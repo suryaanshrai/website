@@ -1,0 +1,1 @@
+Had listened to its audiobook. This was also the first audiobook that I listened to, and God it was amazing. The humble build up to the BharatPe kickout ending was packing so much punch that I couldn't that all it were real life events and not a Julius Caesar play.
