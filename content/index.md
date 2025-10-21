@@ -30,9 +30,9 @@ Second, I'm hoping to connect with like-minded individuals. By putting my though
 
 It can be, but it's not *just* that.
 
-A person's profession is a major part of their life, but it's usually not *all* there is. That's the approach I'm taking here.
+A person's profession is a major part of their life, but it's usually not *all* that there is. That's the approach I'm taking here.
 
-While I do share my professional front, I'm more focused on sharing the entire *journey*—from the very beginning to the interesting steps that kept me going, the challenges I've faced (and hope you can avoid), and my current explorations.
+While I do share my professional front, I'm more focused on sharing the entire journey—from the very beginning to the interesting steps that kept me going, the challenges I've faced (and hope you can avoid), and my current explorations.
 
 But you'll find my hobbies, personal views, and other activities right alongside my technical deep-dives. It's all part of the same story.
 

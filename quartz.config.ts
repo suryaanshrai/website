@@ -8,7 +8,7 @@ import * as Plugin from "./quartz/plugins"
  */
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "suryaansh.dev",
+    pageTitle: "suryaansh",
     pageTitleSuffix: "",
     enableSPA: true,
     enablePopovers: true,

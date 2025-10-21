@@ -4,6 +4,7 @@ description:
 tags:
   - thoughts
   - views
+  - draft
 date:
 draft: "true"
 ---
