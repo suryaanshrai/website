@@ -4,7 +4,7 @@ description:
 tags:
   - "#projects"
   - tech
-date:
+date: 2023-06-28
 ---
 # A New Obsession: Building a Minesweeper AI
 
@@ -14,7 +14,7 @@ To be honest, I didn't even know the exact rules of **Minesweeper** before I sta
 ## Demonstration and Code
 
 Here's a quick video of the AI in action:
-* **[Minesweeper](https://youtu.be/GfYEJIYUaNk?si=wxryAZkupYo4xg2O)**
+* **![Minesweeper](https://youtu.be/GfYEJIYUaNk?si=wxryAZkupYo4xg2O)**
 
 And here is the complete source code on GitHub:
 * **[Minesweeper Solver Source Code](https://github.com/suryaanshrai/minesweeper)**
@@ -41,9 +41,9 @@ So, if I clicked a cell and it revealed a "2", I would add a new sentence to my 
 
 ### 2. The AI's Logic Loop
 
-My `MinesweeperAI` class follows a clear, safety-first strategy:
+The `MinesweeperAI` class follows a clear, safety-first strategy:
 
-1.  **Find a Safe Move:** First, I implemented the `make_safe_move` function. This function iterates through all the cells the AI has proven to be safe (`self.safes`) and picks one that hasn't been played yet.
+1.  **Find a Safe Move:** First, I implemented the `make_safe_move` function. This function simply picks up a safe move from all the possible ones at the moment and pops it from the set (`self.safes`). (*Had to change the self.safes from list to set in the starter code so that the make_safe_move operation maybe more time and space efficient*)
 2.  **Make a Random Move:** If there are no guaranteed safe moves left, the AI has to guess. My `make_random_move` function picks a move at random, making sure not to pick a square that's already been played or one that is a *known mine*.
 
 ### 3. The "Magic": Inferring New Knowledge

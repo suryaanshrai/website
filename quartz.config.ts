@@ -14,9 +14,9 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: null, // Can use google analytics in the future. Its free
     locale: "en-US",
-    baseUrl: "quartz.jzhao.xyz",
+    baseUrl: "suryaansh.dev",
     ignorePatterns: [],
-    defaultDateType: "created",
+    defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,

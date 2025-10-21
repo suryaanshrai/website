@@ -9,6 +9,6 @@ The first time I really started to read (outside of the curriculum, for the shee
 
 By the end of class 7th I started noticing that many of my classmates have leveled up from the comic world into the novels section of the library and thought to give it a try starting from the *Hardy Boys* series. I think it was *Hardy Boys: Top 10 ways to die* that I had read. And as far as I remember it had a story of some celebrity, deaths and the Hardy Brothers trying to uncover the mystery. Was a good read at the time. The *Fantastic Four* was another such series that I explored throughout class 8th. And obviously there were a bunch of other novels by Chetan Bhagat, Ravinder Singh and the likes.
 
-But the magic happened in class 9th when I read the [[The Main Series|Harry Potter Series]]. The sheer engagement and joy that I felt from this series made me more demanding from the books that I used to read. It was the first time that I had experience something like that and had made me bold enough to go for larger series, making me go for [[🌐 Website/🧑‍🎤Entertainment/📘Books/Percy Jackson/index|Percy Jackson]], [[🌐 Website/🧑‍🎤Entertainment/📘Books/Ram Chandra Series/index|Ram Chandra Series]], etc. 
-# Content
-[[🧑‍🎤Entertainment/📘Books/]]
+But the magic happened in class 9th when I read the [[The Main Series|Harry Potter Series]]. The sheer engagement and joy that I felt from this series made me more demanding from the books that I used to read. It was the first time that I had experience something like that and had made me bold enough to go for larger series, making me go for [[Percy Jackson]], [[Ram Chandra Series]], etc. 
+
+# Table of Content

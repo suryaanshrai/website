@@ -8,9 +8,9 @@ export const sharedPageComponents: SharedLayout = {
   afterBody: [],
   footer: Component.Footer({
     links: {
-      "Mail": "mailto:suryaanshrai@gmail.com",
+      "Mail": "mailto:contact@suryaansh.dev",
       "LinkedIn": "https://linkedin.com/in/suryaansh-rai/",
-      "RSS": "index.xml",
+      "RSS": "/index.xml",
     },
   }),
 }
@@ -44,7 +44,7 @@ export const defaultContentPageLayout: PageLayout = {
   right: [
     Component.Graph({
       localGraph: {
-        depth: 2,
+        depth: 1,
       },
     }),
     Component.DesktopOnly(Component.TableOfContents()),
