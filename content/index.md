@@ -43,3 +43,5 @@ This is me, unfiltered. Thanks for stopping by. I hope you find something that r
 > Please feel free to get in touch with me via email or LinkedIn if you are interested in my resume, responding to any of my views, a regular chit chat on anything you found interesting on this page or some suggestion of your own. Wishing you a good time!
 > *I'll be adding commenting options soon btw* :)
 
+> *[[🙋‍♂️About me|Click here to know more about me]]*
+

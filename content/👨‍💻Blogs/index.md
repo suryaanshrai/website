@@ -1,6 +1,5 @@
 ---
-title:
+title: 👨‍💻Blogs
 description:
 tags:
-date:
 ---

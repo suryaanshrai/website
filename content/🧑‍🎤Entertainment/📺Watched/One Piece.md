@@ -4,5 +4,4 @@ description:
 tags:
   - "#anime"
 date:
-draft: "true"
 ---

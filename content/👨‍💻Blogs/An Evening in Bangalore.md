@@ -6,7 +6,7 @@ tags:
   - thoughts
 date: 2022-04-24
 ---
-This is a continuation of my [previous post](https://www.blogger.com/blog/post/edit/3054563877724509654/1696841651062953424#). Though just to recap where I left off, I asked this question-
+This is a continuation of my [[My thoughts on 'Being in the moment'|previous post]]. Though just to recap where I left off, I asked this question-
 
 "Let us say you are roaming around in a city you have just arrived in and you are looking for something to eat. If you are short of cash, assume a hundred Rupee note. You go to a regular food shop (where they give entire lunch for just 80 bucks). At the entrance of the food store, you encounter a beggar, skinny from starvation, wearing a worn-out shirt. What would you do?"
 

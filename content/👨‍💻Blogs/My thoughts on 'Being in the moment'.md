@@ -3,7 +3,7 @@ title: My thoughts on "Being in the moment"
 description:
 tags:
   - thoughts
-date:
+date: 2022-04-17
 ---
  Very often, when thinking or planning for the future, my mind wanders off to situations where my plan may not work. Mostly, it is the question, "Am I doing the right thing?" which initiates the chain of thoughts. When my mind encounters such situations, I mostly renew the plan or completely change it (though it is very less likely).
 

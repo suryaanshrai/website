@@ -150,6 +150,7 @@ With his ancient Mother Earth."
 - "To love and win is the best thing. To love and lose is the next best thing." - William Makepeace Thackeray
 - *"Fate will never smile on the fortunes of a ninja who seeks victory by falling on his own sword, or demanding that others fall on theirs."*
 - The biggest sacrifice someone could make was to live for something—to allow it to consume you and turn you into a version of yourself you didn’t recognize. Death was oblivion; life was reality, the harshest truth that had ever existed.
+- Focus lies between serenity pain
 
 ## Bungo stray dogs
 - The head may err but never the blood

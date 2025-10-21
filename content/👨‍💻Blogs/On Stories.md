@@ -1,5 +1,5 @@
 ---
-title: Stories - is the virtual world not real?
+title: On Stories
 description:
 tags:
   - thoughts
