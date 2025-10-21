@@ -1,5 +1,5 @@
 A collection of my favourite lines, paragraphs and thoughts from my reading endeavours. Mostly noting here for better captions of Instagram posts but good to read otherwise as well.
-## F Scott Fitzgerald, The great Gatsby -
+## F Scott Fitzgerald, The Great Gatsby -
 - "If personality is an unbroken series of successful gestures, then there was something gorgeous about him, some heightened sensitivity to the promises of life. "
 - "There are only the pursued, the pursuing, the busy and the tired"
 
