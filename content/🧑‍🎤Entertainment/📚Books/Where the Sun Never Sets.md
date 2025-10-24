@@ -2,6 +2,6 @@
 title:
 description:
 tags:
-date:
+date: 2025-10-24
 ---
 :)

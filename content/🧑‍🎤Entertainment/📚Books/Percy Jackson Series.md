@@ -4,7 +4,7 @@ description:
 tags:
   - books
   - reviews
-date: 2025-10-21
+date: 2025-10-24
 ---
 Chronologically, after [[🌐 Website/🧑‍🎤Entertainment/📚Books/Harry Potter/index|Harry Potter]], this was the first series that I had truly enjoyed again. I had only read the first 3 parts in class 10th (nearly year-end of 2017), because my better guide in life had told me to stop investing so much time in novels and focus on my academics instead for the nearby future. It was a rather a good advice at the time considering how my priorities were very twisted at the time.
 

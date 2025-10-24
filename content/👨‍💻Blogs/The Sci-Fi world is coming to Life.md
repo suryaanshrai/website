@@ -3,7 +3,7 @@ title: The Sci-Fi world is coming to Life
 description:
 tags:
   - draft
-date:
+date: 2025-10-24
 draft: "true"
 ---
 Aren't we already living a Sci-Fi dream?

@@ -2,7 +2,7 @@
 title:
 description:
 tags:
-date:
+date: 2025-10-24
 ---
 Movies that I watched as a part of this series:
 - Logan

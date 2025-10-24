@@ -2,7 +2,7 @@
 title:
 description:
 tags:
-date: 2025-10-21
+date: 2025-10-24
 ---
 Most of my friends were obsessed with the [[Shiva Trilogy]] back in class 11th (2018), which I read later in my college. But I started Amish with this series and am currently reading *The War of Lanka*.
 

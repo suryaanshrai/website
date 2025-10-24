@@ -6,7 +6,7 @@ tags:
   - reviews
   - views
   - thoughts
-date:
+date: 2025-10-24
 ---
 This was the first real series that I had read. I remember it clearly coz back then my schooldays were busy and yet I was just glued to this series. The first two books I had finished in a week. It was September 2016 or somewhere around that time, as far as I remember that I decided to read this series instead of watching the movies. And GOD was that one of the best choices I've ever made.
 

@@ -1,0 +1,7 @@
+---
+title:
+description:
+tags:
+date: 2025-10-24
+---
+![](https://x.com/suryaanshrai/status/1980978915465478314)

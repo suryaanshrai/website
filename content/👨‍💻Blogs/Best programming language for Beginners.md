@@ -5,6 +5,6 @@ tags:
   - draft
   - tech
   - views
-date:
+date: 2025-10-24
 draft: "true"
 ---

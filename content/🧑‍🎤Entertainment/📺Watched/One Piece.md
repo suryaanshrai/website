@@ -3,5 +3,5 @@ title:
 description:
 tags:
   - "#anime"
-date:
+date: 2025-10-24
 ---

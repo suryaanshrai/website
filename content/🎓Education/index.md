@@ -1,6 +1,5 @@
 ---
-title:
+title: 🎓Education
 description:
 tags:
-date: 2023-06-09
 ---

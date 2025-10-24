@@ -7,7 +7,7 @@ tags:
   - thoughts
 date: 2025-04-30
 ---
-[![](https://blogger.googleusercontent.com/img/a/AVvXsEjnLFTOa8RgpyS9t9qYTuaVBjKzgdaqd_xUyJdqTmAQYpk3nbBvRvpnWDU5252A-CfWmBXNg4LRbOhS9YcdmvZZXWpbNuxpDjyzveiUjK5hhtVb2nqIS8gw366P57fxKaekiDinxCWoS-7xQ0FCneiy7ei2jEF2WfAxWa5NksvJUf4tVjda3xu80YvbMLc=w664-h441)](https://www.blogger.com/blog/post/edit/3054563877724509654/4495270415793920767#)
+ [![](https://blogger.googleusercontent.com/img/a/AVvXsEjnLFTOa8RgpyS9t9qYTuaVBjKzgdaqd_xUyJdqTmAQYpk3nbBvRvpnWDU5252A-CfWmBXNg4LRbOhS9YcdmvZZXWpbNuxpDjyzveiUjK5hhtVb2nqIS8gw366P57fxKaekiDinxCWoS-7xQ0FCneiy7ei2jEF2WfAxWa5NksvJUf4tVjda3xu80YvbMLc=w664-h441)](https://www.blogger.com/blog/post/edit/3054563877724509654/4495270415793920767#)
 
   
   

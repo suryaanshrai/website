@@ -5,6 +5,6 @@ tags:
   - thoughts
   - views
   - draft
-date:
+date: 2025-10-24
 draft: "true"
 ---

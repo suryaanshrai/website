@@ -6,7 +6,7 @@ tags:
   - reviews
   - thoughts
   - views
-date:
+date: 2025-10-03
 ---
 This was definitely one of the most unstoppable read that I had in a some time. This book was good enough to stop me from playing video games, or watching Netflix, or even scrolling memes. Although it had the undertone of an adult conspiracy theory, I resonated well with the overall message of optimism and the belief that thoughts can alter reality. Regardless of what science says, and however "realistic" it may be to stick to statistics, a bit of optimism always goes a long way. IMO at least. Not the blind optimism, but somewhere on the lines of - *it is better to believe that you have a chance to win, and then strive forth to achieve the victory, even if all odds are stacked against you, rather than quitting early and not even trying by just getting overwhelmed by the odds that have been stacked against you. And to strive forth with pessimism? That's like walking on a bridge while always preparing yourself that the bridge might fall. Does not works, does it?*
 
