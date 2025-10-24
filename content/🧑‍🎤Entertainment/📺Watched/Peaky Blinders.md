@@ -1,7 +1,7 @@
 ---
 title:
 description:
-tags:
+tags: series
 date: 2025-10-24
 ---
 No *** fighting!

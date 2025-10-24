@@ -1,7 +1,7 @@
 ---
 title:
 description:
-tags:
+tags: anime
 date: 2025-10-24
 ---
-Had watched this on recommendation. Great watch!
+Had watched this on a recommendation. Great watch!

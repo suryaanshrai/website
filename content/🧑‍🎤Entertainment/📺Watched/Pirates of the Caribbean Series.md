@@ -2,6 +2,8 @@
 title:
 description:
 tags:
+  - movie
+  - series
 date: 2025-10-24
 ---
 Hilarious, engaging, superb, and definitely makes you feel like playing [[Assassin's Creed 4 - Black Flag]]
