@@ -40,7 +40,8 @@ This is me, unfiltered. Thanks for stopping by. I hope you find something that r
 
 > [!faq]- Need my resume?
 > While it occasionally gets hard for me to not fantasize that handing out my resume like a pamphlet in the newspaper might eventually land me a great job, I don't like to think that way. My work is something I am very passionate about and so I'd rather prefer to get in touch with interested parties first, and see if we have some common grounds before proceeding the conversation any further. That saves the time and effort for the both of us.
-> Please feel free to get in touch with me via email or LinkedIn if you are interested in my resume, responding to any of my views, a regular chit chat on anything you found interesting on this page or some suggestion of your own. Wishing you a good time!
+> 
+> **Please feel free to get in touch with me via email or LinkedIn if you are interested in my resume, responding to any of my views, a regular chit chat on anything you found interesting on this page or some suggestion of your own.** Wishing you a good time!
 > *I'll be adding commenting options soon btw* :)
 
 > *[[🙋‍♂️About me|Click here to know more about me]]*

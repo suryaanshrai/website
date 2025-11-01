@@ -14,7 +14,9 @@ To be honest, I didn't even know the exact rules of **Minesweeper** before I sta
 ## Demonstration and Code
 
 Here's a quick video of the AI in action:
-* **![Minesweeper](https://youtu.be/GfYEJIYUaNk?si=wxryAZkupYo4xg2O)**
+
+![Minesweeper](https://youtu.be/GfYEJIYUaNk?si=wxryAZkupYo4xg2O)
+
 
 And here is the complete source code on GitHub:
 * **[Minesweeper Solver Source Code](https://github.com/suryaanshrai/minesweeper)**
@@ -29,7 +31,8 @@ This project was a deep dive into **knowledge-based systems**. It taught me how 
 
 # The Gist of the Project
 
-I'd say the first three steps were very obvious from the project's [description page itself](https://cs50.harvard.edu/ai/projects/1/minesweeper/), the key to this project was figuring out the 4th step [[Minesweeper#]]
+I'd say the first three steps were very obvious from the project's [description page itself](https://cs50.harvard.edu/ai/projects/1/minesweeper/), the key to this project was figuring out the [[Minesweeper#4. Handling the newly updated knowledge base|4th step]].
+
 
 ### 1. Representing Knowledge
 
