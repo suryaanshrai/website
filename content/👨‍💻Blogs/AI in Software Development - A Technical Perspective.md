@@ -24,7 +24,7 @@ The apprehension that AI will render human developers obsolete is widespread. Ho
 
 _There are things that we know. There are things that we know that we don't know. And then there are things that we don't even know that we don't know!_
 
-One of the most significant advantages of using AI in development is its ability to help identify and understand the "unknown unknowns." These are aspects or problems we are unaware of and, therefore, cannot address directly. AI can surface these hidden issues by analyzing patterns and suggesting areas that might need attention. Exploring such unknown unknowns is where the real learning happens.
+One of the most significant advantages of using AI in development is its ability to help identify and understand the "unknown unknowns." These are aspects or problems we are unaware of and, therefore, cannot address directly. AI can surface these hidden issues by analysing patterns and suggesting areas that might need attention. Exploring such unknown unknowns is where the real learning happens.
 
 For example, while working on a project, I might not realize the importance of implementing caching mechanisms or job scheduling if I don't know it already or haven't worked with it before. AI can prompt me to consider these aspects, aiding my learning and growth as a fresher and helping to make more efficient and robust applications.
 

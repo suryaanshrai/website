@@ -21,7 +21,7 @@ The crucial part of his advice was this: **don't do it visibly.** Don't let it t
 
 The revelation was simple but profound: **You don't always need to sit separately for it. You can just do it.**
 
-This transforms the entire practice. It's no longer a daunting item on a to-do list but an accessible tool you can use in any given moment. We can just do it whenever the need arises. More importantly, we can do it every day to gather ourselves and align our minds whenever they begin to go astray.
+This transforms the entire practice. It's no longer a daunting item on a to-do list, but an accessible tool you can use in any given moment. We can just do it whenever the need arises. More importantly, we can do it every day to gather ourselves and align our minds whenever they begin to go astray.
 
 This isn't just a passive coping mechanism. It is active, conscious training. As the books say, we can (and must) train our minds to think positively. We have to consciously control our thoughts and channel their immense energy into creating the best possible path forward.
 
