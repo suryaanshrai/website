@@ -7,6 +7,8 @@ date: 2025-11-30
 ---
 I was just normally using my laptop when a windows defender notification kept popping up. 
 ![[Pasted image 20251128143546.png]]
+
+
 When I looked into it in Defender, I was not getting anything more than just the PID - ![[Pasted image 20251128143705.png]]
 
 Initially, when I searched for it and tried to understand if it was a false alarm by the antivirus, I almost believed that this must be something from NVIDIA or the many games on my laptop that might be doing something to improve the performance which defender is picking up as a threat. But just out of curiosity I asked Gemini-3 (Thinking) to give me a command to see the trace of the PID. 
