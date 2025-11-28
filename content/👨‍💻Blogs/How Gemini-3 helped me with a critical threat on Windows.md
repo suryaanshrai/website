@@ -3,7 +3,7 @@ title:
 description: A persistent alert. A vague Process ID. A folder that refused to be deleted. What looked like a standard driver issue was actually a resource-leeching miner hiding in plain sight. This post details how I leveraged Gemini to perform system forensics, identify the 'imposter' NVIDIA process, and write the custom PowerShell scripts needed to wipe the malware when Windows kept saying 'Access Denied.'
 tags:
   - tech
-date: 2025-11-30
+date: 2025-11-28
 ---
 >[!info]- Entire Gemini chat for reference
 >https://gemini.google.com/share/c0fd61f91f55
