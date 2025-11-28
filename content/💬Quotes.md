@@ -156,7 +156,10 @@ With his ancient Mother Earth."
 ## Bungo stray dogs
 - The head may err but never the blood
 - The most terrifying thing that ever existed on this planet - a mediocre man who is desperate 
-
+## Black Clover
+- I am not exactly his foe or his ally, yet he chose to encourage and help me. And of all the clover Kingdom magic nights I have met before none of them have gone this far to protect and save another person. Everything they claim to stand for he genuinely embodies it! He is a *true Knight*!
+- Due to your body's mutation the mana did not dwell within you. Simply put, you are defective. But because of that you are able to hold the sword. You aren't anything special. Not in the slightest. And that is what precisely makes you extraordinary. 
+- Somewhere along the way in my quest for absolute perfection, it seems that I lost sight on an extremely precious truth. *When one is imperfect there is a certain kind of power that can be gathered from one's emotions. She could never have learned that spell during her time with me. **But now that she is free to be her imperfect self... she has become perfect.***
 ## dan brown 
 - *As above, so below*
 - *From the Crusades, to the Inquisition, to American politics - the name Jesus had been hijacked as an ally in all kinds of power struggles. Since the beginning of time, the ignorant had always screamed the loudest, herding the unsuspecting masses and forcing them to do their bidding. They defended their worldly desires by citing Scripture they did not understand. They celebrated their intolerance as proof of their con-victions. Now, after all these years, mankind had finally managed to utterly erode everything that had once been so beautiful about Jesus.*
