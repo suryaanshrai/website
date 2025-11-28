@@ -5,6 +5,10 @@ tags:
   - tech
 date: 2025-11-30
 ---
+>[!info]- Entire Gemini chat for reference
+>https://gemini.google.com/share/c0fd61f91f55
+
+
 I was just normally using my laptop when a windows defender notification kept popping up. 
 ![[Pasted image 20251128143546.png]]
 
