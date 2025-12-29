@@ -4,11 +4,11 @@ description:
 tags:
   - tech
   - views
-date: 2025-10-24
+date: 2025-12-29
 ---
 
 >[!info]- TLDR;
-Getting confused about what to pick? Choose Python -> [[Best programming language for Beginners#​Python|here's why]].
+>Getting confused about what to pick? Choose Python -> [[Best programming language for Beginners#​Python|here's why]].
 
 ​When you don't have a clue about programming or nobody to mentor you, it might get confusing to pick one language, especially if you search the internet for help deciding which language to pick.
 
