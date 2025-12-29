@@ -98,7 +98,7 @@ I highly encourage you to try out multiple languages of interest and to work wit
 *But how do you try a language?* 
 
 > [!note]- LLMs for learning
-While LLMs can be very helpful for learning new things, I'd rather suggest sticking with the language's documentation itself for the best tutorials to get started. Human-led video tutorials and hands-on labs also suffice depending on who the instructor is and the quality of delivery. I'd suggest that for anything at all, to be honest, if you really want to thoroughly learn something. Once you are done with the fundamentals, LLMs can be used for questioning and recall.
+> While LLMs can be very helpful for learning new things, I'd rather suggest sticking with the language's documentation itself for the best tutorials to get started. Human-led video tutorials and hands-on labs also suffice depending on who the instructor is and the quality of delivery. I'd suggest that for anything at all, to be honest, if you really want to thoroughly learn something. Once you are done with the fundamentals, LLMs can be used for questioning and recall.
 
 Honestly, it takes some work. Here's an oversimplified roadmap of how one must try a language:
 
