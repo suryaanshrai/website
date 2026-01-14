@@ -12,6 +12,9 @@
     "url": "https://github.com/jackyzha0/quartz.git"
   },
   "scripts": {
+    "copy-audios": "node -e \"const fs = require('fs'); const src = 'audios'; const dest = 'quartz/static/audios'; if (fs.existsSync(dest)) { fs.rmSync(dest, { recursive: true }); } if (fs.existsSync(src)) { fs.cpSync(src, dest, { recursive: true }); console.log('Copied audios to quartz/static/audios'); }\"",
+    "prebuild": "npm run copy-audios",
+    "build": "npx quartz build",
     "quartz": "./quartz/bootstrap-cli.mjs",
     "docs": "npx quartz build --serve -d docs",
     "check": "tsc --noEmit && npx prettier . --check",

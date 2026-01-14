@@ -2,7 +2,8 @@ import sourceMapSupport from "source-map-support"
 sourceMapSupport.install(options)
 import path from "path"
 import { PerfTimer } from "./util/perf"
-import { rm } from "fs/promises"
+import { rm, cp, mkdir } from "fs/promises"
+import { existsSync } from "fs"
 import { GlobbyFilterFunction, isGitIgnored } from "globby"
 import { styleText } from "util"
 import { parseMarkdown } from "./processors/parse"
@@ -25,12 +26,12 @@ import { minimatch } from "minimatch"
 type ContentMap = Map<
   FilePath,
   | {
-      type: "markdown"
-      content: ProcessedContent
-    }
+    type: "markdown"
+    content: ProcessedContent
+  }
   | {
-      type: "other"
-    }
+    type: "other"
+  }
 >
 
 type BuildData = {
@@ -69,6 +70,16 @@ async function buildQuartz(argv: Argv, mut: Mutex, clientRefresh: () => void) {
   perf.addEvent("clean")
   await rm(output, { recursive: true, force: true })
   console.log(`Cleaned output directory \`${output}\` in ${perf.timeSince("clean")}`)
+
+  // Copy audios folder to public/static/audios
+  perf.addEvent("copy-audios")
+  const audiosSrc = "audios"
+  const audiosDest = path.join(output, "static", "audios")
+  if (existsSync(audiosSrc)) {
+    await mkdir(path.join(output, "static"), { recursive: true })
+    await cp(audiosSrc, audiosDest, { recursive: true })
+    console.log(`Copied audios to \`${audiosDest}\` in ${perf.timeSince("copy-audios")}`)
+  }
 
   perf.addEvent("glob")
   const allFiles = await glob("**/*.*", argv.directory, cfg.configuration.ignorePatterns)

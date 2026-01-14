@@ -2,7 +2,9 @@
 title: Suryaansh Rai
 description: A page dedicated to everything about me.
 ---
-> *“[One] who works with the door open gets all kinds of interruptions, but [they] also occasionally gets clues as to what the world is and what might be important.” — Richard Hamming*
+> [!quote]
+> 	
+> “[One] who works with the door open gets all kinds of interruptions, but [they] also occasionally get clues as to what the world is and what might be important.” — *Richard Hamming*
 ### Hello, and Welcome.
 
 You've found my personal space on the internet—my small island in this huge digital ocean.
@@ -43,5 +45,5 @@ This is me, unfiltered. Thanks for stopping by. I hope you find something that r
 > **Please feel free to get in touch with me via email or LinkedIn if you are interested in my resume, responding to any of my views, a regular chit chat on anything you found interesting on this page or some suggestion of your own.** Wishing you a good time!
 > *I'll be adding commenting options soon btw* :)
 
-> *[[🙋‍♂️About me|Click here to know more about me]]*
+> *[[About me|Click here to know more about me]]*
 
