@@ -1,6 +1,7 @@
 ---
 title: Suryaansh Rai
 description: A page dedicated to everything about me.
+comments: "false"
 ---
 > [!quote]
 > 	
