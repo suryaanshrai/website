@@ -18,6 +18,7 @@ export const sharedPageComponents: SharedLayout = {
       options: {
         host: "https://comments.suryaansh.dev",
         site_id: "suryaansh",
+        simple_view: true,
         no_footer: true,
       },
     }),
