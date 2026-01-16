@@ -26,4 +26,4 @@ Copy-Item "text-to-speech-local\audios\*" "quartz\audios\" -Recurse -Force
 
 # Final Sync
 Set-Location "quartz"
-# npx quartz sync
+npx quartz sync

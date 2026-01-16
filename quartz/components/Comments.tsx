@@ -1,25 +1,36 @@
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { classNames } from "../util/lang"
 // @ts-ignore
-import script from "./scripts/comments.inline"
+import giscusScript from "./scripts/comments.inline"
+// @ts-ignore
+import remark42Script from "./scripts/remark42.inline"
 
-type Options = {
-  provider: "giscus"
-  options: {
-    repo: `${string}/${string}`
-    repoId: string
-    category: string
-    categoryId: string
-    themeUrl?: string
-    lightTheme?: string
-    darkTheme?: string
-    mapping?: "url" | "title" | "og:title" | "specific" | "number" | "pathname"
-    strict?: boolean
-    reactionsEnabled?: boolean
-    inputPosition?: "top" | "bottom"
-    lang?: string
+type Options =
+  | {
+    provider: "giscus"
+    options: {
+      repo: `${string}/${string}`
+      repoId: string
+      category: string
+      categoryId: string
+      themeUrl?: string
+      lightTheme?: string
+      darkTheme?: string
+      mapping?: "url" | "title" | "og:title" | "specific" | "number" | "pathname"
+      strict?: boolean
+      reactionsEnabled?: boolean
+      inputPosition?: "top" | "bottom"
+      lang?: string
+    }
   }
-}
+  | {
+    provider: "remark42"
+    options: {
+      host: string
+      site_id: string
+      no_footer?: boolean
+    }
+  }
 
 function boolToStringBool(b: boolean): string {
   return b ? "1" : "0"
@@ -29,10 +40,25 @@ export default ((opts: Options) => {
   const Comments: QuartzComponent = ({ displayClass, fileData, cfg }: QuartzComponentProps) => {
     // check if comments should be displayed according to frontmatter
     const disableComment: boolean =
-      typeof fileData.frontmatter?.comments !== "undefined" &&
-      (!fileData.frontmatter?.comments || fileData.frontmatter?.comments === "false")
+      (typeof fileData.frontmatter?.comments !== "undefined" &&
+        (!fileData.frontmatter?.comments || fileData.frontmatter?.comments === "false")) ||
+      fileData.frontmatter?.["disable-comments"] === true ||
+      fileData.frontmatter?.["disable-comments"] === "true"
+
     if (disableComment) {
       return <></>
+    }
+
+    if (opts.provider === "remark42") {
+      return (
+        <div
+          class={classNames(displayClass, "remark42")}
+          id="remark42"
+          data-host={opts.options.host}
+          data-site-id={opts.options.site_id}
+          data-no-footer={boolToStringBool(opts.options.no_footer ?? false)}
+        ></div>
+      )
     }
 
     return (
@@ -56,7 +82,7 @@ export default ((opts: Options) => {
     )
   }
 
-  Comments.afterDOMLoaded = script
+  Comments.afterDOMLoaded = opts.provider === "remark42" ? remark42Script : giscusScript
 
   return Comments
 }) satisfies QuartzComponentConstructor<Options>

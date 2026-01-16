@@ -5,7 +5,6 @@ import * as Component from "./quartz/components"
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
-  afterBody: [],
   footer: Component.Footer({
     links: {
       "📧Mail": "mailto:contact@suryaansh.dev",
@@ -13,6 +12,15 @@ export const sharedPageComponents: SharedLayout = {
       "🛜RSS": "/index.xml",
     },
   }),
+  afterBody: [
+    Component.Comments({
+      provider: "remark42",
+      options: {
+        host: "https://comments.suryaansh.dev",
+        site_id: "suryaansh",
+      },
+    }),
+  ],
 }
 
 // components for pages that display a single page (e.g. a single note)
