@@ -29,6 +29,7 @@ type Options =
       host: string
       site_id: string
       no_footer?: boolean
+      simple_view?: boolean
     }
   }
 
@@ -57,6 +58,7 @@ export default ((opts: Options) => {
           data-host={opts.options.host}
           data-site-id={opts.options.site_id}
           data-no-footer={boolToStringBool(opts.options.no_footer ?? false)}
+          data-simple-view={boolToStringBool(opts.options.simple_view ?? false)}
         ></div>
       )
     }

@@ -47,12 +47,16 @@ document.addEventListener("nav", () => {
     if (!remark42Container) return
 
     const theme = document.documentElement.getAttribute("saved-theme") === "dark" ? "dark" : "light"
+    const noFooter = remark42Container.dataset.noFooter === "1"
+    const simpleView = remark42Container.dataset.simpleView === "1"
 
     window.remark_config = {
         host: remark42Container.dataset.host,
         site_id: remark42Container.dataset.siteId,
         components: ["embed"],
         theme: theme,
+        no_footer: noFooter,
+        simple_view: simpleView,
         url: window.location.href, // Ensure URL is current
     }
 })
