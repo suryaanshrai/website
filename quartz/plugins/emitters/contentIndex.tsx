@@ -2,7 +2,7 @@ import { Root } from "hast"
 import { GlobalConfiguration } from "../../cfg"
 import { getDate } from "../../components/Date"
 import { escapeHTML } from "../../util/escape"
-import { FilePath, FullSlug, SimpleSlug, joinSegments, simplifySlug } from "../../util/path"
+import { FilePath, FullSlug, SimpleSlug, getAllSegmentPrefixes, joinSegments, simplifySlug } from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
 import { toHtml } from "hast-util-to-html"
 import { write } from "./helpers"
@@ -28,6 +28,8 @@ interface Options {
   rssFullHtml: boolean
   rssSlug: string
   includeEmptyFiles: boolean
+  includeTags: boolean
+  rssTagsLimit: number
 }
 
 const defaultOptions: Options = {
@@ -37,6 +39,8 @@ const defaultOptions: Options = {
   rssFullHtml: false,
   rssSlug: "index",
   includeEmptyFiles: true,
+  includeTags: false,
+  rssTagsLimit: 15,
 }
 
 function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap): string {
@@ -84,8 +88,8 @@ function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndexMap, limit?:
       <title>${escapeHTML(cfg.pageTitle)}</title>
       <link>https://${base}</link>
       <description>${!!limit ? i18n(cfg.locale).pages.rss.lastFewNotes({ count: limit }) : i18n(cfg.locale).pages.rss.recentNotes} on ${escapeHTML(
-        cfg.pageTitle,
-      )}</description>
+    cfg.pageTitle,
+  )}</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       ${items}
     </channel>
@@ -135,6 +139,39 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
           slug: (opts?.rssSlug ?? "index") as FullSlug,
           ext: ".xml",
         })
+
+        if (opts?.includeTags && (opts.rssTagsLimit ?? 0) > 0) {
+          const tagCounts: Map<string, number> = new Map()
+
+          // Count tags from all non-empty files (unless includeEmptyFiles is true)
+          for (const [_, content] of linkIndex) {
+            const tags = content.tags.flatMap(getAllSegmentPrefixes)
+            for (const tag of new Set(tags)) { // Use Set to avoid double counting per file
+              tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+            }
+          }
+
+          const sortedTags = Array.from(tagCounts.entries())
+            .sort((a, b) => b[1] - a[1]) // Sort by frequency descending
+            .slice(0, opts.rssTagsLimit)
+            .map(([tag]) => tag)
+
+          for (const tag of sortedTags) {
+            const tagFilteredIndex = new Map(
+              Array.from(linkIndex).filter(([_, content]) => {
+                const fileTags = new Set(content.tags.flatMap(getAllSegmentPrefixes))
+                return fileTags.has(tag)
+              })
+            )
+
+            yield write({
+              ctx,
+              content: generateRSSFeed(cfg, tagFilteredIndex, opts.rssLimit),
+              slug: joinSegments("tags", tag, "index") as FullSlug,
+              ext: ".xml",
+            })
+          }
+        }
       }
 
       const fp = joinSegments("static", "contentIndex") as FullSlug
