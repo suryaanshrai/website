@@ -9,6 +9,7 @@ import {
   getAllSegmentPrefixes,
   joinSegments,
   simplifySlug,
+  slugTag,
 } from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
 import { toHtml } from "hast-util-to-html"
@@ -153,6 +154,9 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
           let sortedTags: string[] = []
 
           if (opts.rssTags && opts.rssTags.length > 0) {
+            // Deduplicate and slugify user-provided tags
+            const userTags = new Set(opts.rssTags.map((tag) => slugTag(tag)))
+
             // Only include user-specified tags that actually exist in the content
             const availableTags = new Set<string>()
             for (const [_, content] of linkIndex) {
@@ -161,7 +165,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
                 availableTags.add(tag)
               }
             }
-            sortedTags = opts.rssTags.filter((tag) => availableTags.has(tag))
+            sortedTags = Array.from(userTags).filter((tag) => availableTags.has(tag))
           } else if ((opts.rssTagsLimit ?? 0) > 0) {
             const tagCounts: Map<string, number> = new Map()
 
