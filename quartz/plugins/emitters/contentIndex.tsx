@@ -153,7 +153,15 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
           let sortedTags: string[] = []
 
           if (opts.rssTags && opts.rssTags.length > 0) {
-            sortedTags = opts.rssTags
+            // Only include user-specified tags that actually exist in the content
+            const availableTags = new Set<string>()
+            for (const [_, content] of linkIndex) {
+              const tags = content.tags.flatMap(getAllSegmentPrefixes)
+              for (const tag of tags) {
+                availableTags.add(tag)
+              }
+            }
+            sortedTags = opts.rssTags.filter((tag) => availableTags.has(tag))
           } else if ((opts.rssTagsLimit ?? 0) > 0) {
             const tagCounts: Map<string, number> = new Map()
 
