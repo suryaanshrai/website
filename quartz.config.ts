@@ -81,7 +81,7 @@ const config: QuartzConfig = {
       Plugin.ContentIndex({
         enableSiteMap: true,
         enableRSS: true,
-        rssFullHtml: true,
+        // rssFullHtml: true,
         includeEmptyFiles: false,
         rssLimit: 15,
       }),
