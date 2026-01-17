@@ -151,56 +151,51 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
         })
 
         if (opts?.includeTags) {
+          // Optimization: Build a map of tag -> content list once (reverse index)
+          const tagsInput: Map<string, ContentDetails[]> = new Map()
+
+          // Iterate over the content index once to populate the reverse index
+          for (const [_, content] of linkIndex) {
+            const tags = content.tags.flatMap(getAllSegmentPrefixes)
+            for (const tag of new Set(tags)) {
+              // Use Set to avoid double counting per file
+              if (!tagsInput.has(tag)) {
+                tagsInput.set(tag, [])
+              }
+              tagsInput.get(tag)!.push(content)
+            }
+          }
+
           let sortedTags: string[] = []
 
           if (opts.rssTags && opts.rssTags.length > 0) {
             // Deduplicate and slugify user-provided tags
             const userTags = new Set(opts.rssTags.map((tag) => slugTag(tag)))
 
-            // Only include user-specified tags that actually exist in the content
-            const availableTags = new Set<string>()
-            for (const [_, content] of linkIndex) {
-              const tags = content.tags.flatMap(getAllSegmentPrefixes)
-              for (const tag of tags) {
-                availableTags.add(tag)
-              }
-            }
-            sortedTags = Array.from(userTags).filter((tag) => availableTags.has(tag))
+            // Filter user tags to only those that exist in the content
+            sortedTags = Array.from(userTags).filter((tag) => tagsInput.has(tag))
           } else if ((opts.rssTagsLimit ?? 0) > 0) {
-            const tagCounts: Map<string, number> = new Map()
-
-            // Count tag occurrences across all files in the index
-            for (const [_, content] of linkIndex) {
-              const tags = content.tags.flatMap(getAllSegmentPrefixes)
-              for (const tag of new Set(tags)) {
-                // Use Set to avoid double counting per file
-                tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
-              }
-            }
-
-            sortedTags = Array.from(tagCounts.entries())
-              .sort((a, b) => b[1] - a[1]) // Sort by frequency descending
+            // Sort available tags by frequency (number of content items)
+            sortedTags = Array.from(tagsInput.entries())
+              .sort((a, b) => b[1].length - a[1].length) // Sort by frequency descending
               .slice(0, opts.rssTagsLimit)
               .map(([tag]) => tag)
           }
 
-          if (
-            sortedTags.length === 0 &&
-            (!opts.rssTags || opts.rssTags.length === 0) &&
-            (opts.rssTagsLimit ?? 0) <= 0
-          ) {
+          if (sortedTags.length === 0) {
             console.warn(
               "[contentIndex] includeTags is enabled, but no tag-based RSS feeds will be generated. " +
-                "Either provide non-empty `rssTags` or set `rssTagsLimit` to a positive number.",
+                "Either provide non-empty `rssTags` matching content tags or set `rssTagsLimit` to a positive number.",
             )
           }
+
           for (const tag of sortedTags) {
-            const tagFilteredIndex = new Map(
-              Array.from(linkIndex).filter(([_, content]) => {
-                const fileTags = new Set(content.tags.flatMap(getAllSegmentPrefixes))
-                return fileTags.has(tag)
-              }),
-            )
+            const tagContent = tagsInput.get(tag)
+            if (!tagContent) continue // Should not happen given logic above
+
+            // Reconstruct a map for generateRSSFeed (it expects a ContentIndexMap)
+            // We can optimize this by making generateRSSFeed accept an array, but for now we conform to the interface
+            const tagFilteredIndex = new Map(tagContent.map((content) => [content.slug, content]))
 
             yield write({
               ctx,
