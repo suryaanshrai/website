@@ -172,6 +172,16 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
               .map(([tag]) => tag)
           }
 
+          if (
+            sortedTags.length === 0 &&
+            (!opts.rssTags || opts.rssTags.length === 0) &&
+            (opts.rssTagsLimit ?? 0) <= 0
+          ) {
+            console.warn(
+              "[contentIndex] includeTags is enabled, but no tag-based RSS feeds will be generated. " +
+                "Either provide non-empty `rssTags` or set `rssTagsLimit` to a positive number.",
+            )
+          }
           for (const tag of sortedTags) {
             const tagFilteredIndex = new Map(
               Array.from(linkIndex).filter(([_, content]) => {
