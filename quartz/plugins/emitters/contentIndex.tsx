@@ -2,7 +2,14 @@ import { Root } from "hast"
 import { GlobalConfiguration } from "../../cfg"
 import { getDate } from "../../components/Date"
 import { escapeHTML } from "../../util/escape"
-import { FilePath, FullSlug, SimpleSlug, getAllSegmentPrefixes, joinSegments, simplifySlug } from "../../util/path"
+import {
+  FilePath,
+  FullSlug,
+  SimpleSlug,
+  getAllSegmentPrefixes,
+  joinSegments,
+  simplifySlug,
+} from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
 import { toHtml } from "hast-util-to-html"
 import { write } from "./helpers"
@@ -90,8 +97,8 @@ function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndexMap, limit?:
       <title>${escapeHTML(cfg.pageTitle)}</title>
       <link>https://${base}</link>
       <description>${!!limit ? i18n(cfg.locale).pages.rss.lastFewNotes({ count: limit }) : i18n(cfg.locale).pages.rss.recentNotes} on ${escapeHTML(
-    cfg.pageTitle,
-  )}</description>
+        cfg.pageTitle,
+      )}</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       ${items}
     </channel>
@@ -153,7 +160,8 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
             // Count tags from all non-empty files (unless includeEmptyFiles is true)
             for (const [_, content] of linkIndex) {
               const tags = content.tags.flatMap(getAllSegmentPrefixes)
-              for (const tag of new Set(tags)) { // Use Set to avoid double counting per file
+              for (const tag of new Set(tags)) {
+                // Use Set to avoid double counting per file
                 tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
               }
             }
@@ -169,7 +177,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
               Array.from(linkIndex).filter(([_, content]) => {
                 const fileTags = new Set(content.tags.flatMap(getAllSegmentPrefixes))
                 return fileTags.has(tag)
-              })
+              }),
             )
 
             yield write({
