@@ -157,7 +157,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
           } else if ((opts.rssTagsLimit ?? 0) > 0) {
             const tagCounts: Map<string, number> = new Map()
 
-            // Count tags from all non-empty files (unless includeEmptyFiles is true)
+            // Count tag occurrences across all files in the index
             for (const [_, content] of linkIndex) {
               const tags = content.tags.flatMap(getAllSegmentPrefixes)
               for (const tag of new Set(tags)) {
