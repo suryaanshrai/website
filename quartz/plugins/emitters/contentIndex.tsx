@@ -30,6 +30,7 @@ interface Options {
   includeEmptyFiles: boolean
   includeTags: boolean
   rssTagsLimit: number
+  rssTags: string[]
 }
 
 const defaultOptions: Options = {
@@ -41,6 +42,7 @@ const defaultOptions: Options = {
   includeEmptyFiles: true,
   includeTags: false,
   rssTagsLimit: 15,
+  rssTags: [],
 }
 
 function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap): string {
@@ -140,21 +142,27 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
           ext: ".xml",
         })
 
-        if (opts?.includeTags && (opts.rssTagsLimit ?? 0) > 0) {
-          const tagCounts: Map<string, number> = new Map()
+        if (opts?.includeTags) {
+          let sortedTags: string[] = []
 
-          // Count tags from all non-empty files (unless includeEmptyFiles is true)
-          for (const [_, content] of linkIndex) {
-            const tags = content.tags.flatMap(getAllSegmentPrefixes)
-            for (const tag of new Set(tags)) { // Use Set to avoid double counting per file
-              tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+          if (opts.rssTags && opts.rssTags.length > 0) {
+            sortedTags = opts.rssTags
+          } else if ((opts.rssTagsLimit ?? 0) > 0) {
+            const tagCounts: Map<string, number> = new Map()
+
+            // Count tags from all non-empty files (unless includeEmptyFiles is true)
+            for (const [_, content] of linkIndex) {
+              const tags = content.tags.flatMap(getAllSegmentPrefixes)
+              for (const tag of new Set(tags)) { // Use Set to avoid double counting per file
+                tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+              }
             }
-          }
 
-          const sortedTags = Array.from(tagCounts.entries())
-            .sort((a, b) => b[1] - a[1]) // Sort by frequency descending
-            .slice(0, opts.rssTagsLimit)
-            .map(([tag]) => tag)
+            sortedTags = Array.from(tagCounts.entries())
+              .sort((a, b) => b[1] - a[1]) // Sort by frequency descending
+              .slice(0, opts.rssTagsLimit)
+              .map(([tag]) => tag)
+          }
 
           for (const tag of sortedTags) {
             const tagFilteredIndex = new Map(
