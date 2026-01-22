@@ -10,6 +10,14 @@ const NotFound: QuartzComponent = ({ cfg }: QuartzComponentProps) => {
     <article class="popover-hint">
       <h1>404</h1>
       <p>{i18n(cfg.locale).pages.error.notFound}</p>
+      <div>
+        <img
+          src={baseDir + "static/404.png"}
+          style={{ maxWidth: "7.5cm", height: "auto" }}
+          alt="404 Not Found"
+        />
+        <p>Oops! Looks like you've ventured into the void.</p>
+      </div>
       <a href={baseDir}>{i18n(cfg.locale).pages.error.home}</a>
     </article>
   )
