@@ -9,7 +9,8 @@ function cleanFilename(str: string): string {
 function hideAudioPlayer() {
     const container = document.querySelector(".audio-player-container") as HTMLElement | null
     if (container) {
-        container.style.display = "none"
+        container.classList.remove("qz-audio-visible")
+        container.setAttribute("aria-hidden", "true")
     }
 }
 
@@ -17,7 +18,8 @@ function hideAudioPlayer() {
 function showAudioPlayer() {
     const container = document.querySelector(".audio-player-container") as HTMLElement | null
     if (container) {
-        container.style.display = "flex"
+        container.classList.add("qz-audio-visible")
+        container.removeAttribute("aria-hidden")
     }
 }
 

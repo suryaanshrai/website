@@ -21,6 +21,11 @@ const config: QuartzConfig = {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
+        title: {
+          name: "Fraunces",
+          weights: [400, 600, 800],
+          includeItalic: true,
+        },
         header: "Schibsted Grotesk",
         body: "Schibsted Grotesk",
         code: "IBM Plex Mono",

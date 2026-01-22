@@ -6,11 +6,33 @@ export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
   footer: Component.Footer({
-    links: {
-      "📧Mail": "mailto:contact@suryaansh.dev",
-      "🤝LinkedIn": "https://linkedin.com/in/suryaansh-rai/",
-      "🛜RSS": "/index.xml",
-    },
+    iconLinks: [
+      {
+        label: "Topmate",
+        href: "https://topmate.io/suryaanshrai/",
+        src: "/static/topmate.png",
+        external: true,
+        spinOnHover: true,
+      },
+      {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/in/suryaansh-rai/",
+        src: "/static/Linkedin.gif",
+        external: true,
+      },
+      {
+        label: "Email",
+        href: "mailto:contact@suryaansh.dev",
+        src: "/static/mail.gif",
+        external: false,
+      },
+      {
+        label: "RSS",
+        href: "/index.xml",
+        src: "/static/rss.gif",
+        external: false,
+      },
+    ],
   }),
   afterBody: [
     Component.SunlitBackground(),

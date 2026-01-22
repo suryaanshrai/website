@@ -23,6 +23,105 @@ body {
   color: var(--darkgray);
 }
 
+:root {
+  --qz-surface: color-mix(in srgb, var(--light) 88%, var(--lightgray) 12%);
+  --qz-surface-2: color-mix(in srgb, var(--light) 78%, var(--lightgray) 22%);
+  --qz-border: color-mix(in srgb, var(--gray) 40%, var(--lightgray) 60%);
+  --qz-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  /* Editorial type scale */
+  --qz-page-title-size: clamp(2.55rem, 4.2vw, 3.55rem);
+  --qz-h1-size: clamp(1.85rem, 1.55rem + 1.2vw, 2.35rem);
+  --qz-h2-size: clamp(1.52rem, 1.30rem + 0.8vw, 1.95rem);
+  --qz-h3-size: clamp(1.22rem, 1.12rem + 0.45vw, 1.48rem);
+  --qz-h4-size: 1.08rem;
+  --qz-h5-size: 1.02rem;
+  --qz-h6-size: 0.98rem;
+
+  --qz-h1-mt: 2.2rem;
+  --qz-h2-mt: 1.9rem;
+  --qz-h3-mt: 1.6rem;
+  --qz-h4-mt: 1.4rem;
+  --qz-h5-mt: 1.3rem;
+  --qz-h6-mt: 1.2rem;
+
+  --qz-title-color: var(--dark);
+  --qz-title-gradient: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--secondary) 85%, var(--dark) 15%),
+    color-mix(in srgb, var(--tertiary) 85%, var(--secondary) 15%)
+  );
+
+  --qz-heading-gradient: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--secondary) 70%, var(--dark) 30%),
+    color-mix(in srgb, var(--tertiary) 70%, var(--secondary) 30%)
+  );
+
+  --qz-meta-color: color-mix(in srgb, var(--darkgray) 72%, var(--gray) 28%);
+
+  --qz-scrollbar-track: color-mix(in srgb, var(--light) 10%, var(--lightgray) 8%);
+  --qz-scrollbar-thumb: color-mix(in srgb, var(--secondary) 22%, var(--gray) 78%);
+  --qz-scrollbar-thumb-hover: color-mix(in srgb, var(--secondary) 34%, var(--gray) 66%);
+
+  --qz-audio-panel: var(--qz-surface-2);
+  --qz-audio-fg: var(--dark);
+}
+
+:root[saved-theme="dark"] {
+  --qz-surface: color-mix(in srgb, var(--light) 88%, var(--darkgray) 12%);
+  --qz-surface-2: color-mix(in srgb, var(--light) 78%, var(--darkgray) 22%);
+  --qz-border: color-mix(in srgb, var(--gray) 55%, var(--darkgray) 45%);
+  --qz-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
+
+  --qz-title-color: color-mix(in srgb, var(--light) 92%, var(--dark) 8%);
+  --qz-title-gradient: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--secondary) 88%, var(--light) 12%),
+    color-mix(in srgb, var(--tertiary) 88%, var(--secondary) 12%)
+  );
+
+  --qz-heading-gradient: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--secondary) 78%, var(--light) 22%),
+    color-mix(in srgb, var(--tertiary) 78%, var(--secondary) 22%)
+  );
+
+  --qz-meta-color: color-mix(in srgb, var(--darkgray) 70%, var(--gray) 30%);
+
+  --qz-scrollbar-track: color-mix(in srgb, var(--light) 10%, var(--darkgray) 8%);
+  --qz-scrollbar-thumb: color-mix(in srgb, var(--secondary) 25%, var(--gray) 75%);
+  --qz-scrollbar-thumb-hover: color-mix(in srgb, var(--secondary) 38%, var(--gray) 62%);
+
+  --qz-audio-panel: var(--qz-surface-2);
+  --qz-audio-fg: var(--light);
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--qz-scrollbar-thumb) var(--qz-scrollbar-track);
+}
+
+/* WebKit scrollbar (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--qz-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--qz-scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid var(--qz-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--qz-scrollbar-thumb-hover);
+}
+
 .text-highlight {
   background-color: var(--textHighlight);
   padding: 0 0.1rem;
@@ -31,6 +130,30 @@ body {
 ::selection {
   background: color-mix(in srgb, var(--tertiary) 60%, rgba(255, 255, 255, 0));
   color: var(--darkgray);
+}
+
+@keyframes qz-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .page .page-header .article-title,
+  .content-meta,
+  .audio-player-container {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 p,
@@ -163,10 +286,6 @@ a {
   max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
   margin: 0 auto;
   & article {
-    & > h1 {
-      font-size: 2rem;
-    }
-
     & li:has(> input[type="checkbox"]) {
       list-style-type: none;
       padding-left: 0;
@@ -374,6 +493,126 @@ thead {
   }
 }
 
+/*
+  Article headings
+  - Titles use --titleFont (classy + impactful)
+  - Other headings share a consistent aesthetic (gradient + subtle underline)
+*/
+.page .page-header .article-title {
+  font-family: var(--titleFont);
+  font-size: var(--qz-page-title-size);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  color: var(--qz-title-color);
+  text-wrap: balance;
+  margin: 2.1rem 0 0.35rem 0;
+  animation: qz-fade-up 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.page .page-header .article-title + .content-meta {
+  margin-top: 0.35rem;
+}
+
+@supports (-webkit-background-clip: text) {
+  .page .page-header .article-title {
+    background-image: var(--qz-title-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.page article {
+  :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--headerFont);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--dark);
+    text-wrap: balance;
+    scroll-margin-top: 5.5rem;
+  }
+
+  h1 {
+    font-size: var(--qz-h1-size);
+    margin-top: var(--qz-h1-mt);
+    margin-bottom: 1rem;
+    font-weight: 800;
+  }
+
+  h2 {
+    font-size: var(--qz-h2-size);
+    margin-top: var(--qz-h2-mt);
+    margin-bottom: 1rem;
+    font-weight: 780;
+  }
+
+  h3 {
+    font-size: var(--qz-h3-size);
+    margin-top: var(--qz-h3-mt);
+    margin-bottom: 0.9rem;
+    font-weight: 740;
+  }
+
+  h4 {
+    font-size: var(--qz-h4-size);
+    margin-top: var(--qz-h4-mt);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+  }
+
+  h5 {
+    font-size: var(--qz-h5-size);
+    margin-top: var(--qz-h5-mt);
+    margin-bottom: 0.75rem;
+    font-weight: 650;
+  }
+
+  h6 {
+    font-size: var(--qz-h6-size);
+    margin-top: var(--qz-h6-mt);
+    margin-bottom: 0.7rem;
+    font-weight: 620;
+    letter-spacing: 0;
+  }
+
+  @supports (-webkit-background-clip: text) {
+    :is(h1, h2, h3) {
+      background-image: var(--qz-heading-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  :is(h1, h2, h3, h4, h5, h6) {
+    em {
+      font-style: italic;
+      color: color-mix(in srgb, var(--tertiary) 85%, var(--dark) 15%);
+    }
+
+    strong {
+      font-weight: 900;
+      color: color-mix(in srgb, var(--secondary) 88%, var(--dark) 12%);
+    }
+  }
+
+  :is(h2, h3) {
+    position: relative;
+  }
+
+  :is(h2, h3)::after {
+    content: "";
+    display: block;
+    width: 3.2rem;
+    height: 2px;
+    margin-top: 0.35rem;
+    border-radius: 999px;
+    background: var(--qz-heading-gradient);
+    opacity: 0.22;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -398,31 +637,15 @@ h6 {
   }
 }
 
-// typography improvements
-h1 {
-  font-size: 1.75rem;
-  margin-top: 2.25rem;
-  margin-bottom: 1rem;
-}
-
-h2 {
-  font-size: 1.4rem;
-  margin-top: 1.9rem;
-  margin-bottom: 1rem;
-}
-
-h3 {
-  font-size: 1.12rem;
-  margin-top: 1.62rem;
-  margin-bottom: 1rem;
-}
-
+// typography improvements (article-scoped above; keep global defaults minimal)
+h1,
+h2,
+h3,
 h4,
 h5,
 h6 {
-  font-size: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
 }
 
 figure[data-rehype-pretty-code-figure] {
@@ -580,6 +803,23 @@ audio,
 video {
   width: 100%;
   border-radius: 5px;
+}
+
+audio {
+  background: var(--qz-audio-panel);
+  border: 1px solid var(--qz-border);
+  box-shadow: var(--qz-shadow);
+  border-radius: 14px;
+  /* Ensure native audio controls render with correct contrast per theme */
+  color-scheme: light;
+}
+
+:root[saved-theme="dark"] audio {
+  color-scheme: dark;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: var(--qz-audio-panel);
 }
 
 .spacer {
