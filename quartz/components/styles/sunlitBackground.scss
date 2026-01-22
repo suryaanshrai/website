@@ -1,0 +1,286 @@
+/* Sunlit-inspired global background
+   - Scoped to #sunlit-bg to avoid leaking into Quartz components
+   - Theme is driven by Quartz's html[saved-theme] attribute
+*/
+
+#sunlit-bg {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  /* Must never sit above content. */
+  z-index: -1;
+
+  /* Sunlit palette (independent from Quartz --light/--dark vars) */
+  --sunlit-day: #fffdfa;
+  --sunlit-morning: #9fb3bf;
+  --sunlit-evening: #fccc83;
+  --sunlit-dusk: #db7a2a;
+  --sunlit-dawn: #16132b;
+  --sunlit-night: #0f131c;
+
+  --sunlit-bg: var(--sunlit-day);
+  --sunlit-shadow: rgba(26, 25, 23, 0.78);
+  --sunlit-bounce: rgba(245, 215, 166, 0.85);
+
+  background-color: var(--sunlit-bg);
+  transition: background-color 1.25s cubic-bezier(0.455, 0.19, 0, 0.985);
+}
+
+html[saved-theme="dark"] #sunlit-bg {
+  --sunlit-bg: var(--sunlit-night);
+  --sunlit-shadow: rgba(3, 3, 7, 0.88);
+  --sunlit-bounce: rgba(27, 41, 63, 0.85);
+}
+
+/* Ensure Quartz content is above the background */
+#quartz-root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Let the background show through */
+body {
+  background-color: transparent;
+}
+
+#sunlit-bg .sunlit-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.62;
+  transform: translateZ(0);
+}
+
+html[saved-theme="dark"] #sunlit-bg .sunlit-stage {
+  opacity: 0.56;
+}
+
+#sunlit-bg .sunlit-filters {
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* Main glow layers */
+#sunlit-bg .sunlit-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  background: linear-gradient(309deg, var(--sunlit-bounce), var(--sunlit-bounce) 20%, transparent);
+  transition: background 1.25s cubic-bezier(0.455, 0.19, 0, 0.985);
+  filter: blur(26px);
+}
+
+#sunlit-bg .sunlit-glow-bounce {
+  position: absolute;
+  inset: 0;
+  bottom: 0;
+  opacity: 0.5;
+  background: linear-gradient(355deg, var(--sunlit-bounce) 0%, transparent 30%, transparent 100%);
+  transition: background 1.25s cubic-bezier(0.455, 0.19, 0, 0.985);
+  filter: blur(22px);
+}
+
+/* Perspective wall-ish layer */
+#sunlit-bg .sunlit-perspective {
+  position: absolute;
+  transition: transform 1.7s cubic-bezier(0.455, 0.19, 0, 0.985), opacity 1.7s ease;
+  top: -30vh;
+  right: 0;
+  width: 80vw;
+  height: 130vh;
+  opacity: 0.10;
+  transform-origin: top right;
+  transform-style: preserve-3d;
+  transform: matrix3d(
+    0.7500, -0.0625, 0.0000, 0.0008,
+    0.0000, 1.0000, 0.0000, 0.0000,
+    0.0000, 0.0000, 1.0000, 0.0000,
+    0.0000, 0.0000, 0.0000, 1.0000
+  );
+}
+
+html[saved-theme="dark"] #sunlit-bg .sunlit-perspective {
+  opacity: 0.24;
+  transform: matrix3d(
+    0.8333, 0.0833, 0.0000, 0.0003,
+    0.0000, 1.0000, 0.0000, 0.0000,
+    0.0000, 0.0000, 1.0000, 0.0000,
+    0.0000, 0.0000, 0.0000, 1.0000
+  );
+}
+
+/* Dappled light */
+#sunlit-bg .sunlit-dapple {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1100px 900px at 10% 25%, color-mix(in srgb, var(--sunlit-evening) 70%, transparent), transparent 60%),
+    radial-gradient(900px 800px at 80% 30%, color-mix(in srgb, var(--sunlit-morning) 65%, transparent), transparent 55%),
+    radial-gradient(1200px 900px at 60% 85%, color-mix(in srgb, var(--sunlit-dusk) 50%, transparent), transparent 65%),
+    linear-gradient(180deg, color-mix(in srgb, var(--sunlit-bg) 70%, transparent), transparent 65%);
+
+  filter: url(#sunlit-noise) blur(32px);
+  animation: sunlit-shift 18s ease-in-out infinite;
+}
+
+html[saved-theme="dark"] #sunlit-bg .sunlit-dapple {
+  background:
+    radial-gradient(1000px 800px at 15% 25%, color-mix(in srgb, var(--sunlit-dawn) 75%, transparent), transparent 60%),
+    radial-gradient(900px 700px at 85% 25%, color-mix(in srgb, var(--sunlit-morning) 35%, transparent), transparent 65%),
+    radial-gradient(1100px 900px at 60% 85%, color-mix(in srgb, var(--sunlit-night) 55%, transparent), transparent 60%),
+    linear-gradient(180deg, color-mix(in srgb, var(--sunlit-bg) 85%, transparent), transparent 60%);
+  filter: url(#sunlit-noise) blur(36px);
+}
+
+@keyframes sunlit-shift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-2%, 1%, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* Leaves (using your leaves.png) */
+#sunlit-bg .sunlit-leaves {
+  position: absolute;
+  background-size: cover;
+  background-repeat: no-repeat;
+  bottom: -20px;
+  right: -700px;
+  width: 1600px;
+  height: 1400px;
+
+  background-image: url("./static/leaves.png");
+  /* slightly more visible, slightly more blurry */
+  filter: url(#sunlit-wind) blur(9px);
+  opacity: 0.46;
+  animation: sunlit-billow 8s ease-in-out infinite;
+}
+
+html[saved-theme="dark"] #sunlit-bg .sunlit-leaves {
+  opacity: 0.38;
+  filter: url(#sunlit-wind) blur(10px);
+}
+
+@keyframes sunlit-billow {
+  0% {
+    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
+  }
+  25% {
+    transform: perspective(400px) rotateX(1deg) rotateY(2deg) scale(1.02);
+  }
+  50% {
+    transform: perspective(400px) rotateX(-4deg) rotateY(-2deg) scale(0.97);
+  }
+  75% {
+    transform: perspective(400px) rotateX(1deg) rotateY(-1deg) scale(1.04);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
+  }
+}
+
+/* Blinds overlay */
+#sunlit-bg .sunlit-blinds {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#sunlit-bg .sunlit-shutters {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 60px;
+  transition: gap 1.0s cubic-bezier(0.455, 0.19, 0, 0.985);
+}
+
+html[saved-theme="dark"] #sunlit-bg .sunlit-shutters {
+  gap: 20px;
+}
+
+#sunlit-bg .sunlit-shutter {
+  width: 100%;
+  height: 40px;
+  transition: height 1.0s cubic-bezier(0.455, 0.19, 0, 0.985);
+  background-color: var(--sunlit-shadow);
+  opacity: 0.46;
+  /* very slightly more blurry */
+  filter: blur(3px);
+}
+
+html[saved-theme="dark"] #sunlit-bg .sunlit-shutter {
+  height: 80px;
+  opacity: 0.40;
+}
+
+#sunlit-bg .sunlit-vertical {
+  top: 0;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+#sunlit-bg .sunlit-bar {
+  width: 5px;
+  height: 100%;
+  background-color: var(--sunlit-shadow);
+  opacity: 0.32;
+  filter: blur(3px);
+}
+
+/* Progressive blur (diffusion near "floor")
+   Reduced slightly so blinds/leaves remain recognizable.
+*/
+#sunlit-bg .sunlit-progressive-blur {
+  position: absolute;
+  inset: 0;
+}
+
+#sunlit-bg .sunlit-progressive-blur > div {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(var(--blur-amount));
+  mask-image: linear-gradient(252deg, transparent, transparent var(--stop1), black var(--stop2), black);
+}
+
+#sunlit-bg .sunlit-progressive-blur > div:nth-child(1) {
+  --blur-amount: 4px;
+  --stop1: 0%;
+  --stop2: 0%;
+}
+
+#sunlit-bg .sunlit-progressive-blur > div:nth-child(2) {
+  --blur-amount: 8px;
+  --stop1: 40%;
+  --stop2: 80%;
+}
+
+#sunlit-bg .sunlit-progressive-blur > div:nth-child(3) {
+  --blur-amount: 24px;
+  --stop1: 40%;
+  --stop2: 70%;
+}
+
+#sunlit-bg .sunlit-progressive-blur > div:nth-child(4) {
+  --blur-amount: 44px;
+  --stop1: 70%;
+  --stop2: 80%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sunlit-bg .sunlit-dapple {
+    animation: none;
+  }
+
+  #sunlit-bg .sunlit-leaves {
+    animation: none;
+  }
+}

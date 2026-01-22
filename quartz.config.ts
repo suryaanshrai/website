@@ -22,31 +22,37 @@ const config: QuartzConfig = {
       cdnCaching: true,
       typography: {
         header: "Schibsted Grotesk",
-        body: "Source Sans Pro",
+        body: "Schibsted Grotesk",
         code: "IBM Plex Mono",
       },
       colors: {
         lightMode: {
-          light: "#faf8f8",
-          lightgray: "#e5e5e5",
-          gray: "#b8b8b8",
-          darkgray: "#4e4e4e",
-          dark: "#2b2b2b",
-          secondary: "#284b63",
-          tertiary: "#84a59d",
-          highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#fff23688",
+          // slightly translucent surfaces so the Sunlit background can breathe
+          light: "rgba(255, 253, 250, 0.70)",
+          lightgray: "rgba(229, 229, 229, 0.65)",
+          gray: "rgba(184, 184, 184, 0.75)",
+          darkgray: "#2b2b2b",
+          dark: "#0f131c",
+
+          // warm/cool accents closer to Sunlit
+          secondary: "#2b5b6f",
+          tertiary: "#db7a2a",
+
+          highlight: "rgba(252, 204, 131, 0.18)",
+          textHighlight: "rgba(252, 204, 131, 0.45)",
         },
         darkMode: {
-          light: "#161618",
-          lightgray: "#393639",
-          gray: "#646464",
-          darkgray: "#d4d4d4",
-          dark: "#ebebec",
-          secondary: "#7b97aa",
-          tertiary: "#84a59d",
-          highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#b3aa0288",
+          light: "rgba(15, 19, 28, 0.62)",
+          lightgray: "rgba(40, 49, 63, 0.55)",
+          gray: "rgba(100, 100, 100, 0.75)",
+          darkgray: "#e6e8ee",
+          dark: "#fffdfa",
+
+          secondary: "#9fb3bf",
+          tertiary: "#fccc83",
+
+          highlight: "rgba(252, 204, 131, 0.14)",
+          textHighlight: "rgba(252, 204, 131, 0.32)",
         },
       },
     },

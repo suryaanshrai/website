@@ -235,12 +235,15 @@ a {
       @media all and ($mobile) {
         gap: 0;
         align-items: center;
-        position: initial;
+        position: sticky;
+        top: 0;
+        z-index: 350;
+        width: 100%;
         display: flex;
         height: unset;
         flex-direction: row;
-        padding: 0;
-        padding-top: 2rem;
+        justify-content: space-between;
+        padding: 0.75rem 0;
       }
     }
 

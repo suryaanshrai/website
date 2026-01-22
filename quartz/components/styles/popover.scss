@@ -35,6 +35,11 @@
     font-family: var(--bodyFont);
     border: 1px solid var(--lightgray);
     background-color: var(--light);
+    // Theme colors may include alpha for glassmorphism; popovers should be solid.
+    @supports (background-color: rgb(from white r g b / 1)) {
+      background-color: rgb(from var(--light) r g b / 1);
+      border-color: rgb(from var(--lightgray) r g b / 1);
+    }
     border-radius: 5px;
     box-shadow: 6px 6px 36px 0 rgba(0, 0, 0, 0.25);
     overflow: auto;

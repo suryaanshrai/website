@@ -13,6 +13,7 @@ export const sharedPageComponents: SharedLayout = {
     },
   }),
   afterBody: [
+    Component.SunlitBackground(),
     Component.Comments({
       provider: "remark42",
       options: {
