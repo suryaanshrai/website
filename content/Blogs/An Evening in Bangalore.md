@@ -3,6 +3,7 @@ title: An Evening in Bangalore
 description:
 tags:
   - travel
+  - blog
   - thoughts
 date: 2022-04-24
 generate-audio: "true"

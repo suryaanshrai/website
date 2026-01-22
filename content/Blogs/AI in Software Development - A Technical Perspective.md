@@ -5,6 +5,7 @@ tags:
   - views
   - tech
   - thoughts
+  - blog
 date: 2025-04-30
 generate-audio: "true"
 ---

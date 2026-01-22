@@ -4,6 +4,7 @@ description:
 tags:
   - tech
   - views
+  - blog
 date: 2025-12-29
 generate-audio: "true"
 ---

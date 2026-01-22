@@ -3,6 +3,7 @@ title: My thoughts on "Being in the moment"
 description:
 tags:
   - thoughts
+  - blog
 date: 2022-04-17
 generate-audio: "true"
 ---

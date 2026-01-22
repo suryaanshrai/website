@@ -3,6 +3,7 @@ title:
 description:
 tags:
   - tech
+  - blog
 date: 2025-10-24
 generate-audio: "true"
 ---

@@ -3,6 +3,7 @@ title: '"chill out bruh": Calming the chaos'
 description: This article explores how to harness the power of your thoughts—a 'superpower' discussed in books like The Lost Symbol—without the overwhelm of formal meditation. It offers a simple, in-the-moment breathing technique to help you calm the chaos and consciously train your mind anytime, anywhere.
 tags:
   - productivity
+  - blog
 date: 2025-10-05
 generate-audio: "true"
 ---

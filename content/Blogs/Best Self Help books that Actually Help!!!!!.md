@@ -4,6 +4,7 @@ description:
 tags:
   - books
   - reviews
+  - blog
 date: 2022-06-05
 generate-audio: "true"
 ---

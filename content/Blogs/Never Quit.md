@@ -3,6 +3,7 @@ title: Never Quit
 description: Just don't. Persevere.
 tags:
   - thoughts
+  - blog
 date: 2022-06-05
 generate-audio: "true"
 ---

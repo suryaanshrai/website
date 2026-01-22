@@ -4,6 +4,7 @@ description: A list of python libraries that eases out and improves the developm
 tags:
   - "#tech"
   - "#django"
+  - blog
 date: 2025-06-04
 generate-audio: "true"
 ---

@@ -4,6 +4,7 @@ description: A blog on most useful obsidian community plugins that makes the bes
 tags:
   - "#productivity"
   - "#obsidian"
+  - blog
 date: 2025-07-05
 generate-audio: "true"
 ---
