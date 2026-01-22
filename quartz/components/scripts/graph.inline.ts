@@ -68,10 +68,33 @@ type TweenNode = {
   stop: () => void
 }
 
+function shouldSkipGraphRendering(graph: HTMLElement): boolean {
+  // On small/coarse-pointer devices, the graph is disproportionately expensive (pixi canvas + RAF loop).
+  // Lighthouse mobile also applies CPU throttling, amplifying the impact.
+  try {
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return true
+    if (window.matchMedia?.("(max-width: 800px)")?.matches) return true
+    if (window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches) return true
+  } catch {
+    // ignore
+  }
+
+  // If the element is not laid out (e.g. display:none), skip entirely.
+  const width = graph.offsetWidth
+  const height = graph.offsetHeight
+  return width <= 0 || height <= 0
+}
+
 async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const slug = simplifySlug(fullSlug)
   const visited = getVisited()
   removeAllChildren(graph)
+
+  if (shouldSkipGraphRendering(graph)) {
+    return () => {
+      // no-op
+    }
+  }
 
   let {
     drag: enableDrag,

@@ -3,6 +3,7 @@ declare global {
     interface Window {
         REMARK42: any
         remark_config: any
+        __remark42_script_loading?: boolean
     }
 }
 
@@ -14,38 +15,7 @@ const REMARK42 = {
     },
 }
 
-document.addEventListener("nav", () => {
-    const remark42Container = document.getElementById("remark42")
-    if (!remark42Container) {
-        return
-    }
-
-    // Load the script if it hasn't been loaded yet
-    if (!window.REMARK42) {
-        const script = document.createElement("script")
-        script.src = `${remark42Container.dataset.host}/web/embed.js`
-        script.async = true
-        script.defer = true
-        document.head.appendChild(script)
-
-        script.onload = () => {
-            // Initial load might be handled automatically by the script if `remark_config` is set correctly beforehand,
-            // but explicitly creating it ensures it works with SPA transitions if the script was already loaded.
-            if (window.REMARK42) {
-                window.REMARK42.createInstance(window.remark_config)
-            }
-        }
-    } else {
-        // If script is already loaded, just re-create the instance
-        window.REMARK42.createInstance(window.remark_config)
-    }
-})
-
-// Setup config on initial load and navigation
-document.addEventListener("nav", () => {
-    const remark42Container = document.getElementById("remark42")
-    if (!remark42Container) return
-
+function computeRemarkConfig(remark42Container: HTMLElement) {
     const theme = document.documentElement.getAttribute("saved-theme") === "dark" ? "dark" : "light"
     const noFooter = remark42Container.dataset.noFooter === "1"
     const simpleView = remark42Container.dataset.simpleView === "1"
@@ -59,6 +29,66 @@ document.addEventListener("nav", () => {
         simple_view: simpleView,
         url: window.location.href, // Ensure URL is current
     }
+}
+
+function loadRemark42Script(remark42Container: HTMLElement) {
+    if (window.REMARK42 || window.__remark42_script_loading) {
+        return
+    }
+
+    window.__remark42_script_loading = true
+    const script = document.createElement("script")
+    script.src = `${remark42Container.dataset.host}/web/embed.js`
+    script.async = true
+    script.defer = true
+    document.head.appendChild(script)
+
+    script.onload = () => {
+        window.__remark42_script_loading = false
+        if (window.REMARK42) {
+            window.REMARK42.createInstance(window.remark_config)
+        }
+    }
+
+    script.onerror = () => {
+        window.__remark42_script_loading = false
+    }
+}
+
+function ensureRemark42Ready(remark42Container: HTMLElement) {
+    computeRemarkConfig(remark42Container)
+
+    // If script is already loaded, just re-create the instance for SPA navigations.
+    if (window.REMARK42) {
+        window.REMARK42.createInstance(window.remark_config)
+        return
+    }
+
+    // Otherwise, defer loading until the user is near the comments (or when the browser is idle).
+    const load = () => loadRemark42Script(remark42Container)
+
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((e) => e.isIntersecting)) {
+                    observer.disconnect()
+                    load()
+                }
+            },
+            { root: null, rootMargin: "250px 0px", threshold: 0 },
+        )
+        observer.observe(remark42Container)
+    } else if ("requestIdleCallback" in window) {
+        ;(window as any).requestIdleCallback(load, { timeout: 2000 })
+    } else {
+        setTimeout(load, 800)
+    }
+}
+
+document.addEventListener("nav", () => {
+    const remark42Container = document.getElementById("remark42")
+    if (!remark42Container) return
+    ensureRemark42Ready(remark42Container)
 })
 
 // Handle theme changes

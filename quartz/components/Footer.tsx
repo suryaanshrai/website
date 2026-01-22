@@ -9,6 +9,7 @@ interface Options {
     src: string
     external?: boolean
     spinOnHover?: boolean
+    size?: "normal" | "large"
   }>
 }
 
@@ -22,6 +23,10 @@ export default ((opts?: Options) => {
           {iconLinks.map((link) => {
             const rel = link.external ? "noopener noreferrer" : undefined
             const target = link.external ? "_blank" : undefined
+
+            const sizeClass = link.size === "large" ? "footerIconLarge" : ""
+            const spinClass = link.spinOnHover ? "footerIconSpin" : ""
+            const imgClass = ["footerIcon", sizeClass, spinClass].filter(Boolean).join(" ")
             return (
               <li>
                 <a
@@ -33,7 +38,7 @@ export default ((opts?: Options) => {
                   target={target}
                 >
                   <img
-                    class={link.spinOnHover ? "footerIcon footerIconSpin" : "footerIcon"}
+                    class={imgClass}
                     src={link.src}
                     alt=""
                     loading="lazy"

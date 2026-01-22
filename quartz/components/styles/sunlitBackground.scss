@@ -145,46 +145,6 @@ html[saved-theme="dark"] #sunlit-bg .sunlit-dapple {
   }
 }
 
-/* Leaves (using your leaves.png) */
-#sunlit-bg .sunlit-leaves {
-  position: absolute;
-  background-size: cover;
-  background-repeat: no-repeat;
-  bottom: -20px;
-  right: -700px;
-  width: 1600px;
-  height: 1400px;
-
-  background-image: url("./static/leaves.png");
-  /* slightly more visible, slightly more blurry */
-  filter: url(#sunlit-wind) blur(9px);
-  opacity: 0.46;
-  animation: sunlit-billow 8s ease-in-out infinite;
-}
-
-html[saved-theme="dark"] #sunlit-bg .sunlit-leaves {
-  opacity: 0.38;
-  filter: url(#sunlit-wind) blur(10px);
-}
-
-@keyframes sunlit-billow {
-  0% {
-    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
-  }
-  25% {
-    transform: perspective(400px) rotateX(1deg) rotateY(2deg) scale(1.02);
-  }
-  50% {
-    transform: perspective(400px) rotateX(-4deg) rotateY(-2deg) scale(0.97);
-  }
-  75% {
-    transform: perspective(400px) rotateX(1deg) rotateY(-1deg) scale(1.04);
-  }
-  100% {
-    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1);
-  }
-}
-
 /* Blinds overlay */
 #sunlit-bg .sunlit-blinds {
   position: relative;
@@ -237,7 +197,7 @@ html[saved-theme="dark"] #sunlit-bg .sunlit-shutter {
 }
 
 /* Progressive blur (diffusion near "floor")
-   Reduced slightly so blinds/leaves remain recognizable.
+  Reduced slightly so blinds remain recognizable.
 */
 #sunlit-bg .sunlit-progressive-blur {
   position: absolute;
@@ -279,8 +239,19 @@ html[saved-theme="dark"] #sunlit-bg .sunlit-shutter {
   #sunlit-bg .sunlit-dapple {
     animation: none;
   }
+}
 
-  #sunlit-bg .sunlit-leaves {
+/* Mobile/low-power: remove continuous filter work + backdrop-filter cost.
+   Lighthouse mobile runs are CPU-throttled, and these effects are disproportionately expensive.
+*/
+@media (max-width: 800px), (hover: none) and (pointer: coarse) {
+  #sunlit-bg .sunlit-dapple {
     animation: none;
+    /* Drop the SVG turbulence filter on mobile; keep a soft static blur. */
+    filter: blur(28px);
+  }
+
+  #sunlit-bg .sunlit-progressive-blur > div {
+    backdrop-filter: none;
   }
 }
