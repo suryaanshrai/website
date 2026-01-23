@@ -15,6 +15,12 @@ export const sharedPageComponents: SharedLayout = {
         spinOnHover: true,
       },
       {
+        label: "Resume",
+        href: "https://resume.suryaansh.dev/",
+        src: "/static/resume.gif",
+        external: true,
+      },
+      {
         label: "LinkedIn",
         href: "https://www.linkedin.com/in/suryaansh-rai/",
         src: "/static/Linkedin.gif",

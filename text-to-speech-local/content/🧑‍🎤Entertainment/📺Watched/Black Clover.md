@@ -1,3 +1,0 @@
-Currently watching and enjoying it. Been a while since I found an interesting anime. 
-
-Love the thought of "its not over until I win". Although this anime is almost a glorified version of the turtle and the hare, its still fun to watch (and so was the original fairy tale). Something about the idea of "hard work beats talent" takes it home every time, doesn't it? Funny enough, I believe in it too, even when it gets hard to believe in it sometimes, I still do.

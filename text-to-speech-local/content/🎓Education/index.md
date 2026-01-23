@@ -1,5 +1,0 @@
----
-title: 🎓Education
-description:
-tags:
----
