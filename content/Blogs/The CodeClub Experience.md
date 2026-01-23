@@ -4,6 +4,7 @@ description:
 tags:
   - draft
   - education
+  - blog
 date: 2025-10-26
 draft: "true"
 ---

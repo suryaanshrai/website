@@ -22,7 +22,7 @@ const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponen
     const audioPath = filePath
         .replace(/^content\//, "static/audios/")  // Replace content/ with static/audios/
         .replace(/[?!]/g, "")                      // Remove special characters like ? and !
-        .replace(/\.md$/, ".wav")                  // Replace .md extension with .wav
+        .replace(/\.md$/, ".mp3")                  // Replace .md extension with .wav
 
     // Encode the path for URL usage while preserving directory structure
     const encodedPath = "/" + audioPath

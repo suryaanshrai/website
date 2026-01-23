@@ -5,6 +5,7 @@ tags:
   - draft
   - views
   - productivity
+  - blog
 date: 2025-10-24
 draft: "true"
 ---

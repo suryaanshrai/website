@@ -5,6 +5,7 @@ tags:
   - "#ubuntu"
   - "#productivity"
   - "#tech"
+  - blog
 date: 2025-06-07
 generate-audio: "true"
 ---

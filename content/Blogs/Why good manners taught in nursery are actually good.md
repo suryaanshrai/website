@@ -4,10 +4,11 @@ description: An overthought expression of my lack of self-control and contemplat
 tags:
   - thoughts
   - views
+  - blog
 date: 2023-12-24
 generate-audio: "true"
 ---
-- "Early to bed, early to rise, makes a man healthy, wealthy and wise."
+ - "Early to bed, early to rise, makes a man healthy, wealthy and wise."
 
 - "All work and no play makes Jack a dull boy,"
 

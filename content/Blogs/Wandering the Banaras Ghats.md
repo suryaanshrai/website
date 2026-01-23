@@ -5,6 +5,7 @@ tags:
   - "#travel"
   - views
   - thoughts
+  - blog
 date: 2025-05-03
 generate-audio: "true"
 ---

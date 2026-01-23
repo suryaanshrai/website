@@ -4,6 +4,7 @@ description: A blog post on how to rewrite git history. Very useful when you acc
 tags:
   - "#git"
   - "#tech"
+  - blog
 date: 2025-06-14
 generate-audio: "true"
 ---

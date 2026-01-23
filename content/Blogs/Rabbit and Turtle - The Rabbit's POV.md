@@ -4,7 +4,9 @@ description: Ever listened to Eminem's Rabbit Run?
 tags:
   - views
   - thoughts
+  - blog
 date: 2023-12-20
+generate-audio: "true"
 ---
 The story of rabbit and turtle is a prevalent one taught to young children. In a jungle, there's a rabbit and a turtle and they decide to race. The rabbit, confident of victory because of his speed, gets lazy during the race, meanwhile the turtle, even with his slow speed wins the race by staying consistent, even when he is slow. Moral of the story? 'Slow and steady wins the race.'
 

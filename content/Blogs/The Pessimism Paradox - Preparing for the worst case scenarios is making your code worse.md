@@ -4,6 +4,7 @@ description: As software engineers, a certain amount of pessimism is a required 
 tags:
   - tech
   - views
+  - blog
 date: 2025-10-05
 generate-audio: "true"
 ---

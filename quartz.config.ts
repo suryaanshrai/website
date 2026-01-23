@@ -12,7 +12,10 @@ const config: QuartzConfig = {
     pageTitleSuffix: "",
     enableSPA: true,
     enablePopovers: true,
-    analytics: null, // Can use google analytics in the future. Its free
+    analytics: { 
+      provider: 'google', 
+      tagId: 'G-8WSLP2BSR2' 
+    },
     locale: "en-US",
     baseUrl: "suryaansh.dev",
     ignorePatterns: [],
