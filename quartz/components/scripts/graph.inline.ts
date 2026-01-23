@@ -69,12 +69,14 @@ type TweenNode = {
 }
 
 function shouldSkipGraphRendering(graph: HTMLElement): boolean {
+  const force = graph.dataset["force"] === "true"
+
   // On small/coarse-pointer devices, the graph is disproportionately expensive (pixi canvas + RAF loop).
   // Lighthouse mobile also applies CPU throttling, amplifying the impact.
   try {
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return true
-    if (window.matchMedia?.("(max-width: 800px)")?.matches) return true
-    if (window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches) return true
+    if (!force && window.matchMedia?.("(max-width: 800px)")?.matches) return true
+    if (!force && window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches) return true
   } catch {
     // ignore
   }
@@ -85,10 +87,24 @@ function shouldSkipGraphRendering(graph: HTMLElement): boolean {
   return width <= 0 || height <= 0
 }
 
+async function waitForLayout(graph: HTMLElement, maxFrames = 20): Promise<boolean> {
+  for (let i = 0; i < maxFrames; i++) {
+    if (graph.offsetWidth > 0 && graph.offsetHeight > 0) return true
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+  }
+  return graph.offsetWidth > 0 && graph.offsetHeight > 0
+}
+
 async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const slug = simplifySlug(fullSlug)
   const visited = getVisited()
+  const force = graph.dataset["force"] === "true"
   removeAllChildren(graph)
+
+  // Global graph overlay can become visible right before rendering; wait a moment for layout.
+  if (force) {
+    await waitForLayout(graph)
+  }
 
   if (shouldSkipGraphRendering(graph)) {
     return () => {
@@ -631,6 +647,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       const graphContainer = container.querySelector(".global-graph-container") as HTMLElement
       registerEscapeHandler(container, hideGlobalGraph)
       if (graphContainer) {
+        graphContainer.dataset["force"] = "true"
         globalGraphCleanups.push(await renderGraph(graphContainer, slug))
       }
     }
@@ -643,6 +660,11 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       const sidebar = container.closest(".sidebar") as HTMLElement
       if (sidebar) {
         sidebar.style.zIndex = ""
+      }
+
+      const graphContainer = container.querySelector(".global-graph-container") as HTMLElement
+      if (graphContainer) {
+        delete graphContainer.dataset["force"]
       }
     }
   }
