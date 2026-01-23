@@ -12,10 +12,7 @@ const config: QuartzConfig = {
     pageTitleSuffix: "",
     enableSPA: true,
     enablePopovers: true,
-    analytics: { 
-      provider: 'google', 
-      tagId: 'G-8WSLP2BSR2' 
-    },
+    analytics: null,
     locale: "en-US",
     baseUrl: "suryaansh.dev",
     ignorePatterns: [],
