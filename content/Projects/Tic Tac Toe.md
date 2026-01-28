@@ -10,7 +10,27 @@ This was again a part of [[CS50]]'s AI course. I learned the minmax algorithm fr
 
 Regardless, here is the pseudocode for the minmax algorithm which I used for the AI at the time.
 
-![[Pasted image 20260123184459.png]]
+-   Given a state _s_
+    - The maximizing player picks action _a_ in _Actions(s)_ that produces the highest value of _Min-Value(Result(s, a))_.
+    - The minimizing player picks action _a_ in _Actions(s)_ that produces the lowest value of _Max-Value(Result(s, a))_.
+
+- Function _Max-Value(state)_    
+    - _v = -∞_
+    - if _Terminal(state)_:
+        ​ return _Utility(state)_
+    - for _action_ in _Actions(state)_:
+        ​ _v = Max(v, Min-Value(Result(state, action)))_
+        return _v_
+    
+- Function _Min-Value(state)_:
+    - _v = ∞_    
+    - if _Terminal(state)_:
+        ​ return _Utility(state)_
+    - for _action_ in _Actions(state)_:
+        ​ _v = Min(v, Max-Value(Result(state, action)))_
+        return _v_
+
+
 
 And a video demonstrating the application itself - 
 ![Video Link](https://youtu.be/h7uUl9YMY9k)
