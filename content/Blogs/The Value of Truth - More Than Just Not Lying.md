@@ -13,7 +13,7 @@ generate-audio: "true"
   
   
 
-**सच क्या है? ट्रुथ क्या होता है?** Why is _truth_ so heavily emphasized? Not just in moral terms, but practically—why does it matter _so much_?
+**What is the "truth"?** Why is _truth_ so heavily emphasized? Not just in moral terms, but practically—why does it matter _so much_?
 
 We're taught from childhood: speak the truth, live the truth. But truth isn’t just about avoiding lies. The _truth_ I’m talking about is valuable information—knowledge that can _change your life_, influence your reality, and give you an edge.
 
