@@ -3,7 +3,6 @@ title:
 description:
 tags:
   - books
-  - draft
 date: 2025-11-02
-draft: "true"
 ---
+Good read but felt over hyped. Similar to rich dad poor dad and how to win friends and influence people. Kinda subjective. Might actually help. 

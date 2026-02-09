@@ -4,6 +4,7 @@ description:
 tags:
   - projects
 date: 2025-10-24
+generate-audio: "true"
 ---
 This one takes me back. It was my first ever deployed application. I built it in 2022. I doubt anybody ever used it to solve their own cubes, but I enjoyed making it a lot.
 
