@@ -157,6 +157,7 @@ With his ancient Mother Earth."
 - Focus lies between serenity pain
 - How do I take of a mask when it stops being a mask? When it's as much a part of me as I am?
 - "We make out of the quarrel with others, rhetoric, but if the quarrel with ourselves, poetry" 
+- there's no bad business with a good man, there's no good business with a bad man.
 
 ## Bungo stray dogs
 - The head may err but never the blood
