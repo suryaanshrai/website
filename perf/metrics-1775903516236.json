@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-04-11T10:31:56.234Z",
+  "buildSeconds": 33.92,
+  "publicFileCount": 348,
+  "htmlPageCount": 153,
+  "assetSizes": {
+    "indexCssBytes": 51128,
+    "preScriptBytes": 1387,
+    "postScriptBytes": 1215718
+  }
+}

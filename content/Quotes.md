@@ -140,7 +140,8 @@ He must join eternal union
 
 With his ancient Mother Earth."
 
-
+## pride and prejudice 
+- "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife"
 ## Random
 - let the victor be the judge and the vanquished be the evil
 - मोहब्बत भी मुसीबत है, करे क्या। लेकिन अपनी भी जरूरत है, करे क्या।
