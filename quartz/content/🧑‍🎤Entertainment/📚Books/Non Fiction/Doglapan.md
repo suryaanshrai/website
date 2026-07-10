@@ -5,4 +5,5 @@ tags:
   - books
 date: 2025-10-24
 ---
+
 Had listened to its audiobook. This was also the first audiobook that I listened to, and God it was amazing. The humble build up to the BharatPe kickout ending was packing so much punch that I couldn't believe that all of it were real life events and not a Julius Caesar play.

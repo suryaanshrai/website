@@ -7,31 +7,31 @@ import remark42Script from "./scripts/remark42.inline"
 
 type Options =
   | {
-    provider: "giscus"
-    options: {
-      repo: `${string}/${string}`
-      repoId: string
-      category: string
-      categoryId: string
-      themeUrl?: string
-      lightTheme?: string
-      darkTheme?: string
-      mapping?: "url" | "title" | "og:title" | "specific" | "number" | "pathname"
-      strict?: boolean
-      reactionsEnabled?: boolean
-      inputPosition?: "top" | "bottom"
-      lang?: string
+      provider: "giscus"
+      options: {
+        repo: `${string}/${string}`
+        repoId: string
+        category: string
+        categoryId: string
+        themeUrl?: string
+        lightTheme?: string
+        darkTheme?: string
+        mapping?: "url" | "title" | "og:title" | "specific" | "number" | "pathname"
+        strict?: boolean
+        reactionsEnabled?: boolean
+        inputPosition?: "top" | "bottom"
+        lang?: string
+      }
     }
-  }
   | {
-    provider: "remark42"
-    options: {
-      host: string
-      site_id: string
-      no_footer?: boolean
-      simple_view?: boolean
+      provider: "remark42"
+      options: {
+        host: string
+        site_id: string
+        no_footer?: boolean
+        simple_view?: boolean
+      }
     }
-  }
 
 function boolToStringBool(b: boolean): string {
   return b ? "1" : "0"

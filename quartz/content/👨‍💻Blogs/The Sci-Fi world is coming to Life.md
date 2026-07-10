@@ -6,6 +6,7 @@ tags:
 date: 2025-10-24
 draft: "true"
 ---
+
 Aren't we already living a Sci-Fi dream?
 
 Stocks, money, land, everything can be managed digitally

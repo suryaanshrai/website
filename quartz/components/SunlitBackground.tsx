@@ -37,8 +37,7 @@ const SunlitBackground: QuartzComponent = () => {
         <svg class="sunlit-filters" aria-hidden="true" focusable="false">
           <defs>
             <filter id="sunlit-noise" x="-20%" y="-20%" width="140%" height="140%">
-              <feTurbulence type="fractalNoise" numOctaves="2" seed="7">
-              </feTurbulence>
+              <feTurbulence type="fractalNoise" numOctaves="2" seed="7"></feTurbulence>
               <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.25 0" />
             </filter>
           </defs>

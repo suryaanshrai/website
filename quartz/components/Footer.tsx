@@ -37,13 +37,7 @@ export default ((opts?: Options) => {
                   rel={rel}
                   target={target}
                 >
-                  <img
-                    class={imgClass}
-                    src={link.src}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <img class={imgClass} src={link.src} alt="" loading="lazy" decoding="async" />
                 </a>
               </li>
             )

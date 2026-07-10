@@ -34,7 +34,10 @@ footer {
     border-radius: 999px;
     text-decoration: none;
 
-    transition: transform 120ms ease, background-color 120ms ease, opacity 120ms ease;
+    transition:
+      transform 120ms ease,
+      background-color 120ms ease,
+      opacity 120ms ease;
   }
 
   & a.footerIconLink:hover {

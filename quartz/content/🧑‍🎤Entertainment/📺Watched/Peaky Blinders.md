@@ -4,4 +4,5 @@ description:
 tags: series
 date: 2025-10-24
 ---
-No *** fighting!
+
+No \*\*\* fighting!

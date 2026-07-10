@@ -9,14 +9,12 @@ tags:
 date: 2025-04-30
 generate-audio: "true"
 ---
- [![](https://blogger.googleusercontent.com/img/a/AVvXsEjnLFTOa8RgpyS9t9qYTuaVBjKzgdaqd_xUyJdqTmAQYpk3nbBvRvpnWDU5252A-CfWmBXNg4LRbOhS9YcdmvZZXWpbNuxpDjyzveiUjK5hhtVb2nqIS8gw366P57fxKaekiDinxCWoS-7xQ0FCneiy7ei2jEF2WfAxWa5NksvJUf4tVjda3xu80YvbMLc=w664-h441)](https://www.blogger.com/blog/post/edit/3054563877724509654/4495270415793920767#)
 
-  
-  
+[![](https://blogger.googleusercontent.com/img/a/AVvXsEjnLFTOa8RgpyS9t9qYTuaVBjKzgdaqd_xUyJdqTmAQYpk3nbBvRvpnWDU5252A-CfWmBXNg4LRbOhS9YcdmvZZXWpbNuxpDjyzveiUjK5hhtVb2nqIS8gw366P57fxKaekiDinxCWoS-7xQ0FCneiy7ei2jEF2WfAxWa5NksvJUf4tVjda3xu80YvbMLc=w664-h441)](https://www.blogger.com/blog/post/edit/3054563877724509654/4495270415793920767#)
 
 In this blog, I aim to share my experiences and insights on integrating Artificial Intelligence (AI) into software development workflows. Contrary to the common fear that AI might replace developers, I believe that AI serves as a powerful collaborator, enhancing our capabilities and efficiency. 
 
-_Think of AI like a very very smart butler and very very knowledgeable butler. It knows a lot, but it doesn't know what to do with what it knows._ 
+*Think of AI like a very very smart butler and very very knowledgeable butler. It knows a lot, but it doesn't know what to do with what it knows.* 
 
 The apprehension that AI will render human developers obsolete is widespread. However, in my experience, AI acts more as an assistant than a replacement. It automates repetitive tasks, offers suggestions, and helps in exploring new solutions, thereby allowing developers to focus on more complex and creative aspects of development.
 
@@ -35,9 +33,7 @@ For example, while working on a project, I might not realize the importance of i
 To illustrate the practical use of AI in development, let's consider two projects:
 
 - **A Django-based full-stack app**: An online bookstore application where I used AI to generate a lot of boilerplate code, such as views and serializers. This helped focus my time and energy on creating good and robust models.
-    
 - **Portfolio Website**: For this project, I utilized Vercel's [v0.dev](https://www.blogger.com/blog/post/edit/3054563877724509654/4495270415793920767#) , which is fine-tuned for frontend development. It helped me create the entire website with just one prompt.
-    
 
 I'll add links to both the projects and the prompts used in it as soon as I publish their blogs.
 

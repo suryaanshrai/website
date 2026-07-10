@@ -32,7 +32,7 @@ body {
   /* Editorial type scale */
   --qz-page-title-size: clamp(2.55rem, 4.2vw, 3.55rem);
   --qz-h1-size: clamp(1.85rem, 1.55rem + 1.2vw, 2.35rem);
-  --qz-h2-size: clamp(1.52rem, 1.30rem + 0.8vw, 1.95rem);
+  --qz-h2-size: clamp(1.52rem, 1.3rem + 0.8vw, 1.95rem);
   --qz-h3-size: clamp(1.22rem, 1.12rem + 0.45vw, 1.48rem);
   --qz-h4-size: 1.08rem;
   --qz-h5-size: 1.02rem;
@@ -881,4 +881,113 @@ iframe.pdf {
   background: var(--secondary);
   transition: width 0.2s ease;
   z-index: 9999;
+}
+
+/* Landing Page Overrides */
+body[data-slug="index"] {
+  #quartz-root {
+    background-color: transparent !important; // Let the space canvas shine through
+  }
+  .page {
+    margin: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  .center {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  // Hide sidebars
+  .left.sidebar,
+  .right.sidebar {
+    display: none !important;
+  }
+
+  // Hide all headers/footers except the Landing component inside .popover-hint
+  .page-header > *:not(.popover-hint),
+  article,
+  hr,
+  .page-footer {
+    display: none !important;
+  }
+}
+
+/* Cosmic Space Overhaul styles for the digital garden notes */
+body {
+  background-color: var(--light) !important;
+  color: var(--darkgray);
+}
+
+.page {
+  background: transparent !important;
+}
+
+// Glassmorphism on sidebars
+.left.sidebar,
+.right.sidebar {
+  background: rgba(23, 17, 38, 0.45) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(164, 144, 194, 0.08) !important;
+  border-radius: 16px;
+  padding: 1.5rem !important;
+  margin: 1.5rem !important;
+  height: calc(100vh - 3rem) !important;
+  overflow-y: auto;
+  box-sizing: border-box;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+html[saved-theme="light"] {
+  .left.sidebar,
+  .right.sidebar {
+    background: rgba(255, 255, 255, 0.55) !important;
+    border-color: rgba(74, 78, 143, 0.08) !important;
+  }
+}
+
+// Glowing hover on links
+a.internal,
+a.external {
+  transition:
+    text-shadow 0.3s ease,
+    color 0.3s ease;
+  &:hover {
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+    color: var(--tertiary) !important;
+  }
+}
+
+// Make search input translucent cosmic purple
+.search {
+  input {
+    background: rgba(23, 17, 38, 0.6) !important;
+    border: 1px solid rgba(164, 144, 194, 0.2) !important;
+    color: var(--dark) !important;
+    border-radius: 8px !important;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease;
+
+    &:focus {
+      border-color: var(--tertiary) !important;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.2) !important;
+    }
+  }
+}
+
+html[saved-theme="light"] {
+  .search {
+    input {
+      background: rgba(255, 255, 255, 0.8) !important;
+      border-color: rgba(74, 78, 143, 0.15) !important;
+      color: var(--dark) !important;
+    }
+  }
 }

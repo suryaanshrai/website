@@ -7,8 +7,11 @@ tags:
 date: 2026-04-19
 generate-audio: "true"
 ---
->[!info] The python notebook for this is at -> https://github.com/suryaanshrai/vector-analysis/blob/master/analyze.ipynb for your use and play.
+
+> [!info] The python notebook for this is at -> https://github.com/suryaanshrai/vector-analysis/blob/master/analyze.ipynb for your use and play.
+
 ## Introduction
+
 Every now and then you see a game studio do something that makes the rest of us look up from our tabs and go, wait, how did they spot that so fast?
 
 That was the hook for me.
@@ -53,7 +56,6 @@ From there, the notebook clusters the vectors, summarizes the resulting groups, 
 ![[Screenshot 2026-04-19 233026.png]]
 
 ![[Screenshot 2026-04-20 031825.png]]
-
 
 ## Clustering: The Interesting Bit
 
@@ -102,7 +104,6 @@ There is an obvious next step here too: model-targeted analysis.
 Right now the notebook focuses on finding broad thematic clusters across the feedback. A natural extension would be to adapt the same workflow to pull model-specific patterns, so instead of just seeing battery complaints in general, you could ask whether a particular iPhone model, variant, or seller condition is overrepresented inside that cluster. That would make the output even more decision-friendly.
 
 I skipped that part for now, mostly to keep the first version focused and not turn the notebook into an overly ambitious monster. But the structure is already pointing in that direction.
-
 
 ## The Tech Stack (and alternatives)
 

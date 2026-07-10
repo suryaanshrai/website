@@ -25,6 +25,8 @@ import Comments from "./Comments"
 import Flex from "./Flex"
 import ConditionalRender from "./ConditionalRender"
 import SunlitBackground from "./SunlitBackground"
+import Landing from "./Landing"
+import SpaceBackground from "./SpaceBackground"
 
 export {
   ArticleTitle,
@@ -54,4 +56,6 @@ export {
   Flex,
   ConditionalRender,
   SunlitBackground,
+  Landing,
+  SpaceBackground,
 }

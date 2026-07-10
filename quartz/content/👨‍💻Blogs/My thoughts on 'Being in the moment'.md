@@ -6,6 +6,7 @@ tags:
 date: 2022-04-17
 generate-audio: "true"
 ---
+
  Very often, when thinking or planning for the future, my mind wanders off to situations where my plan may not work. Mostly, it is the question, "Am I doing the right thing?" which initiates the chain of thoughts. When my mind encounters such situations, I mostly renew the plan or completely change it (though it is very less likely).
 
 Today, when going through a similar chain of thoughts, I somehow came across the idea of "being in the moment". It was when I broke it down, that I realized something whoppingly overwhelming. Although it was not the first time that this idea was encountered me but the realization was such that I felt it was worth sharing about in my very first blog ever.

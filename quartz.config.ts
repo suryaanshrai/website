@@ -21,43 +21,32 @@ const config: QuartzConfig = {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
-        title: {
-          name: "Fraunces",
-          weights: [400, 600, 800],
-          includeItalic: true,
-        },
-        header: "Schibsted Grotesk",
-        body: "Schibsted Grotesk",
-        code: "IBM Plex Mono",
+        header: "Outfit",
+        body: "Space Grotesk",
+        code: "JetBrains Mono",
       },
       colors: {
         lightMode: {
-          // slightly translucent surfaces so the Sunlit background can breathe
-          light: "rgba(255, 253, 250, 0.70)",
-          lightgray: "rgba(229, 229, 229, 0.65)",
-          gray: "rgba(184, 184, 184, 0.75)",
-          darkgray: "#2b2b2b",
-          dark: "#0f131c",
-
-          // warm/cool accents closer to Sunlit
-          secondary: "#2b5b6f",
-          tertiary: "#db7a2a",
-
-          highlight: "rgba(252, 204, 131, 0.18)",
-          textHighlight: "rgba(252, 204, 131, 0.45)",
+          light: "#f7f5fa",
+          lightgray: "#eae5f4",
+          gray: "#9c8eb9",
+          darkgray: "#2b1e3e",
+          dark: "#0d0814",
+          secondary: "#4a4e8f", // Cosmic Blue
+          tertiary: "#8b5cf6",
+          highlight: "rgba(74, 78, 143, 0.1)",
+          textHighlight: "rgba(74, 78, 143, 0.2)",
         },
         darkMode: {
-          light: "rgba(15, 19, 28, 0.62)",
-          lightgray: "rgba(40, 49, 63, 0.55)",
-          gray: "rgba(100, 100, 100, 0.75)",
-          darkgray: "#e6e8ee",
-          dark: "#fffdfa",
-
-          secondary: "#9fb3bf",
-          tertiary: "#fccc83",
-
-          highlight: "rgba(252, 204, 131, 0.14)",
-          textHighlight: "rgba(252, 204, 131, 0.32)",
+          light: "#090514", // Deep obsidian space background
+          lightgray: "#171126", // Dark purple panels
+          gray: "#514375", // Nebula grey
+          darkgray: "#d3c2eb", // Nebula silver / lavender
+          dark: "#ffffff", // Pure white headers
+          secondary: "#a490c2", // Soft Lavender links/accents
+          tertiary: "#00f2fe", // Cosmic Cyan highlights
+          highlight: "rgba(164, 144, 194, 0.15)",
+          textHighlight: "rgba(0, 242, 254, 0.3)",
         },
       },
     },

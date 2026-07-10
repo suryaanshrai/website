@@ -3,4 +3,5 @@ title: ⚙️Projects
 description:
 tags:
 ---
-*Side quests done with interest and enthusiasm*
+
+_Side quests done with interest and enthusiasm_

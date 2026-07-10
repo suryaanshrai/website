@@ -292,8 +292,7 @@ li:has(> .folder-outer:not(.open)) > .folder-container > svg {
         transform 200ms ease,
         visibility 200ms ease;
       overflow: hidden;
-      padding: 4rem max(1rem, env(safe-area-inset-left)) 2rem
-        max(1rem, env(safe-area-inset-right));
+      padding: 4rem max(1rem, env(safe-area-inset-left)) 2rem max(1rem, env(safe-area-inset-right));
       height: 100dvh;
       max-height: 100dvh;
       visibility: hidden;

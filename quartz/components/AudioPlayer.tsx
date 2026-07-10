@@ -3,50 +3,46 @@ import { classNames } from "../util/lang"
 // @ts-ignore
 import audioplayerScript from "./scripts/audioplayer.inline"
 
-
 const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponentProps) => {
-    // Only show audio player if the page has the generate-audio flag set to "true"
-    const hasAudio = fileData.frontmatter?.["generate-audio"] === "true"
+  // Only show audio player if the page has the generate-audio flag set to "true"
+  const hasAudio = fileData.frontmatter?.["generate-audio"] === "true"
 
-    if (!hasAudio) {
-        return null
-    }
+  if (!hasAudio) {
+    return null
+  }
 
-    // Construct the audio file path based on the content file path
-    // Convert: content/🌹Poetry/The Fallen Rose.md -> /static/audios/🌹Poetry/The Fallen Rose.wav
-    const filePath = fileData.filePath || ""
+  // Construct the audio file path based on the content file path
+  // Convert: content/🌹Poetry/The Fallen Rose.md -> /static/audios/🌹Poetry/The Fallen Rose.wav
+  const filePath = fileData.filePath || ""
 
-    // Extract the relative path from the content folder and change extension
-    // filePath typically looks like "content/folder/file.md"
-    // Strip special characters that don't exist in audio filenames (?, !, etc.)
-    const audioPath = filePath
-        .replace(/^content\//, "static/audios/")  // Replace content/ with static/audios/
-        .replace(/[?!]/g, "")                      // Remove special characters like ? and !
-        .replace(/\.md$/, ".mp3")                  // Replace .md extension with .wav
+  // Extract the relative path from the content folder and change extension
+  // filePath typically looks like "content/folder/file.md"
+  // Strip special characters that don't exist in audio filenames (?, !, etc.)
+  const audioPath = filePath
+    .replace(/^content\//, "static/audios/") // Replace content/ with static/audios/
+    .replace(/[?!]/g, "") // Remove special characters like ? and !
+    .replace(/\.md$/, ".mp3") // Replace .md extension with .wav
 
-    // Encode the path for URL usage while preserving directory structure
-    const encodedPath = "/" + audioPath
-        .split("/")
-        .map(segment => encodeURIComponent(segment))
-        .join("/")
+  // Encode the path for URL usage while preserving directory structure
+  const encodedPath =
+    "/" +
+    audioPath
+      .split("/")
+      .map((segment) => encodeURIComponent(segment))
+      .join("/")
 
-    return (
-        <div
-          class={classNames(displayClass, "audio-player-container")}
-          data-audio-base-path={audioPath}
-          aria-hidden="true"
-        >
-            <audio
-                controls
-                preload="metadata"
-                class="audio-player"
-                data-expected-src={encodedPath}
-            >
-                <source src={encodedPath} type="audio/wav" />
-                Your browser does not support the audio element.
-            </audio>
-        </div>
-    )
+  return (
+    <div
+      class={classNames(displayClass, "audio-player-container")}
+      data-audio-base-path={audioPath}
+      aria-hidden="true"
+    >
+      <audio controls preload="metadata" class="audio-player" data-expected-src={encodedPath}>
+        <source src={encodedPath} type="audio/wav" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  )
 }
 
 AudioPlayer.css = `

@@ -8,20 +8,21 @@ tags:
 date: 2025-10-05
 generate-audio: "true"
 ---
+
 ## The Pessimism Paradox: Why a Positive Mindset Builds Better Code
 
 > TLDR;
-> *Instead of thinking about all the cases where a certain code might not work, thinking about the cases where the code must work and restricting to it might be more simpler, easier and robust.*
+> _Instead of thinking about all the cases where a certain code might not work, thinking about the cases where the code must work and restricting to it might be more simpler, easier and robust._
 
 As a software engineer, it was very easy for me to develop a general sense of pessimism. I am required to think of edge cases, plan for worst-case scenarios, and hunt for vulnerabilities. That lead me to believing that I must be pessimistic to write robust code.
 
-But here’s a thought: What if this line of thinking is actually leading me to write *worse* code? What if, in my hyper-focus on what could go wrong, I am ending up creating brittle, fearful, over-complicated systems that *still miss edge cases*?
+But here’s a thought: What if this line of thinking is actually leading me to write _worse_ code? What if, in my hyper-focus on what could go wrong, I am ending up creating brittle, fearful, over-complicated systems that _still miss edge cases_?
 
 I’m starting to believe that. I’ve all been there quite often—stressed, worried, and just trying to get things done "somehow." The result is often a convoluted mess.
 
 So, why worry and fail?
 
-Let's be clear: a few cases here and there might *always* slip through. It doesn't mean we stop trying, obviously. We should always try our best to write the most stable, vulnerability-proof, and strongest code we can. But the *mindset* we bring to the task is what makes all the difference.
+Let's be clear: a few cases here and there might _always_ slip through. It doesn't mean we stop trying, obviously. We should always try our best to write the most stable, vulnerability-proof, and strongest code we can. But the _mindset_ we bring to the task is what makes all the difference.
 
 I am starting to think that a positive mindset—not a fool’s mindset, but a learned, practiced, positive one—would allow us to write even more beautiful and polished code than a "worrisome fool on an errand."
 
