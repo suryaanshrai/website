@@ -37,7 +37,21 @@ const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponen
       data-audio-base-path={audioPath}
       aria-hidden="true"
     >
-      <audio controls preload="metadata" class="audio-player" data-expected-src={encodedPath}>
+      <button type="button" class="audio-toggle" aria-label="Play audio narration" data-magnet>
+        <svg class="audio-icon-play" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        <svg class="audio-icon-pause" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="5" width="4" height="14" />
+          <rect x="14" y="5" width="4" height="14" />
+        </svg>
+      </button>
+      <div class="audio-track">
+        <div class="audio-track-fill"></div>
+      </div>
+      <span class="audio-time">0:00 / 0:00</span>
+      <span class="audio-label">LISTEN</span>
+      <audio preload="metadata" class="audio-player" data-expected-src={encodedPath}>
         <source src={encodedPath} type="audio/wav" />
         Your browser does not support the audio element.
       </audio>
@@ -48,27 +62,30 @@ const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponen
 AudioPlayer.css = `
 .audio-player-container {
   margin: 1rem 0;
-  color: var(--qz-text);
+  color: var(--darkgray);
   /* Hidden by default; revealed via JS by toggling .qz-audio-visible */
   display: flex;
   align-items: center;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
+  gap: 14px;
+  padding: 0 18px;
+  background: var(--qz-audio-panel);
+  border: 1px solid var(--qz-border);
+  border-radius: 999px;
   box-shadow: none;
+  max-width: 560px;
+  box-sizing: border-box;
 
   /* Smooth reveal without layout “pop” */
   opacity: 0;
   transform: translateY(4px);
   max-height: 0;
-  margin: 0;
   overflow: clip;
   pointer-events: none;
   transition:
     opacity 220ms ease,
     transform 220ms ease,
     max-height 260ms ease,
+    padding 260ms ease,
     margin 260ms ease;
   will-change: opacity, transform, max-height;
 }
@@ -77,6 +94,7 @@ AudioPlayer.css = `
   opacity: 1;
   transform: translateY(0);
   max-height: 80px;
+  padding: 12px 18px;
   margin: 1rem 0;
   pointer-events: auto;
 }
@@ -88,69 +106,70 @@ AudioPlayer.css = `
 }
 
 .audio-player {
-  width: 100%;
-  max-width: 720px;
-  height: 42px;
-  outline: none;
+  display: none;
+}
+
+.audio-toggle {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
   border-radius: 999px;
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--qz-border) 55%, transparent);
-  box-shadow: none;
-  /* Ensure native controls match Quartz theme (otherwise icons/time can become unreadable) */
-  color-scheme: light;
-  accent-color: var(--secondary);
-  transition: border-color 160ms ease, background-color 160ms ease;
-}
+  border: none;
+  background: var(--dark);
+  color: var(--light);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-:root[saved-theme="dark"] .audio-player {
-  color-scheme: dark;
-}
-
-.audio-player:hover {
-  border-color: color-mix(in srgb, var(--secondary) 35%, var(--qz-border));
-}
-
-.audio-player:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--secondary) 55%, transparent);
-  outline-offset: 3px;
-}
-
-/* Chrome/Edge/Safari: style the native control surface */
-.audio-player::-webkit-media-controls-enclosure {
-  border-radius: 999px;
-  background-color: color-mix(in srgb, var(--qz-audio-panel) 65%, transparent);
-}
-
-.audio-player::-webkit-media-controls-panel {
-  background-color: transparent;
-}
-
-.audio-player::-webkit-media-controls-play-button,
-.audio-player::-webkit-media-controls-current-time-display,
-.audio-player::-webkit-media-controls-time-remaining-display {
-  color: var(--qz-audio-fg);
-  -webkit-text-fill-color: var(--qz-audio-fg);
-}
-
-:root:not([saved-theme="dark"]) .audio-player::-webkit-media-controls-current-time-display,
-:root:not([saved-theme="dark"]) .audio-player::-webkit-media-controls-time-remaining-display {
-  color: var(--dark) !important;
-  -webkit-text-fill-color: var(--dark) !important;
-}
-
-:root[saved-theme="dark"] .audio-player::-webkit-media-controls-current-time-display,
-:root[saved-theme="dark"] .audio-player::-webkit-media-controls-time-remaining-display {
-  color: var(--light) !important;
-  -webkit-text-fill-color: var(--light) !important;
-}
-
-/* Dark mode support */
-/* Themed via CSS variables; no separate dark-mode overrides needed */
-
-@media (max-width: 600px) {
-  .audio-player {
-    max-width: 100%;
+  svg {
+    width: 16px;
+    height: 16px;
   }
+
+  .audio-icon-pause {
+    display: none;
+  }
+
+  &.is-playing {
+    .audio-icon-play {
+      display: none;
+    }
+    .audio-icon-pause {
+      display: block;
+    }
+  }
+}
+
+.audio-track {
+  flex: 1;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--qz-audio-panel);
+  position: relative;
+  overflow: hidden;
+}
+
+.audio-track-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--secondary), var(--tertiary));
+  border-radius: 99px;
+}
+
+.audio-time {
+  font-family: var(--codeFont);
+  font-size: 0.68rem;
+  color: var(--gray);
+  white-space: nowrap;
+}
+
+.audio-label {
+  font-family: var(--codeFont);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--gray);
 }
 `
 

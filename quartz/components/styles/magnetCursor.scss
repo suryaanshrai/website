@@ -1,0 +1,29 @@
+.magnet-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  border: 1px solid color-mix(in srgb, var(--secondary) 55%, transparent);
+  border-radius: 999px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  will-change: transform, width, height, border-radius, opacity;
+  transition:
+    border-radius 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 250ms ease;
+}
+
+@media (hover: none) {
+  .magnet-cursor {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magnet-cursor {
+    transition: none;
+  }
+}

@@ -1,223 +1,197 @@
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { FullSlug, resolveRelative } from "../util/path"
 // @ts-ignore
 import styles from "./styles/landing.scss"
+// @ts-ignore
+import script from "./scripts/landing.inline"
 
-const Landing: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
+interface IndexRow {
+  num: string
+  title: string
+  note: string
+  slug: FullSlug
+  kicker: string
+  body: string
+  countOverride?: string
+}
+
+const INDEX_ROWS: IndexRow[] = [
+  {
+    num: "01",
+    title: "Projects",
+    note: "Side quests done with interest and enthusiasm",
+    slug: "Projects" as FullSlug,
+    kicker: "PROJECTS",
+    body: "Cube solvers, a Minesweeper AI, a Nim player, OmniPost, Scibot, a data visualizer — and this website.",
+  },
+  {
+    num: "02",
+    title: "Blogs",
+    note: "Engineering write-ups, travel, books, rants",
+    slug: "Blogs" as FullSlug,
+    kicker: "BLOGS",
+    body: "From router registration tradeoffs to an evening in Bangalore. Systems thinking and living, kept side by side.",
+  },
+  {
+    num: "03",
+    title: "Poetry",
+    note: "For what only rhythm can carry",
+    slug: "Poetry" as FullSlug,
+    kicker: "POETRY · EN / HI",
+    body: "The Fallen Rose, Whispering Screams, ज़िन्दगी का दीवाना, दिनचर्या.",
+  },
+  {
+    num: "04",
+    title: "Entertainment",
+    note: "Books, games, and everything watched",
+    slug: "Entertainment" as FullSlug,
+    kicker: "BOOKS / GAMES / WATCHED",
+    body: "Highlights, ratings, and the reasons a thing stayed with me.",
+    countOverride: "3 shelves",
+  },
+  {
+    num: "05",
+    title: "Education",
+    note: "Sainik School, the drop year, SMVDU, CS50",
+    slug: "Education" as FullSlug,
+    kicker: "EDUCATION",
+    body: "One Goal, One Aim — NDA. The Drop Year. Shri Mata Vaishno Devi University. CS50.",
+  },
+  {
+    num: "06",
+    title: "About me",
+    note: "The person behind all of it",
+    slug: "About-me" as FullSlug,
+    kicker: "ABOUT · BACKEND ENGINEER @ WOBOT",
+    body: "Gurugram by address, Ambikapur by upbringing. Currently building a no-code video analytics pipeline builder.",
+    countOverride: "—",
+  },
+]
+
+const NOW_CARDS = [
+  {
+    label: "WORK",
+    head: "Wobot, Gurugram",
+    body: "Backend for a no-code video analytics pipeline builder. Drag blocks, ship pipelines.",
+  },
+  {
+    label: "READING",
+    head: "Dostoevsky, slowly",
+    body: "Plus a running list of self-help books that actually help, kept honest.",
+  },
+  {
+    label: "BUILDING",
+    head: "This garden",
+    body: "Quartz, tuned by hand. Audio narrations of notes, a live graph, and comments that work.",
+  },
+]
+
+function countInFolder(allFiles: QuartzComponentProps["allFiles"], folder: string): number {
+  return allFiles.filter((f) => {
+    const slug = f.slug ?? ""
+    if (slug === folder || slug === `${folder}/index`) return false
+    if (!slug.startsWith(`${folder}/`)) return false
+    if (slug.endsWith("/index")) return false
+    return true
+  }).length
+}
+
+const Landing: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps) => {
   // Only render this component on the index page
   if (fileData.slug !== "index") return null
 
+  const blogsHref = resolveRelative(fileData.slug, "Blogs" as FullSlug)
+  const contactHref = resolveRelative(fileData.slug, "Contact" as FullSlug)
+  const blogsCount = countInFolder(allFiles, "Blogs")
+  const monthYear = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })
+
   return (
-    <div class="portal-wrapper notranslate">
-      {/* 1. Interactive Custom Cursor (with Snapping Ring and Inertial Dot) */}
-      <div class="portal-cursor" id="portal-cursor">
-        <div class="portal-cursor-ring" id="portal-cursor-ring" />
-        <div class="portal-cursor-dot" />
-      </div>
-
-      {/* 2. Main Layout Container */}
-      <div class="portal-container">
-        {/* Left column: Hero Title & Description */}
-        <div class="portal-hero">
-          <div class="hero-intro">WORKSPACE INDEX // V4.8</div>
-          <h1 class="hero-brand" id="hero-brand">
-            SURYAANSH RAI
+    <div class="landing-page notranslate">
+      <section class="landing-hero-row">
+        <div class="landing-hero">
+          <div class="landing-kicker">
+            <span class="landing-pulse" />
+            BACKEND ENGINEER · GURUGRAM, IN · OPEN TO CONVERSATION
+          </div>
+          <h1 class="landing-name">
+            Suryaansh
+            <br />
+            <span class="landing-name-italic">Rai</span>
           </h1>
-          <p class="hero-tagline">
-            A digital garden harboring software builds, curated thoughts, poetry, and technical notes, floating in a clean WebGL workspace.
+          <p class="landing-tagline">
+            A digital garden, kept in the open. Software I build, thoughts I keep returning to,
+            poetry, and notes from a life still being figured out.
           </p>
-          <div class="hero-status">
-            <span class="status-indicator"></span>
-            SYSTEM STATUS: ONLINE
+          <div class="landing-cta-row">
+            <a href={blogsHref} class="landing-cta landing-cta-primary" data-magnet>
+              Enter the garden <span class="landing-cta-arrow">→</span>
+            </a>
+            <a href={contactHref} class="landing-cta" data-magnet>
+              Get in touch
+            </a>
           </div>
         </div>
 
-        {/* Right column: Typographic Navigation List */}
-        <nav class="portal-nav">
-          <ul class="nav-list">
-            <li class="nav-item" data-preview-id="prev-projects">
-              <a href="/Projects" class="nav-link">
-                <span class="link-num">01</span>
-                <span class="link-text">PROJECT ARCHIVE</span>
-                <span class="link-arrow">↗</span>
+        <nav class="landing-index">
+          {INDEX_ROWS.map((row) => {
+            const count = row.countOverride ?? String(countInFolder(allFiles, row.slug))
+            return (
+              <a
+                href={resolveRelative(fileData.slug!, row.slug)}
+                class="landing-index-row"
+                data-magnet
+                data-kicker={row.kicker}
+                data-body={row.body}
+              >
+                <span class="landing-index-num">{row.num}</span>
+                <span class="landing-index-copy">
+                  <span class="landing-index-title">{row.title}</span>
+                  <span class="landing-index-note">{row.note}</span>
+                </span>
+                <span class="landing-index-count">{count}</span>
               </a>
-            </li>
-            <li class="nav-item" data-preview-id="prev-poetry">
-              <a href="/Poetry" class="nav-link">
-                <span class="link-num">02</span>
-                <span class="link-text">SELECTED POETRY</span>
-                <span class="link-arrow">↗</span>
-              </a>
-            </li>
-            <li class="nav-item" data-preview-id="prev-blogs">
-              <a href="/Blogs" class="nav-link">
-                <span class="link-num">03</span>
-                <span class="link-text">WRITTEN THOUGHTS</span>
-                <span class="link-arrow">↗</span>
-              </a>
-            </li>
-            <li class="nav-item" data-preview-id="prev-entertainment">
-              <a href="/Entertainment" class="nav-link">
-                <span class="link-num">04</span>
-                <span class="link-text">CHRONICLES & REVIEWS</span>
-                <span class="link-arrow">↗</span>
-              </a>
-            </li>
-            <li class="nav-item" data-preview-id="prev-about">
-              <a href="/About-me" class="nav-link">
-                <span class="link-num">05</span>
-                <span class="link-text">METADATA (ABOUT)</span>
-                <span class="link-arrow">↗</span>
-              </a>
-            </li>
-            <li class="nav-item" data-preview-id="prev-contact">
-              <a href="mailto:contact@suryaansh.dev" class="nav-link">
-                <span class="link-num">06</span>
-                <span class="link-text">SEND TRANSMISSION</span>
-                <span class="link-arrow">✉</span>
-              </a>
-            </li>
-          </ul>
+            )
+          })}
+          <div class="landing-index-preview">
+            <div class="landing-preview-kicker" id="landing-preview-kicker">
+              STATUS · IDLE
+            </div>
+            <div class="landing-preview-body" id="landing-preview-body">
+              Hover an entry to preview what lives inside it.
+            </div>
+          </div>
         </nav>
-      </div>
+      </section>
 
-      {/* 3. Floating Preview Cards (Glassmorphic Terminal Panels) */}
-      <div class="portal-previews" id="portal-previews">
-        {/* Projects Preview */}
-        <div class="preview-card" id="prev-projects">
-          <div class="card-glow" />
-          <div class="card-inner">
-            <div class="card-header">
-              <span class="win-btn win-close"></span>
-              <span class="win-btn win-min"></span>
-              <span class="win-btn win-max"></span>
-              <span class="win-title">projects.dat</span>
-            </div>
-            <div class="card-body">
-              <div class="preview-line">TYPE: ACTIVE SOFTWARE</div>
-              <div class="preview-line">LANGS: TS, GO, RUST, VITE</div>
-              <div class="preview-desc">A workshop of active software builds, scripts, and visual experiments.</div>
-              <div class="preview-deco">░░░░░░░░░░ 78%</div>
-            </div>
-          </div>
+      <section class="landing-section">
+        <div class="landing-section-head">
+          <h2>CURRENTLY</h2>
+          <span>{monthYear.toUpperCase()}</span>
         </div>
+        <div class="landing-currently-grid">
+          {NOW_CARDS.map((card) => (
+            <div class="landing-currently-card">
+              <span class="landing-currently-label">{card.label}</span>
+              <span class="landing-currently-head">{card.head}</span>
+              <span class="landing-currently-body">{card.body}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        {/* Poetry Preview */}
-        <div class="preview-card" id="prev-poetry">
-          <div class="card-glow" />
-          <div class="card-inner">
-            <div class="card-header">
-              <span class="win-btn win-close"></span>
-              <span class="win-btn win-min"></span>
-              <span class="win-btn win-max"></span>
-              <span class="win-title">poetry.txt</span>
-            </div>
-            <div class="card-body">
-              <div class="preview-line">TYPE: EXPRESSIVE LITERATURE</div>
-              <div class="preview-line">THEMES: BEAUTY, TRANSIENCE, SOUL</div>
-              <div class="preview-desc">"For the beauty that can be expressed with words, the way emotions weave..."</div>
-              <div class="preview-deco">🌹 OVERFLOW_ACTIVE</div>
-            </div>
-          </div>
+      <section class="landing-section" id="landing-recent-writing">
+        <div class="landing-section-head">
+          <h2>RECENT WRITING</h2>
+          <a href={blogsHref} class="landing-section-link" data-magnet>
+            ALL {blogsCount} NOTES →
+          </a>
         </div>
-
-        {/* Blogs Preview */}
-        <div class="preview-card" id="prev-blogs">
-          <div class="card-glow" />
-          <div class="card-inner">
-            <div class="card-header">
-              <span class="win-btn win-close"></span>
-              <span class="win-btn win-min"></span>
-              <span class="win-btn win-max"></span>
-              <span class="win-title">blogs.md</span>
-            </div>
-            <div class="card-body">
-              <div class="preview-line">TYPE: ENGINEERING LOGS</div>
-              <div class="preview-line">TOPICS: SYSTEMS, ARCHITECTURE, WEB</div>
-              <div class="preview-desc">Deep-dives into systems engineering, developmental guidelines, and tech stacks.</div>
-              <div class="preview-deco">⚡ READ_CYCLE_INIT</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Entertainment Preview */}
-        <div class="preview-card" id="prev-entertainment">
-          <div class="card-glow" />
-          <div class="card-inner">
-            <div class="card-header">
-              <span class="win-btn win-close"></span>
-              <span class="win-btn win-min"></span>
-              <span class="win-btn win-max"></span>
-              <span class="win-title">chronicles.db</span>
-            </div>
-            <div class="card-body">
-              <div class="preview-line">TYPE: MEDIA REVIEWS</div>
-              <div class="preview-line">ITEMS: CINEMA, GAMING, BOOKS</div>
-              <div class="preview-desc">A chronological catalog of video games, book highlights, and film reviews.</div>
-              <div class="preview-deco">🎮 RATING_GRID</div>
-            </div>
-          </div>
-        </div>
-
-        {/* About Preview */}
-        <div class="preview-card" id="prev-about">
-          <div class="card-glow" />
-          <div class="card-inner">
-            <div class="card-header">
-              <span class="win-btn win-close"></span>
-              <span class="win-btn win-min"></span>
-              <span class="win-btn win-max"></span>
-              <span class="win-title">metadata.json</span>
-            </div>
-            <div class="card-body">
-              <div class="preview-line">TYPE: CORE IDENTITY</div>
-              <div class="preview-line">NAME: SURYAANSH RAI</div>
-              <div class="preview-desc">Learn about my values, technical competence, history, and workspace setup.</div>
-              <div class="preview-deco">🤖 HOST_VERIFIED</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Preview */}
-        <div class="preview-card" id="prev-contact">
-          <div class="card-glow" />
-          <div class="card-inner">
-            <div class="card-header">
-              <span class="win-btn win-close"></span>
-              <span class="win-btn win-min"></span>
-              <span class="win-btn win-max"></span>
-              <span class="win-title">inbox.dock</span>
-            </div>
-            <div class="card-body">
-              <div class="preview-line">TYPE: TRANSMISSION CAPABLE</div>
-              <div class="preview-line">STATUS: OPEN FOR WORK</div>
-              <div class="preview-desc">Click to launch your system's mail agent and send a direct packet to my address.</div>
-              <div class="preview-deco">✉ READY_TO_SEND</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Elegant Premium Status Footer */}
-      <footer class="portal-footer">
-        <div class="footer-col footer-col-status">
-          <span class="footer-clock" id="footer-clock">00:00:00 GMT+0000</span>
-          <span class="footer-metrics">FPS: 60 // PORTAL V4.8</span>
-        </div>
-        <div class="footer-col footer-col-quote">
-          "THE QUIETER YOU BECOME, THE MORE YOU ARE ABLE TO HEAR." — RUMI
-        </div>
-        <div class="footer-col footer-col-copy">
-          © 2026 SURYAANSH.DEV // DIGITAL GARDEN
-        </div>
-      </footer>
+      </section>
     </div>
   )
 }
 
 Landing.css = styles
-
-// @ts-ignore
-import script from "./scripts/landing.inline"
 Landing.afterDOMLoaded = script
 
 export default (() => Landing) satisfies QuartzComponentConstructor

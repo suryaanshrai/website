@@ -17,12 +17,15 @@ button.toc-header {
   text-align: left;
   cursor: pointer;
   padding: 0;
-  color: var(--dark);
+  color: var(--gray);
   display: flex;
   align-items: center;
 
   & h3 {
-    font-size: 1rem;
+    font-family: var(--codeFont);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     display: inline-block;
     margin: 0;
   }
@@ -41,26 +44,45 @@ button.toc-header {
 ul.toc-content.overflow {
   list-style: none;
   position: relative;
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
   padding: 0;
   max-height: calc(100% - 2rem);
   overscroll-behavior: contain;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  & > li {
+    border-left: 1px solid var(--lightgray);
+
+    &.depth-0 {
+      border-left-color: var(--lightgray);
+    }
+  }
 
   & > li > a {
-    color: var(--dark);
-    opacity: 0.35;
+    display: block;
+    padding: 0.1rem 0 0.1rem 0.75rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--gray);
+    opacity: 1;
     transition:
-      0.5s ease opacity,
-      0.3s ease color;
+      0.3s ease color,
+      0.3s ease border-color;
     &.in-view {
-      opacity: 0.75;
+      color: var(--dark);
     }
+  }
+
+  & > li:has(> a.in-view) {
+    border-left-color: var(--secondary);
   }
 
   @for $i from 0 through 6 {
     & .depth-#{$i} {
-      padding-left: calc(1rem * #{$i});
+      margin-left: calc(0.85rem * #{$i});
     }
   }
 }

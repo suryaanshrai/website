@@ -21,32 +21,32 @@ const config: QuartzConfig = {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
-        header: "Outfit",
-        body: "Space Grotesk",
-        code: "JetBrains Mono",
+        header: { name: "Instrument Serif", weights: [400], includeItalic: true },
+        body: { name: "Space Grotesk", weights: [300, 400, 500, 600, 700] },
+        code: { name: "JetBrains Mono", weights: [400, 500] },
       },
       colors: {
         lightMode: {
-          light: "#f7f5fa",
-          lightgray: "#eae5f4",
-          gray: "#9c8eb9",
-          darkgray: "#2b1e3e",
-          dark: "#0d0814",
-          secondary: "#4a4e8f", // Cosmic Blue
-          tertiary: "#8b5cf6",
-          highlight: "rgba(74, 78, 143, 0.1)",
-          textHighlight: "rgba(74, 78, 143, 0.2)",
+          light: "#f6f2ea", // void (paper)
+          lightgray: "#ece4d6",
+          gray: "#8b8298", // faint
+          darkgray: "#554d64", // muted
+          dark: "#16121c", // ink
+          secondary: "#6d3fb0", // violet
+          tertiary: "#1c7f93", // cyan
+          highlight: "rgba(109, 63, 176, 0.1)",
+          textHighlight: "rgba(28, 127, 147, 0.2)",
         },
         darkMode: {
-          light: "#090514", // Deep obsidian space background
-          lightgray: "#171126", // Dark purple panels
-          gray: "#514375", // Nebula grey
-          darkgray: "#d3c2eb", // Nebula silver / lavender
-          dark: "#ffffff", // Pure white headers
-          secondary: "#a490c2", // Soft Lavender links/accents
-          tertiary: "#00f2fe", // Cosmic Cyan highlights
-          highlight: "rgba(164, 144, 194, 0.15)",
-          textHighlight: "rgba(0, 242, 254, 0.3)",
+          light: "#08060e", // void
+          lightgray: "#140f1e",
+          gray: "#6b6383", // faint
+          darkgray: "#a79dbe", // muted
+          dark: "#efeaf7", // ink
+          secondary: "#b58cf0", // violet
+          tertiary: "#56c4d8", // cyan
+          highlight: "rgba(196, 178, 235, 0.14)",
+          textHighlight: "rgba(86, 196, 216, 0.3)",
         },
       },
     },

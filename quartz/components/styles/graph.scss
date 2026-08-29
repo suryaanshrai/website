@@ -2,13 +2,17 @@
 
 .graph {
   & > h3 {
-    font-size: 1rem;
+    font-family: var(--codeFont);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
     margin: 0;
   }
 
   & > .graph-outer {
-    border-radius: 5px;
-    border: 1px solid var(--lightgray);
+    border-radius: 14px;
+    border: 1px solid var(--qz-border);
     box-sizing: border-box;
     height: 250px;
     margin: 0.5em 0;
@@ -57,10 +61,10 @@
     }
 
     & > .global-graph-container {
-      border: 1px solid var(--lightgray);
+      border: 1px solid var(--qz-border);
       background: color-mix(in srgb, var(--light) 82%, transparent);
       backdrop-filter: blur(22px);
-      border-radius: 5px;
+      border-radius: 14px;
       box-sizing: border-box;
       position: fixed;
       top: 50%;

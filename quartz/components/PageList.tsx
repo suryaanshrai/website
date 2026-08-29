@@ -1,8 +1,9 @@
-import { FullSlug, isFolderPath, resolveRelative } from "../util/path"
+import { isFolderPath, resolveRelative } from "../util/path"
 import { QuartzPluginData } from "../plugins/vfile"
 import { Date, getDate } from "./Date"
 import { QuartzComponent, QuartzComponentProps } from "./types"
 import { GlobalConfiguration } from "../cfg"
+import readingTime from "reading-time"
 
 export type SortFn = (f1: QuartzPluginData, f2: QuartzPluginData) => number
 
@@ -68,34 +69,21 @@ export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort
     <ul class="section-ul">
       {list.map((page) => {
         const title = page.frontmatter?.title
-        const tags = page.frontmatter?.tags ?? []
+        const desc = page.description?.trim()
+        const minutes = page.text ? Math.max(1, Math.ceil(readingTime(page.text).minutes)) : null
 
         return (
           <li class="section-li">
-            <div class="section">
+            <a href={resolveRelative(fileData.slug!, page.slug!)} class="section internal" data-magnet>
               <p class="meta">
                 {page.dates && <Date date={getDate(cfg, page)!} locale={cfg.locale} />}
               </p>
               <div class="desc">
-                <h3>
-                  <a href={resolveRelative(fileData.slug!, page.slug!)} class="internal">
-                    {title}
-                  </a>
-                </h3>
+                <h3>{title}</h3>
+                {desc && <p class="section-excerpt">{desc}</p>}
               </div>
-              <ul class="tags">
-                {tags.map((tag) => (
-                  <li>
-                    <a
-                      class="internal tag-link"
-                      href={resolveRelative(fileData.slug!, `tags/${tag}` as FullSlug)}
-                    >
-                      {tag}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+              <p class="section-time">{minutes ? `${minutes} MIN` : ""}</p>
+            </a>
           </li>
         )
       })}
@@ -105,10 +93,6 @@ export const PageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort
 
 PageList.css = `
 .section h3 {
-  margin: 0;
-}
-
-.section > .tags {
   margin: 0;
 }
 `

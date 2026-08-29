@@ -396,10 +396,19 @@ a {
 
     & .page-header {
       grid-area: grid-header;
-      margin: $topSpacing 0 0 0;
+      margin: 0;
+
+      & > .popover-hint {
+        margin-top: 2.5rem;
+        padding: 0 0.5rem;
+      }
+
       @media all and ($mobile) {
-        margin-top: 0;
         padding: 0;
+
+        & > .popover-hint {
+          margin-top: 1.5rem;
+        }
       }
     }
 
@@ -907,11 +916,18 @@ body[data-slug="index"] {
     display: none !important;
   }
 
-  // Hide all headers/footers except the Landing component inside .popover-hint
-  .page-header > *:not(.popover-hint),
+  // Hide the article body (Landing replaces it) but keep the sticky site header
   article,
-  hr,
-  .page-footer {
+  hr {
+    display: none !important;
+  }
+}
+
+/* About / Contact pages: a hand-authored component replaces the markdown body,
+   following the same pattern as the index page above. */
+body[data-slug="About-me"],
+body[data-slug="Contact"] {
+  .center > article {
     display: none !important;
   }
 }
@@ -929,10 +945,10 @@ body {
 // Glassmorphism on sidebars
 .left.sidebar,
 .right.sidebar {
-  background: rgba(23, 17, 38, 0.45) !important;
+  background: color-mix(in srgb, var(--light) 55%, transparent) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(164, 144, 194, 0.08) !important;
+  border: 1px solid color-mix(in srgb, var(--secondary) 14%, transparent) !important;
   border-radius: 16px;
   padding: 1.5rem !important;
   margin: 1.5rem !important;
@@ -947,8 +963,8 @@ body {
 html[saved-theme="light"] {
   .left.sidebar,
   .right.sidebar {
-    background: rgba(255, 255, 255, 0.55) !important;
-    border-color: rgba(74, 78, 143, 0.08) !important;
+    background: color-mix(in srgb, var(--light) 85%, white 15%) !important;
+    border-color: color-mix(in srgb, var(--secondary) 8%, transparent) !important;
   }
 }
 
@@ -959,7 +975,7 @@ a.external {
     text-shadow 0.3s ease,
     color 0.3s ease;
   &:hover {
-    text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--tertiary) 40%, transparent);
     color: var(--tertiary) !important;
   }
 }
@@ -967,8 +983,8 @@ a.external {
 // Make search input translucent cosmic purple
 .search {
   input {
-    background: rgba(23, 17, 38, 0.6) !important;
-    border: 1px solid rgba(164, 144, 194, 0.2) !important;
+    background: color-mix(in srgb, var(--light) 60%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent) !important;
     color: var(--dark) !important;
     border-radius: 8px !important;
     transition:
@@ -977,7 +993,7 @@ a.external {
 
     &:focus {
       border-color: var(--tertiary) !important;
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.2) !important;
+      box-shadow: 0 0 10px color-mix(in srgb, var(--tertiary) 20%, transparent) !important;
     }
   }
 }
@@ -985,8 +1001,8 @@ a.external {
 html[saved-theme="light"] {
   .search {
     input {
-      background: rgba(255, 255, 255, 0.8) !important;
-      border-color: rgba(74, 78, 143, 0.15) !important;
+      background: color-mix(in srgb, var(--light) 80%, white 20%) !important;
+      border-color: color-mix(in srgb, var(--secondary) 15%, transparent) !important;
       color: var(--dark) !important;
     }
   }

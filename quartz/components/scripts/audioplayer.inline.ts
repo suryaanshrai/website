@@ -118,8 +118,67 @@ function setupErrorHandlers() {
   })
 }
 
+function formatTime(seconds: number): string {
+  if (!isFinite(seconds) || seconds < 0) return "0:00"
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${m}:${String(s).padStart(2, "0")}`
+}
+
+// Wire the custom play/pause button + progress fill to the real <audio> element
+function setupCustomControls() {
+  const container = document.querySelector(".audio-player-container") as HTMLElement | null
+  const audioElement = container?.querySelector(".audio-player") as HTMLAudioElement | null
+  const toggle = container?.querySelector(".audio-toggle") as HTMLButtonElement | null
+  const fill = container?.querySelector(".audio-track-fill") as HTMLElement | null
+  const track = container?.querySelector(".audio-track") as HTMLElement | null
+  const timeLabel = container?.querySelector(".audio-time") as HTMLElement | null
+  if (!container || !audioElement || !toggle || !fill || !track || !timeLabel) return
+
+  const updateProgress = () => {
+    const pct = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0
+    fill.style.width = `${pct}%`
+    timeLabel.textContent = `${formatTime(audioElement.currentTime)} / ${formatTime(audioElement.duration)}`
+  }
+
+  const handleToggleClick = () => {
+    if (audioElement.paused) {
+      audioElement.play()
+    } else {
+      audioElement.pause()
+    }
+  }
+  const handlePlay = () => toggle.classList.add("is-playing")
+  const handlePause = () => toggle.classList.remove("is-playing")
+  const handleSeek = (e: MouseEvent) => {
+    if (!audioElement.duration) return
+    const rect = track.getBoundingClientRect()
+    const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
+    audioElement.currentTime = pct * audioElement.duration
+  }
+
+  toggle.addEventListener("click", handleToggleClick)
+  track.addEventListener("click", handleSeek)
+  audioElement.addEventListener("play", handlePlay)
+  audioElement.addEventListener("pause", handlePause)
+  audioElement.addEventListener("timeupdate", updateProgress)
+  audioElement.addEventListener("loadedmetadata", updateProgress)
+
+  updateProgress()
+
+  window.addCleanup?.(() => {
+    toggle.removeEventListener("click", handleToggleClick)
+    track.removeEventListener("click", handleSeek)
+    audioElement.removeEventListener("play", handlePlay)
+    audioElement.removeEventListener("pause", handlePause)
+    audioElement.removeEventListener("timeupdate", updateProgress)
+    audioElement.removeEventListener("loadedmetadata", updateProgress)
+  })
+}
+
 // Initialize on page load
 setupErrorHandlers()
+setupCustomControls()
 updateAudioPlayer()
 
 // Pause audio immediately when navigation starts (before DOM morphing)
@@ -135,6 +194,7 @@ document.addEventListener("nav", () => {
   // Use requestAnimationFrame to ensure DOM is fully settled after micromorph
   requestAnimationFrame(() => {
     setupErrorHandlers()
+    setupCustomControls()
     updateAudioPlayer()
   })
 })

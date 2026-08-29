@@ -6,7 +6,7 @@ import styles from "./styles/spaceBg.scss"
 
 const SpaceBackground: QuartzComponent = () => {
   return (
-    <div class="animation-container" data-preserve="true" aria-hidden="true">
+    <div class="animation-container" data-persist="" aria-hidden="true">
       <canvas id="space-canvas" class="space-canvas" />
       <div class="grid-overlay" />
     </div>

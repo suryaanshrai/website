@@ -9,6 +9,7 @@ import { QuartzPluginData } from "../../plugins/vfile"
 import { ComponentChildren } from "preact"
 import { concatenateResources } from "../../util/resources"
 import { trieFromAllFiles } from "../../util/ctx"
+import { FullSlug, resolveRelative } from "../../util/path"
 
 interface FolderContentOptions {
   /**
@@ -96,6 +97,17 @@ export default ((opts?: Partial<FolderContentOptions>) => {
       allFiles: allPagesInFolder,
     }
 
+    const tagCounts = new Map<string, number>()
+    for (const page of allPagesInFolder) {
+      for (const tag of page.frontmatter?.tags ?? []) {
+        tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+      }
+    }
+    const topTags = [...tagCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([tag]) => tag)
+
     const content = (
       (tree as Root).children.length === 0
         ? fileData.description
@@ -112,6 +124,21 @@ export default ((opts?: Partial<FolderContentOptions>) => {
                 count: allPagesInFolder.length,
               })}
             </p>
+          )}
+          {topTags.length > 0 && (
+            <ul class="folder-tag-pills">
+              {topTags.map((tag) => (
+                <li>
+                  <a
+                    href={resolveRelative(fileData.slug!, `tags/${tag}` as FullSlug)}
+                    class="internal folder-tag-pill"
+                    data-magnet
+                  >
+                    {tag}
+                  </a>
+                </li>
+              ))}
+            </ul>
           )}
           <div>
             <PageList {...listProps} />

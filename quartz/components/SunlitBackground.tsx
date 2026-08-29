@@ -5,7 +5,7 @@ const SunlitBackground: QuartzComponent = () => {
   // NOTE: This is intentionally decorative only.
   // It is positioned `fixed` and placed behind all content via CSS.
   return (
-    <div id="sunlit-bg" data-preserve="true" aria-hidden="true">
+    <div id="sunlit-bg" data-persist="" aria-hidden="true">
       <div class="sunlit-stage">
         <div class="sunlit-glow" />
         <div class="sunlit-glow-bounce" />

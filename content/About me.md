@@ -1,10 +1,8 @@
 ---
 title: 🙋‍♂️About me
-description:
+description: The long version — background, upbringing, and what I do now.
 tags:
-  - draft
 date:
-draft: "true"
 ---
 
 # The Professional Introduction

@@ -1,49 +1,23 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
+import { contactLinks } from "./quartz/contactLinks"
+import { SimpleSlug } from "./quartz/util/path"
+
+// Pages with a hand-authored hero component that replaces the generic
+// breadcrumbs/title/meta chrome (Landing, AboutHero, ContactCards).
+const CUSTOM_HERO_SLUGS = ["index", "About-me", "Contact"]
+const isCustomHeroPage = (slug: string | undefined) => CUSTOM_HERO_SLUGS.includes(slug ?? "")
 
 // components shared across all pages
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
-  header: [],
+  header: [Component.SiteHeader(), Component.Darkmode(), Component.ReadingProgress()],
   footer: Component.Footer({
-    iconLinks: [
-      {
-        label: "Topmate",
-        href: "https://topmate.io/suryaanshrai/",
-        src: "/static/topmate.png",
-        external: true,
-        spinOnHover: true,
-      },
-      {
-        label: "Resume",
-        href: "https://resume.suryaansh.dev/",
-        src: "/static/resume.gif",
-        external: true,
-      },
-      {
-        label: "LinkedIn",
-        href: "https://www.linkedin.com/in/suryaansh-rai/",
-        src: "/static/Linkedin.gif",
-        external: true,
-      },
-      {
-        label: "Email",
-        href: "mailto:contact@suryaansh.dev",
-        src: "/static/mail.gif",
-        external: false,
-        size: "large",
-      },
-      {
-        label: "RSS",
-        href: "/index.xml",
-        src: "/static/rss.gif",
-        external: false,
-        size: "large",
-      },
-    ],
+    iconLinks: contactLinks,
   }),
   afterBody: [
     Component.SpaceBackground(),
+    Component.MagnetCursor(),
     Component.Comments({
       provider: "remark42",
       options: {
@@ -61,25 +35,51 @@ export const defaultContentPageLayout: PageLayout = {
   beforeBody: [
     Component.Landing(),
     Component.ConditionalRender({
+      component: Component.RecentNotes({
+        title: "",
+        limit: 4,
+        showTags: false,
+        linkToMore: "Blogs" as SimpleSlug,
+        filter: (f) => (f.slug ?? "").startsWith("Blogs/") && !(f.slug ?? "").endsWith("/index"),
+      }),
+      condition: (page) => page.fileData.slug === "index",
+    }),
+    Component.ConditionalRender({
+      component: Component.LandingGraphTeaser(),
+      condition: (page) => page.fileData.slug === "index",
+    }),
+    Component.ConditionalRender({
+      component: Component.Graph({
+        localGraph: { depth: -1, showTags: true },
+      }),
+      condition: (page) => page.fileData.slug === "index",
+    }),
+    Component.ConditionalRender({
+      component: Component.LandingFooterQuote(),
+      condition: (page) => page.fileData.slug === "index",
+    }),
+    Component.ConditionalRender({
       component: Component.Breadcrumbs(),
-      condition: (page) => page.fileData.slug !== "index",
+      condition: (page) => !isCustomHeroPage(page.fileData.slug),
     }),
     Component.ConditionalRender({
       component: Component.ArticleTitle(),
-      condition: (page) => page.fileData.slug !== "index",
+      condition: (page) => !isCustomHeroPage(page.fileData.slug),
     }),
     Component.ConditionalRender({
       component: Component.AudioPlayer(),
-      condition: (page) => page.fileData.slug !== "index",
+      condition: (page) => !isCustomHeroPage(page.fileData.slug),
     }),
     Component.ConditionalRender({
       component: Component.ContentMeta(),
-      condition: (page) => page.fileData.slug !== "index",
+      condition: (page) => !isCustomHeroPage(page.fileData.slug),
     }),
     Component.ConditionalRender({
       component: Component.TagList(),
-      condition: (page) => page.fileData.slug !== "index",
+      condition: (page) => !isCustomHeroPage(page.fileData.slug),
     }),
+    Component.AboutHero(),
+    Component.ContactCards(),
   ],
   left: [
     Component.PageTitle(),

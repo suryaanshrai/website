@@ -1,274 +1,226 @@
-import { Application, Graphics } from "pixi.js"
+let gl: WebGLRenderingContext | null = null
+let uniforms: {
+  res: WebGLUniformLocation | null
+  time: WebGLUniformLocation | null
+  mouse: WebGLUniformLocation | null
+  theme: WebGLUniformLocation | null
+  ripple: WebGLUniformLocation | null
+} | null = null
+let raf: number | null = null
+let onResize: (() => void) | null = null
+let startTime = 0
 
-let app: Application | null = null
-let waveGraphics: Graphics | null = null
+const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 }
+let rippleAt: [number, number] | null = null
+let ripple = 0
 
-interface WaveRibbon {
-  yBaseRatio: number  // Vertical center ratio (e.g. 0.3, 0.5, 0.7)
-  amplitude: number
-  frequency: number
-  speed: number
-  color: number
-  targetColor: number
-  currentColor: number
-  alpha: number
-  phaseOffset: number
-  direction: number // 1 or -1
+function getTheme(): "light" | "dark" {
+  return document.documentElement.getAttribute("saved-theme") === "light" ? "light" : "dark"
 }
 
-let ribbons: WaveRibbon[] = []
-let mouseX = window.innerWidth / 2
-let mouseY = window.innerHeight / 2
-let targetMouseX = mouseX
-let targetMouseY = mouseY
+const VERTEX_SRC = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0); }`
 
-let targetScrollY = window.scrollY
-let currentScrollY = window.scrollY
+const FRAGMENT_SRC = `
+precision highp float;
+uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_theme; uniform vec3 u_ripple;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+float noise(vec2 p){
+  vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);
+  return mix(mix(hash(i), hash(i+vec2(1.0,0.0)), u.x), mix(hash(i+vec2(0.0,1.0)), hash(i+vec2(1.0,1.0)), u.x), u.y);
+}
+float fbm(vec2 p){ float v=0.0, a=0.5; for(int i=0;i<5;i++){ v += a*noise(p); p*=2.02; a*=0.5; } return v; }
+float stars(vec2 uv, float density, float size, float t){
+  vec2 g = uv*density; vec2 i = floor(g); vec2 f = fract(g);
+  float h = hash(i);
+  if(h < 0.965) return 0.0;
+  vec2 c = vec2(hash(i+1.3), hash(i+7.7));
+  float d = length(f-c);
+  float tw = 0.55 + 0.45*sin(t*1.7 + h*60.0);
+  return smoothstep(size, 0.0, d) * tw;
+}
+void main(){
+  vec2 uv = (gl_FragCoord.xy - 0.5*u_res) / u_res.y;
+  vec2 m = (u_mouse - 0.5*u_res) / u_res.y;
+  float t = u_time * 0.035;
 
-let time = 0
-let currentTheme = document.documentElement.getAttribute("saved-theme") || "dark"
+  vec2 q = uv * 1.15;
+  q += 0.16 * vec2(fbm(q*1.4 + t), fbm(q*1.4 - t + 4.7));
+  float neb = fbm(q*1.9 + vec2(t*0.6, -t*0.4));
+  neb = pow(smoothstep(0.28, 1.0, neb), 1.6);
 
-function getThemePalette(theme: string) {
-  if (theme === "light") {
-    return {
-      ribbons: [
-        { color: 0x4f46e5, alpha: 0.12 }, // Indigo
-        { color: 0x0ea5e9, alpha: 0.15 }, // Sky Blue
-        { color: 0xdb2777, alpha: 0.10 }, // Deep Pink
-        { color: 0x9333ea, alpha: 0.12 }, // Purple
-      ]
-    }
+  float depth = smoothstep(1.25, 0.0, length(uv - m*0.25));
+  neb *= 0.55 + 0.75*depth;
+
+  vec3 violet = vec3(0.710, 0.549, 0.941);
+  vec3 cyan = vec3(0.337, 0.769, 0.847);
+  vec3 col = mix(violet, cyan, smoothstep(-0.5, 0.9, uv.x + 0.35*fbm(q*2.4)));
+  col *= neb * 0.62;
+
+  float s = stars(uv + vec2(t*0.12, 0.0), 26.0, 0.055, u_time)
+          + 0.6*stars(uv*1.7 + vec2(-t*0.07, t*0.03), 46.0, 0.04, u_time*0.8)
+          + 0.35*stars(uv*2.6 + vec2(t*0.04, 0.0), 78.0, 0.03, u_time*1.4);
+  col += vec3(0.86, 0.84, 0.95) * s * 0.85;
+
+  float md = length(uv - m);
+  col += vec3(0.42, 0.30, 0.62) * smoothstep(0.42, 0.0, md) * 0.30;
+  col += vec3(0.25, 0.55, 0.62) * smoothstep(0.06, 0.0, md) * 0.5;
+
+  if(u_ripple.z > 0.0){
+    vec2 rp = (u_ripple.xy - 0.5*u_res) / u_res.y;
+    float r = u_ripple.z;
+    float ring = smoothstep(0.03, 0.0, abs(length(uv - rp) - r*0.75)) * (1.0 - r);
+    col += vec3(0.55, 0.45, 0.80) * ring * 0.9;
+  }
+
+  vec3 dark = vec3(0.031, 0.024, 0.055) + col;
+  vec3 paperInk = mix(vec3(0.964, 0.949, 0.918), vec3(0.72, 0.66, 0.80), clamp(neb*0.9, 0.0, 1.0));
+  paperInk -= vec3(0.10, 0.12, 0.08) * s * 0.5;
+  vec3 outc = mix(dark, paperInk, u_theme);
+
+  float vig = smoothstep(1.55, 0.35, length(uv));
+  outc *= mix(0.72, 1.0, vig);
+  gl_FragColor = vec4(outc, 1.0);
+}`
+
+function compile(context: WebGLRenderingContext, type: number, src: string): WebGLShader {
+  const shader = context.createShader(type)!
+  context.shaderSource(shader, src)
+  context.compileShader(shader)
+  if (!context.getShaderParameter(shader, context.COMPILE_STATUS)) {
+    console.warn(context.getShaderInfoLog(shader))
+  }
+  return shader
+}
+
+function handlePointerMove(e: PointerEvent) {
+  mouse.tx = e.clientX / Math.max(window.innerWidth, 1)
+  mouse.ty = 1 - e.clientY / Math.max(window.innerHeight, 1)
+}
+
+function handlePointerDown(e: PointerEvent) {
+  rippleAt = [e.clientX / Math.max(window.innerWidth, 1), 1 - e.clientY / Math.max(window.innerHeight, 1)]
+  ripple = 0.001
+}
+
+function draw(now: number) {
+  raf = requestAnimationFrame(draw)
+
+  const canvas = document.getElementById("space-canvas") as HTMLCanvasElement | null
+  if (!canvas || !canvas.isConnected || !gl || !uniforms || document.hidden) return
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  const t = reduceMotion ? 0 : (now - startTime) / 1000
+
+  mouse.x += (mouse.tx - mouse.x) * 0.06
+  mouse.y += (mouse.ty - mouse.y) * 0.06
+
+  gl.uniform1f(uniforms.time, t)
+  gl.uniform2f(uniforms.mouse, mouse.x * canvas.width, mouse.y * canvas.height)
+
+  if (ripple > 0) {
+    ripple = Math.min(ripple + 0.012, 1.0)
+    if (ripple >= 1) ripple = 0
+    const r = rippleAt ?? [0.5, 0.5]
+    gl.uniform3f(uniforms.ripple, r[0] * canvas.width, r[1] * canvas.height, ripple)
   } else {
-    return {
-      ribbons: [
-        { color: 0x00f2fe, alpha: 0.28 }, // Electric Cyan
-        { color: 0x7c3aed, alpha: 0.20 }, // Cosmic Purple
-        { color: 0xec4899, alpha: 0.16 }, // Hot Pink
-        { color: 0x38bdf8, alpha: 0.24 }, // Sky Glow
-      ]
-    }
+    gl.uniform3f(uniforms.ripple, 0, 0, 0)
+  }
+
+  gl.drawArrays(gl.TRIANGLES, 0, 3)
+}
+
+function syncTheme() {
+  if (gl && uniforms) {
+    gl.uniform1f(uniforms.theme, getTheme() === "light" ? 1 : 0)
   }
 }
 
-async function initKineticWaveBg() {
-  cleanupWaveBg()
-
-  const canvas = document.getElementById("space-canvas") as HTMLCanvasElement
+function initNebulaBg() {
+  const canvas = document.getElementById("space-canvas") as HTMLCanvasElement | null
   if (!canvas) return
 
-  app = new Application()
-  try {
-    await app.init({
-      canvas: canvas,
-      resizeTo: window,
-      backgroundAlpha: 0,
-      antialias: true,
-      resolution: Math.min(window.devicePixelRatio, 2),
-      hello: false,
-    })
-  } catch (err) {
-    console.error("Failed to initialize PixiJS kinetic wave background:", err)
+  // Re-bind window listeners idempotently (safe across repeated SPA navigations)
+  window.removeEventListener("pointermove", handlePointerMove)
+  window.removeEventListener("pointerdown", handlePointerDown)
+  window.addEventListener("pointermove", handlePointerMove, { passive: true })
+  window.addEventListener("pointerdown", handlePointerDown)
+
+  // SPA navigation: the canvas element (and its WebGL context) survives the
+  // body morph since it's identical markup on every page. Do NOT recreate the
+  // context or touch canvas.width/height here - just resync theme and make
+  // sure the render loop is alive.
+  if (gl && uniforms) {
+    syncTheme()
+    if (onResize) onResize()
+    if (raf === null) raf = requestAnimationFrame(draw)
     return
   }
 
-  waveGraphics = new Graphics()
-  if (currentTheme === "dark") {
-    waveGraphics.blendMode = "screen"
-  } else {
-    waveGraphics.blendMode = "normal"
-  }
-
-  app.stage.addChild(waveGraphics)
-
-  const palette = getThemePalette(currentTheme)
-
-  // Initialize 4 ribbons
-  ribbons = [
-    {
-      yBaseRatio: 0.35,
-      amplitude: 65,
-      frequency: 0.002,
-      speed: 0.012,
-      color: palette.ribbons[0].color,
-      targetColor: palette.ribbons[0].color,
-      currentColor: palette.ribbons[0].color,
-      alpha: palette.ribbons[0].alpha,
-      phaseOffset: 0,
-      direction: 1
-    },
-    {
-      yBaseRatio: 0.50,
-      amplitude: 85,
-      frequency: 0.0015,
-      speed: -0.008,
-      color: palette.ribbons[1].color,
-      targetColor: palette.ribbons[1].color,
-      currentColor: palette.ribbons[1].color,
-      alpha: palette.ribbons[1].alpha,
-      phaseOffset: Math.PI * 0.4,
-      direction: -1
-    },
-    {
-      yBaseRatio: 0.65,
-      amplitude: 75,
-      frequency: 0.0025,
-      speed: 0.015,
-      color: palette.ribbons[2].color,
-      targetColor: palette.ribbons[2].color,
-      currentColor: palette.ribbons[2].color,
-      alpha: palette.ribbons[2].alpha,
-      phaseOffset: Math.PI * 0.85,
-      direction: 1
-    },
-    {
-      yBaseRatio: 0.80,
-      amplitude: 55,
-      frequency: 0.0018,
-      speed: -0.01,
-      color: palette.ribbons[3].color,
-      targetColor: palette.ribbons[3].color,
-      currentColor: palette.ribbons[3].color,
-      alpha: palette.ribbons[3].alpha,
-      phaseOffset: Math.PI * 1.3,
-      direction: -1
-    }
-  ]
-
-  // Listeners
-  window.addEventListener("mousemove", handleMouseMove)
-  window.addEventListener("scroll", handleScroll, { passive: true })
-
-  app.ticker.add(updateScene)
-}
-
-function handleMouseMove(e: MouseEvent) {
-  targetMouseX = e.clientX
-  targetMouseY = e.clientY
-}
-
-function handleScroll() {
-  targetScrollY = window.scrollY
-}
-
-function updateScene() {
-  if (!app || !waveGraphics) return
-
-  // Smooth lerps
-  mouseX += (targetMouseX - mouseX) * 0.06
-  mouseY += (targetMouseY - mouseY) * 0.06
-  currentScrollY += (targetScrollY - currentScrollY) * 0.08
-  time += 0.8
-
-  // Theme Sync
-  const newTheme = document.documentElement.getAttribute("saved-theme") || "dark"
-  if (newTheme !== currentTheme) {
-    currentTheme = newTheme
-    const palette = getThemePalette(currentTheme)
-    waveGraphics.blendMode = currentTheme === "dark" ? "screen" : "normal"
-    ribbons.forEach((r, idx) => {
-      r.targetColor = palette.ribbons[idx].color
-      r.alpha = palette.ribbons[idx].alpha
-    })
-  }
-
-  waveGraphics.clear()
-
-  const width = window.innerWidth
-  const height = window.innerHeight
-  const segments = 90
-  const step = width / segments
-
-  ribbons.forEach((r) => {
-    // Smooth color morphing
-    if (r.currentColor !== r.targetColor) {
-      const cr = (r.currentColor >> 16) & 0xff
-      const cg = (r.currentColor >> 8) & 0xff
-      const cb = r.currentColor & 0xff
-
-      const tr = (r.targetColor >> 16) & 0xff
-      const tg = (r.targetColor >> 8) & 0xff
-      const tb = r.targetColor & 0xff
-
-      const nr = Math.round(cr + (tr - cr) * 0.05)
-      const ng = Math.round(cg + (tg - cg) * 0.05)
-      const nb = Math.round(cb + (tb - cb) * 0.05)
-
-      r.currentColor = (nr << 16) | (ng << 8) | nb
-    }
-
-    const baseHeight = height * r.yBaseRatio - currentScrollY * 0.15
-
-    // To make it look extremely premium, draw 4 adjacent strands for a ribbon effect
-    const numStrands = 4
-    for (let s = 0; s < numStrands; s++) {
-      const strandOffset = s * 6
-      const strandAlpha = r.alpha * (1.0 - s / numStrands)
-      const strandAmp = r.amplitude * (1.0 - s * 0.08)
-
-      // Start drawing path
-      waveGraphics.moveTo(0, baseHeight)
-
-      for (let i = 0; i <= segments; i++) {
-        const px = i * step
-        
-        // Multi-frequency wave calculation
-        const tVal = time * r.speed
-        const angle1 = px * r.frequency + tVal + r.phaseOffset + s * 0.1
-        const angle2 = px * (r.frequency * 2.3) - tVal * 0.5 + s * 0.05
-        
-        let py = baseHeight + Math.sin(angle1) * strandAmp + Math.cos(angle2) * (strandAmp * 0.45)
-
-        // Mouse displacement repulsion (organic ripple push)
-        const dx = mouseX - px
-        const dy = mouseY - py
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        const repelRadius = 250
-        
-        if (dist < repelRadius) {
-          const force = (repelRadius - dist) / repelRadius
-          // Push vertically away from cursor with custom sigmoid drop-off
-          const pushVal = Math.sin(force * Math.PI * 0.5) * 55
-          py -= (dy / dist) * pushVal
-        }
-
-        if (i === 0) {
-          waveGraphics.moveTo(px, py)
-        } else {
-          waveGraphics.lineTo(px, py)
-        }
-      }
-
-      if (typeof (waveGraphics as any).stroke === "function") {
-        waveGraphics.stroke({ width: 1.5, color: r.currentColor, alpha: strandAlpha })
-      } else {
-        ;(waveGraphics as any).lineStyle(1.5, r.currentColor, strandAlpha)
-        ;(waveGraphics as any).stroke()
-      }
-    }
+  const context = canvas.getContext("webgl", {
+    antialias: false,
+    alpha: false,
+    powerPreference: "low-power",
   })
+  if (!context) return
+  gl = context
+
+  const program = gl.createProgram()!
+  gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERTEX_SRC))
+  gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAGMENT_SRC))
+  gl.linkProgram(program)
+  gl.useProgram(program)
+
+  const buf = gl.createBuffer()
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf)
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
+  const loc = gl.getAttribLocation(program, "p")
+  gl.enableVertexAttribArray(loc)
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+
+  uniforms = {
+    res: gl.getUniformLocation(program, "u_res"),
+    time: gl.getUniformLocation(program, "u_time"),
+    mouse: gl.getUniformLocation(program, "u_mouse"),
+    theme: gl.getUniformLocation(program, "u_theme"),
+    ripple: gl.getUniformLocation(program, "u_ripple"),
+  }
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+  onResize = () => {
+    const w = Math.floor(canvas.clientWidth * dpr)
+    const h = Math.floor(canvas.clientHeight * dpr)
+    canvas.width = w
+    canvas.height = h
+    gl!.viewport(0, 0, w, h)
+    gl!.uniform2f(uniforms!.res, w, h)
+  }
+  onResize()
+  window.addEventListener("resize", onResize)
+
+  syncTheme()
+  startTime = performance.now()
+  raf = requestAnimationFrame(draw)
 }
 
-function cleanupWaveBg() {
-  window.removeEventListener("mousemove", handleMouseMove)
-  window.removeEventListener("scroll", handleScroll)
-
-  if (app) {
-    app.destroy(true, { children: true, texture: true })
-    app = null
-    waveGraphics = null
-  }
+function cleanupNebulaBg() {
+  window.removeEventListener("pointermove", handlePointerMove)
+  window.removeEventListener("pointerdown", handlePointerDown)
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initKineticWaveBg)
+  document.addEventListener("DOMContentLoaded", initNebulaBg)
 } else {
-  initKineticWaveBg()
-}
-
-if (typeof (window as any).addCleanup === "function") {
-  ;(window as any).addCleanup(cleanupWaveBg)
+  initNebulaBg()
 }
 
 document.addEventListener("nav", () => {
-  initKineticWaveBg()
+  initNebulaBg()
 })
+
+document.addEventListener("themechange", () => {
+  syncTheme()
+})
+
+if (typeof window.addCleanup === "function") {
+  window.addCleanup(cleanupNebulaBg)
+}
