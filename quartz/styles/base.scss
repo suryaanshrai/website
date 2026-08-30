@@ -274,10 +274,19 @@ a {
 
     & .page-header {
       grid-area: grid-header;
-      margin: $topSpacing 0 0 0;
+      margin: 0;
+
+      & > .popover-hint {
+        margin-top: 2.5rem;
+        padding: 0 0.5rem;
+      }
+
       @media all and ($mobile) {
-        margin-top: 0;
         padding: 0;
+
+        & > .popover-hint {
+          margin-top: 1.5rem;
+        }
       }
     }
 
@@ -681,4 +690,130 @@ iframe.pdf {
   background: var(--secondary);
   transition: width 0.2s ease;
   z-index: 9999;
+}
+
+/* Landing page overrides */
+body[data-slug="index"] {
+  #quartz-root {
+    background-color: transparent !important;
+  }
+  .page {
+    margin: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  .center {
+    grid-column: 1 / -1 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+  .left.sidebar,
+  .right.sidebar {
+    display: none !important;
+  }
+  article,
+  hr,
+  .article-title,
+  .content-meta,
+  .note-properties,
+  .breadcrumb-container,
+  .tag-list {
+    display: none !important;
+  }
+  .page-header > .popover-hint {
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+  #quartz-root {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* About / Contact pages: a hand-authored component replaces the generic chrome */
+body[data-slug="about-me"],
+body[data-slug="contact"] {
+  .article-title,
+  .content-meta,
+  .note-properties,
+  .breadcrumb-container,
+  .tag-list {
+    display: none !important;
+  }
+}
+
+body[data-slug="about-me"],
+body[data-slug="contact"] {
+  .center > article {
+    display: none !important;
+  }
+}
+
+/* Glassmorphism on sidebars */
+.left.sidebar,
+.right.sidebar {
+  background: color-mix(in srgb, var(--light) 55%, transparent) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid color-mix(in srgb, var(--secondary) 14%, transparent) !important;
+  border-radius: 16px;
+  padding: 1.5rem !important;
+  margin: 1.5rem !important;
+  height: calc(100vh - 3rem) !important;
+  overflow-y: auto;
+  box-sizing: border-box;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+html[saved-theme="light"] {
+  .left.sidebar,
+  .right.sidebar {
+    background: color-mix(in srgb, var(--light) 85%, white 15%) !important;
+    border-color: color-mix(in srgb, var(--secondary) 8%, transparent) !important;
+  }
+}
+
+a.internal,
+a.external {
+  transition:
+    text-shadow 0.3s ease,
+    color 0.3s ease;
+  &:hover {
+    text-shadow: 0 0 8px color-mix(in srgb, var(--tertiary) 40%, transparent);
+    color: var(--tertiary) !important;
+  }
+}
+
+.search {
+  input {
+    background: color-mix(in srgb, var(--light) 60%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent) !important;
+    color: var(--dark) !important;
+    border-radius: 8px !important;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease;
+
+    &:focus {
+      border-color: var(--tertiary) !important;
+      box-shadow: 0 0 10px color-mix(in srgb, var(--tertiary) 20%, transparent) !important;
+    }
+  }
+}
+
+html[saved-theme="light"] {
+  .search {
+    input {
+      background: color-mix(in srgb, var(--light) 80%, white 20%) !important;
+      border-color: color-mix(in srgb, var(--secondary) 15%, transparent) !important;
+      color: var(--dark) !important;
+    }
+  }
 }

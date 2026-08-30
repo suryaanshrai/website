@@ -1,0 +1,348 @@
+@use "../../styles/variables.scss" as *;
+
+// Quartz chrome overrides specific to the landing page
+body[data-slug="index"] {
+  .page-footer {
+    display: block !important;
+    background: transparent !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+
+    & > *:not(.animation-container) {
+      display: none !important;
+    }
+  }
+
+  .center {
+    grid-column: 1 / -1 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #quartz-root {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .page-header > .popover-hint {
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+@keyframes landing-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.landing-page {
+  position: relative;
+  color: var(--dark);
+  font-family: var(--bodyFont);
+}
+
+.landing-section {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 0 40px 60px;
+  box-sizing: border-box;
+}
+
+.landing-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--lightgray);
+  padding-bottom: 14px;
+  margin-bottom: 34px;
+  gap: 20px;
+
+  h2 {
+    font-family: var(--codeFont);
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    color: var(--gray);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  span {
+    font-family: var(--codeFont);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+  }
+}
+
+.landing-section-link {
+  font-family: var(--codeFont);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--dark);
+
+  &:hover {
+    color: var(--secondary);
+  }
+}
+
+.landing-hero-row {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 70px;
+  align-items: center;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 40px 40px 90px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 220px);
+
+  @media all and ($mobile) {
+    grid-template-columns: 1fr;
+    gap: 42px;
+    padding: 24px 20px 60px;
+    min-height: auto;
+  }
+}
+
+.landing-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--codeFont);
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  color: var(--gray);
+  margin-bottom: 26px;
+}
+
+.landing-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3ddc97;
+  box-shadow: 0 0 10px #3ddc97;
+  animation: landing-blink 2.6s ease-in-out infinite;
+}
+
+.landing-name {
+  font-family: var(--titleFont);
+  font-weight: 400;
+  font-size: clamp(3rem, 7.4vw, 7.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--dark);
+}
+
+.landing-name-italic {
+  font-style: italic;
+  color: var(--secondary);
+}
+
+.landing-tagline {
+  max-width: 44ch;
+  margin: 28px 0 0;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: var(--darkgray);
+}
+
+.landing-cta-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.landing-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--lightgray);
+  color: var(--darkgray);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: var(--dark);
+  }
+}
+
+.landing-cta-primary {
+  border-color: color-mix(in srgb, var(--secondary) 40%, transparent);
+  background: var(--qz-surface);
+  color: var(--dark);
+}
+
+.landing-cta-arrow {
+  color: var(--secondary);
+}
+
+.landing-index {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--lightgray);
+}
+
+.landing-index-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 6px;
+  border-bottom: 1px solid var(--lightgray);
+  color: var(--dark);
+}
+
+.landing-index-num {
+  font-family: var(--codeFont);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--gray);
+}
+
+.landing-index-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.landing-index-title {
+  font-family: var(--titleFont);
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+  transition: color 0.2s ease;
+}
+
+.landing-index-row:hover .landing-index-title {
+  color: var(--secondary);
+}
+
+.landing-index-note {
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+
+.landing-index-count {
+  font-family: var(--codeFont);
+  font-size: 0.62rem;
+  color: var(--gray);
+}
+
+.landing-index-preview {
+  margin-top: 18px;
+  min-height: 70px;
+  padding: 14px 16px;
+  border: 1px solid var(--lightgray);
+  border-radius: 14px;
+  background: var(--qz-surface);
+}
+
+.landing-preview-kicker {
+  font-family: var(--codeFont);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--tertiary);
+  margin-bottom: 6px;
+}
+
+.landing-preview-body {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--darkgray);
+}
+
+.landing-currently-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--lightgray);
+
+  @media all and ($mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.landing-currently-card {
+  background: var(--light);
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.landing-currently-label {
+  font-family: var(--codeFont);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--tertiary);
+}
+
+.landing-currently-head {
+  font-family: var(--titleFont);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--dark);
+}
+
+.landing-currently-body {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--darkgray);
+}
+
+// Homepage recent-writing list reuses RecentNotes; it's the next sibling of
+// .landing-page (which renders the "RECENT WRITING" section head), so it
+// needs the same max width to line up under that heading.
+.landing-page + .recent-notes {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 0 40px 20px;
+  box-sizing: border-box;
+
+  > h3:empty {
+    display: none;
+  }
+}
+
+// Homepage graph teaser widget reuses Graph(); style the mini-map bigger.
+.landing-graph-teaser + .graph {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 0 40px 60px;
+  box-sizing: border-box;
+
+  > h3 {
+    display: none;
+  }
+
+  .graph-outer {
+    height: 420px;
+  }
+}
+
+.landing-footer-quote {
+  position: relative;
+  z-index: 10;
+}

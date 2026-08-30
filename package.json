@@ -19,7 +19,8 @@
     "test": "tsx --test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "install-plugins": "npx tsx ./quartz/plugins/loader/install-plugins.ts",
-    "prebuild": "npm run install-plugins"
+    "copy-audios": "node -e \"const fs = require('fs'); const src = 'audios'; const dest = 'quartz/static/audios'; if (fs.existsSync(dest)) { fs.rmSync(dest, { recursive: true }); } if (fs.existsSync(src)) { fs.cpSync(src, dest, { recursive: true }); console.log('Copied audios to quartz/static/audios'); } }\"",
+    "prebuild": "npm run copy-audios && npm run install-plugins"
   },
   "engines": {
     "npm": ">=10.9.2",
@@ -54,7 +55,6 @@
     "@quartz-community/content-meta": "^0.1.0",
     "@quartz-community/content-page": "^0.1.0",
     "@quartz-community/crawl-links": "^0.1.0",
-    "@quartz-themes/core": "^1.0.0",
     "@quartz-community/created-modified-date": "^0.1.0",
     "@quartz-community/darkmode": "^0.1.0",
     "@quartz-community/description": "^0.1.0",
@@ -70,6 +70,7 @@
     "@quartz-community/latex": "^0.1.0",
     "@quartz-community/note-properties": "^0.1.0",
     "@quartz-community/obsidian-flavored-markdown": "^0.1.1",
+    "@quartz-community/obsidian-plugin-excalidraw": "^0.1.0",
     "@quartz-community/og-image": "^0.1.1",
     "@quartz-community/ox-hugo": "^0.1.0",
     "@quartz-community/page-title": "^0.1.0",
@@ -86,6 +87,8 @@
     "@quartz-community/tag-list": "^0.1.0",
     "@quartz-community/tag-page": "^0.1.0",
     "@quartz-community/unlisted-pages": "^0.1.0",
+    "@quartz-themes/core": "^1.0.0",
+    "@quartz-themes/default": "^1.0.1",
     "ansi-truncate": "^1.4.0",
     "async-mutex": "^0.5.0",
     "chokidar": "^5.0.0",
