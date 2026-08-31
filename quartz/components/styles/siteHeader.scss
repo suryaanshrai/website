@@ -16,8 +16,7 @@
   border-bottom: 1px solid color-mix(in srgb, var(--secondary) 14%, transparent);
 
   @media all and ($mobile) {
-    flex-wrap: wrap;
-    row-gap: 10px;
+    flex-wrap: nowrap;
     padding: 10px 4px;
   }
 }
@@ -81,9 +80,7 @@
   }
 
   @media all and ($mobile) {
-    order: 3;
-    width: 100%;
-    gap: 2px;
+    display: none;
   }
 }
 
@@ -97,6 +94,32 @@
 
   @media all and ($mobile) {
     display: none;
+  }
+}
+
+.site-header-nav-toggle {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent);
+  background: transparent;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    background: var(--dark);
+  }
+
+  @media all and ($mobile) {
+    display: flex;
   }
 }
 

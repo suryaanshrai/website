@@ -6,6 +6,7 @@ import MobileOnly from "./MobileOnly"
 import Flex from "./Flex"
 import ConditionalRender from "./ConditionalRender"
 import SiteHeader from "./SiteHeader"
+import MobileNav from "./MobileNav"
 import MagnetCursor from "./MagnetCursor"
 import ReadingProgress from "./ReadingProgress"
 import Landing from "./Landing"
@@ -32,6 +33,7 @@ export {
   Flex,
   ConditionalRender,
   SiteHeader,
+  MobileNav,
   MagnetCursor,
   ReadingProgress,
   Landing,

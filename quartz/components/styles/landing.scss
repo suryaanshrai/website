@@ -12,7 +12,7 @@ body[data-slug="index"] {
     position: absolute !important;
     pointer-events: none !important;
 
-    & > *:not(.animation-container) {
+    & > *:not(.animation-container):not(.site-mobile-nav) {
       display: none !important;
     }
   }

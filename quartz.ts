@@ -14,6 +14,7 @@ const contentBase = base.byPageType.content ?? base.defaults
 const HEADER = [Component.SiteHeader(), Darkmode(), Component.ReadingProgress()]
 const FOOTER = [Component.Footer({ iconLinks: contactLinks })]
 const GLOBAL_AFTER_BODY = [
+  Component.MobileNav(),
   Component.SpaceBackground(),
   Component.MagnetCursor(),
   Component.Comments({

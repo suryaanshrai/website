@@ -10,7 +10,7 @@ interface NavItem {
   slug: FullSlug
 }
 
-const NAV_ITEMS: NavItem[] = [
+export const NAV_ITEMS: NavItem[] = [
   { label: "Blogs", slug: "blogs" as FullSlug },
   { label: "Projects", slug: "projects" as FullSlug },
   { label: "Poetry", slug: "poetry" as FullSlug },
@@ -20,7 +20,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Contact", slug: "contact" as FullSlug },
 ]
 
-function isActive(current: string, target: string): boolean {
+export function isActive(current: string, target: string): boolean {
   return current === target || current.startsWith(`${target}/`)
 }
 
@@ -48,6 +48,18 @@ const SiteHeader: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
       <span class="site-header-clock" id="site-header-clock">
         --:--:-- IST
       </span>
+      <button
+        type="button"
+        class="site-header-nav-toggle"
+        id="site-header-nav-toggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="site-mobile-nav"
+      >
+        <span />
+        <span />
+        <span />
+      </button>
     </>
   )
 }
