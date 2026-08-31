@@ -12,6 +12,14 @@
   --qz-surface: color-mix(in srgb, var(--light) 97%, var(--dark) 3%);
   --qz-border: var(--lightgray);
   --qz-audio-panel: color-mix(in srgb, var(--light) 92%, var(--dark) 8%);
+
+  // One motion signature for the whole site. Every entrance uses this curve and
+  // duration band; UI feedback uses the shorter one. Previously each component
+  // improvised its own `ease` values, which is what makes a page feel assembled
+  // rather than designed.
+  --qz-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --qz-enter: 0.9s;
+  --qz-feedback: 0.28s;
 }
 
 // The table-of-contents plugin's own CSS only dims inactive links via
@@ -96,6 +104,151 @@ html.theme-swapping *::after {
     overflow: visible !important;
     background: transparent !important;
     padding: 0 !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Scroll reveals
+// ---------------------------------------------------------------------------
+// `will-reveal` is added by landing.inline.ts only after the IntersectionObserver
+// is live, so a browser without it (or with reduced motion) never hides anything.
+// The paired translate matters: a bare opacity fade reads as no motion at all.
+.will-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity var(--qz-enter) var(--qz-ease),
+    transform var(--qz-enter) var(--qz-ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.will-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+// Reduced motion must land on the *end* state — the common bug is disabling the
+// animation but leaving the element at opacity 0, so content never appears.
+@media (prefers-reduced-motion: reduce) {
+  .will-reveal,
+  .will-reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Typographic detail
+// ---------------------------------------------------------------------------
+// Headings set at display sizes are where a one-word last line is most obvious.
+h1,
+h2,
+h3,
+.landing-name,
+.landing-currently-head,
+.recent-writing-title,
+.contact-title {
+  text-wrap: balance;
+}
+
+p,
+.landing-tagline,
+.landing-index-note,
+.recent-writing-kicker,
+.landing-currently-body {
+  text-wrap: pretty;
+}
+
+// Figures that sit in a column — the index counts, row numbers and dates — need
+// to be tabular or they visibly jitter against each other.
+.landing-index-num,
+.landing-index-count,
+.recent-writing-date,
+.site-header-clock {
+  font-variant-numeric: tabular-nums;
+}
+
+// ---------------------------------------------------------------------------
+// Comments
+// ---------------------------------------------------------------------------
+// The Comments component never assigned a stylesheet, so the remark42 embed was
+// dropped into the page with no width, spacing, or heading of its own. This
+// gives it the same measure and section rule as the rest of the article chrome;
+// the widget's internal theming is handled in the remark42 fork.
+.remark42 {
+  max-width: 750px;
+  margin: 56px auto 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--lightgray);
+  min-height: 1px;
+
+  &::before {
+    content: "RESPONSES";
+    display: block;
+    margin-bottom: 22px;
+    font-family: var(--codeFont);
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    color: var(--gray);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Scrollbars
+// ---------------------------------------------------------------------------
+// There was no scrollbar styling anywhere in the project, so every scroll
+// surface used the browser default — a stock grey bar sitting against warm
+// aged paper in light mode, and the only element on screen not drawn from the
+// palette. `color-scheme` already follows the theme, which fixes the gutter;
+// these rules give the thumb the same translucent-ink treatment as the hairline
+// borders, so it reads as part of the design rather than as chrome.
+//
+// `scrollbar-color` is the standard property (Firefox, Chrome 121+); the
+// ::-webkit- rules cover Safari and older Chromium.
+:root {
+  scrollbar-color: color-mix(in srgb, var(--secondary) 38%, transparent) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--secondary) 32%, transparent);
+  border-radius: 999px;
+  // Inset the thumb from the track edges without needing a second element.
+  border: 2px solid transparent;
+  background-clip: padding-box;
+
+  &:hover {
+    background: color-mix(in srgb, var(--secondary) 55%, transparent);
+    background-clip: padding-box;
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+// Inner scroll surfaces (sidebars, the drawer's file tree, code blocks) get a
+// narrower bar so they don't compete with the page scrollbar.
+.left.sidebar,
+.right.sidebar,
+.site-mobile-nav-tree,
+.explorer-ul,
+pre {
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
   }
 }
 
