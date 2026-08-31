@@ -1,0 +1,466 @@
+@use "./variables.scss" as *;
+
+// ============================================================================
+// Page templates — article header, reading column, index lists, rails
+// ============================================================================
+//
+// Everything the marketplace plugins emit for a page (breadcrumb, title, meta,
+// tags, folder listing, table of contents, backlinks, graph) ships with stock
+// Quartz styling: body-font labels, a 2rem h1, chevron separators, an h3 rail
+// heading. The approved design uses one consistent chrome register instead —
+// small tracked-out uppercase mono for every label and every piece of metadata,
+// and display serif at a real editorial size for every title.
+//
+// The measurements below are the design's own, converted from px at a 16px
+// root: 10px -> 0.625rem, 9.5px -> 0.594rem.
+
+$chrome-size: 0.625rem;
+$chrome-track: 0.16em;
+
+// One mixin, so a label added later cannot drift out of the register.
+@mixin chrome($size: $chrome-size, $track: $chrome-track) {
+  font-family: var(--codeFont);
+  font-size: $size;
+  font-weight: 500;
+  letter-spacing: $track;
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------- breadcrumb
+
+.page[data-frame="site"] .breadcrumb-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0 0 22px;
+  padding: 0;
+
+  .breadcrumb-element {
+    display: flex;
+    align-items: center;
+
+    a {
+      @include chrome($track: 0.26em);
+      color: var(--gray);
+      font-weight: 500;
+      background: none;
+      padding: 0;
+      transition: color var(--qz-feedback) var(--qz-ease);
+
+      &:hover {
+        color: var(--dark);
+      }
+    }
+
+    // The plugin's separator is a "❯" in the body face inside its own <p>. The
+    // design uses a plain slash on the same mono baseline as the crumbs.
+    > p {
+      font-size: 0;
+      margin: 0;
+
+      &::after {
+        content: "/";
+        @include chrome($track: 0);
+        color: var(--gray);
+        opacity: 0.6;
+        margin: 0 0.75em;
+      }
+    }
+  }
+
+  // The current page is the end of the trail, not a destination.
+  .breadcrumb-element:last-child a {
+    color: var(--darkgray);
+    pointer-events: none;
+  }
+}
+
+// -------------------------------------------------------------------- title
+
+.page[data-frame="site"] .article-title {
+  font-family: var(--titleFont);
+  font-weight: 400;
+  // Design: clamp(2.8rem, 5.6vw, 5rem). The article title is the one place the
+  // page is allowed to be loud; every other element stays quiet around it.
+  font-size: clamp(2.4rem, 5.6vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0;
+  max-width: 22ch;
+  text-wrap: balance;
+
+  @media all and ($mobile) {
+    font-size: clamp(2.1rem, 11vw, 3.2rem);
+    max-width: none;
+  }
+}
+
+// ------------------------------------------------------- meta band + tags
+//
+// `content-meta` and `tags` are two sibling blocks in the markup but one line in
+// the design: `29 JAN 2026 · 3 MIN READ · #PROJECTS`. Making both inline-flex
+// lets them share a line without needing to move either in the DOM.
+
+.page[data-frame="site"] .site-lede {
+  > .content-meta,
+  > .tags {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 26px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+    vertical-align: baseline;
+  }
+
+  > .content-meta {
+    @include chrome;
+    color: var(--darkgray);
+
+    > * {
+      color: inherit;
+      font-size: inherit;
+      font-family: inherit;
+      letter-spacing: inherit;
+    }
+
+    // Interpuncts between items, in the fainter chrome colour.
+    > * + *::before {
+      content: "·";
+      margin-right: 26px;
+      color: var(--gray);
+    }
+
+    // The plugin appends a comma after the date (`show-comma`), which reads as a
+    // second separator sitting right next to the interpunct.
+    > time::after {
+      content: none;
+    }
+  }
+
+  > .tags {
+    gap: 14px;
+    margin-left: 26px;
+
+    &::before {
+      content: "·";
+      @include chrome;
+      color: var(--gray);
+    }
+
+    li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    a.tag-link {
+      @include chrome;
+      // The design gives the topic the cool accent, so it reads as a different
+      // kind of fact from the date and the length.
+      color: var(--tertiary);
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      font-weight: 500;
+    }
+  }
+
+  // Narrow screens can't hold date + length + topics on one line, and once the
+  // tags wrap, the interpunct that joined them to the meta band is left orphaned
+  // at the start of the new line. Below the breakpoint the tags become their own
+  // row and drop the joining mark.
+  @media all and ($mobile) {
+    > .content-meta {
+      display: flex;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    > .content-meta > * + *::before {
+      margin-right: 14px;
+    }
+
+    > .tags {
+      display: flex;
+      gap: 14px;
+      margin: 12px 0 0;
+
+      &::before {
+        content: none;
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------- reading column
+//
+// Two page types put the article at different depths — a content page emits
+// `.site-column > article.popover-hint`, a folder page emits
+// `.site-column > .popover-hint > article` — so this is matched by descent
+// rather than by child combinator.
+
+.page[data-frame="site"] .site-column article {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--darkgray);
+
+  p,
+  li {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  // The design opens every piece with a larger, full-contrast standfirst before
+  // settling into the reading size.
+  > .markdown-preview-view > p:first-child {
+    font-size: 1.32rem;
+    line-height: 1.7;
+    color: var(--dark);
+    margin-top: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--titleFont);
+    font-weight: 400;
+    letter-spacing: -0.012em;
+    color: var(--dark);
+    text-wrap: balance;
+    margin-top: 2.2em;
+    margin-bottom: 0.5em;
+  }
+
+  // Content in this vault uses `#` for section headings, so h1 is the common
+  // in-body heading level, not a second page title.
+  h1,
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  h4 {
+    font-size: 1.2rem;
+  }
+}
+
+// -------------------------------------------------------------- index lists
+//
+// Folder and tag pages. The design's row is a four-part grid — date, title,
+// description, length — set against a hairline. The plugin's PageList emits
+// three of those four (there is no description in its markup), so the row is
+// laid out as date | title | tags and the tags take the right-hand column.
+
+.page[data-frame="site"] .page-listing {
+  margin-top: 54px;
+
+  // "5 items under this folder." — a count, so it belongs in the chrome
+  // register with the other small facts, not as a body-font sentence.
+  > p:first-child {
+    @include chrome($track: 0.22em);
+    color: var(--gray);
+    margin: 0 0 18px;
+  }
+
+  .section-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    // A hairline under the last row closes the list, exactly as in the design.
+    border-bottom: 1px solid var(--lightgray);
+  }
+
+  .section-li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .section {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr) auto;
+    gap: 30px;
+    align-items: baseline;
+    padding: 30px 6px;
+    border-top: 1px solid var(--lightgray);
+    transition: background-color var(--qz-feedback) var(--qz-ease);
+
+    > .meta {
+      @include chrome($track: 0.14em);
+      color: var(--gray);
+      margin: 0;
+    }
+
+    > .desc {
+      min-width: 0;
+
+      h3 {
+        margin: 0;
+        font-family: var(--titleFont);
+        font-weight: 400;
+        font-size: 2.2rem;
+        line-height: 1.12;
+        letter-spacing: -0.012em;
+        text-wrap: balance;
+
+        a {
+          color: var(--dark);
+          background: none;
+          padding: 0;
+          border-radius: 0;
+          font-weight: 400;
+          transition: color var(--qz-feedback) var(--qz-ease);
+        }
+      }
+    }
+
+    > .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      li {
+        margin: 0;
+        list-style: none;
+      }
+
+      a.tag-link {
+        @include chrome($size: 0.594rem, $track: 0.14em);
+        color: var(--tertiary);
+        background: none;
+        padding: 0;
+        border-radius: 0;
+        font-weight: 500;
+      }
+    }
+  }
+
+  // Hovering the row — not just the link — reads as one target, which is how
+  // the design's rows behave. Suppressed on touch, where :hover latches.
+  @media (hover: hover) {
+    .section:hover > .desc h3 a {
+      color: var(--secondary);
+    }
+  }
+
+  @media all and ($mobile) {
+    margin-top: 32px;
+
+    .section {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+      padding: 22px 0;
+
+      > .desc h3 {
+        font-size: 1.5rem;
+      }
+
+      > .tags {
+        justify-content: flex-start;
+      }
+    }
+  }
+}
+
+// ------------------------------------------------------------------- rails
+
+.page[data-frame="site"] .site-aside {
+  // The plugins wrap their rail heading in a <button> (table of contents) or
+  // emit a bare <h3> (backlinks, graph). Both are reset to the design's label
+  // in siteFrame.scss; what is left here is the rail body.
+  .toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    .fold {
+      width: 14px;
+      height: 14px;
+      color: var(--gray);
+      opacity: 0.7;
+    }
+  }
+
+  .toc-content {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style: none;
+      margin: 0;
+    }
+
+    a {
+      display: block;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      padding: 6px 0 6px 12px;
+      background: none;
+      font-weight: 400;
+    }
+
+    .depth-1 {
+      padding-left: 12px;
+    }
+    .depth-2 {
+      padding-left: 24px;
+    }
+  }
+
+  .backlinks ul,
+  .backlinks li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .backlinks li + li {
+    margin-top: 10px;
+  }
+
+  .backlinks a {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    background: none;
+    padding: 0;
+  }
+
+  // The graph is a panel in the design — a hairline box on the page ground,
+  // with no fill of its own.
+  .graph-outer {
+    border: 1px solid var(--lightgray);
+    border-radius: 14px;
+    background: none;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+// The generic chrome is hidden on the hand-authored pages; the tag-list plugin
+// emits `ul.tags`, which those rules missed (they only named `.tag-list`), so
+// About and Contact rendered a stray tag row under the custom hero.
+body[data-slug="index"],
+body[data-slug="about-me"],
+body[data-slug="contact"] {
+  .site-lede > .tags {
+    display: none !important;
+  }
+}

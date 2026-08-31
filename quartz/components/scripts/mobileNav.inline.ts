@@ -38,27 +38,6 @@ function onKeydown(e: KeyboardEvent) {
   if (e.key === "Escape") closeNav()
 }
 
-const MOBILE = "(max-width: 800px)"
-
-// On mobile the left sidebar (site title + explorer) is hidden, because it
-// rendered as a second sticky bar stacked above the real header. The explorer
-// itself is still wanted, so relocate the live element into the drawer rather
-// than re-implementing the tree: moving a node preserves its listeners and the
-// plugin's own render-on-`nav` continues to work. Above the breakpoint it is
-// moved back so the desktop sidebar is unaffected.
-function syncExplorerPlacement() {
-  const explorer = document.querySelector(".explorer")
-  const tree = document.getElementById("site-mobile-nav-tree")
-  const sidebar = document.querySelector(".left.sidebar")
-  if (!explorer) return
-
-  if (window.matchMedia(MOBILE).matches) {
-    if (tree && explorer.parentElement !== tree) tree.appendChild(explorer)
-  } else if (sidebar && explorer.parentElement !== sidebar) {
-    sidebar.appendChild(explorer)
-  }
-}
-
 function setup() {
   const { nav, toggle, close } = getEls()
   toggle?.addEventListener("click", onToggleClick)
@@ -68,30 +47,13 @@ function setup() {
   })
   document.addEventListener("keydown", onKeydown)
   closeNav()
-  syncExplorerPlacement()
-  // The explorer plugin rebuilds its tree on `nav` too, and ordering between
-  // the two listeners isn't guaranteed — re-assert placement after it settles.
-  requestAnimationFrame(syncExplorerPlacement)
 }
-
-// Tapping a file in the relocated tree should dismiss the drawer like any other
-// nav link. Delegated, because the tree is re-rendered by its own plugin.
-function onTreeClick(e: Event) {
-  const target = e.target as HTMLElement | null
-  if (target?.closest("#site-mobile-nav-tree a")) closeNav()
-}
-
-const mobileQuery = window.matchMedia(MOBILE)
 
 document.addEventListener("nav", setup)
-document.addEventListener("click", onTreeClick)
-mobileQuery.addEventListener("change", syncExplorerPlacement)
 
 if (typeof window.addCleanup === "function") {
   window.addCleanup(() => {
     document.removeEventListener("keydown", onKeydown)
-    document.removeEventListener("click", onTreeClick)
-    mobileQuery.removeEventListener("change", syncExplorerPlacement)
     document.body.style.overflow = ""
   })
 }

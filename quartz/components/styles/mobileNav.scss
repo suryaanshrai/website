@@ -63,40 +63,28 @@
   flex-shrink: 0;
 }
 
-// The drawer now holds the section links *and* the relocated explorer tree, so
-// it scrolls as one column instead of vertically centring a fixed list.
+// The design's drawer is the seven sections in display serif, vertically
+// centred in the panel — nothing else. It used to also carry the relocated
+// explorer tree, which is gone site-wide.
 .site-mobile-nav-links {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 2px;
-  padding: 20px 28px 0;
-  flex-shrink: 0;
+  padding: 20px 28px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 
   .site-mobile-nav-link {
     padding: 16px 4px;
     border-bottom: 1px solid color-mix(in srgb, var(--secondary) 14%, transparent);
     font-family: var(--titleFont);
-    font-size: 2rem;
+    font-size: 2.1rem;
     color: var(--dark);
 
     &.active {
       color: var(--secondary);
     }
   }
-}
-
-.site-mobile-nav-tree {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 22px 28px 32px;
-}
-
-.site-mobile-nav-tree-label {
-  margin: 0 0 14px;
-  font-family: var(--codeFont);
-  font-size: 0.6rem;
-  letter-spacing: 0.28em;
-  color: var(--gray);
 }

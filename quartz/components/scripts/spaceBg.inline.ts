@@ -23,9 +23,28 @@ const VERTEX_SRC = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0)
 const FRAGMENT_SRC = `
 precision highp float;
 uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_theme; uniform vec3 u_ripple;
-float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+
+// The classic \`fract(sin(dot(p, k)) * 43758.5)\` hash is the usual cause of
+// blocky patches on phones: fbm pushes p out to ~30x, and mobile GPUs implement
+// sin() with much coarser range reduction than desktop ones, so above a few
+// hundred radians neighbouring cells collapse onto the same value and the noise
+// grows visible rectangular structure. This variant never leaves [0,1) and uses
+// no transcendentals, so it is stable on every GPU.
+float hash(vec2 p){
+  vec3 v = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
+  v += dot(v, v.yzx + 33.33);
+  return fract((v.x + v.y) * v.z);
+}
+
+// Interleaved gradient noise, used only to dither the final colour.
+float ign(vec2 p){ return fract(52.9829189 * fract(dot(p, vec2(0.06711056, 0.00583715)))); }
+
 float noise(vec2 p){
-  vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);
+  vec2 i = floor(p); vec2 f = fract(p);
+  // Quintic, not cubic: smoothstep's second derivative is discontinuous at the
+  // cell boundary, which shows up as a faint grid of creases across a large
+  // smooth gradient like this one.
+  vec2 u = f*f*f*(f*(f*6.0-15.0)+10.0);
   return mix(mix(hash(i), hash(i+vec2(1.0,0.0)), u.x), mix(hash(i+vec2(0.0,1.0)), hash(i+vec2(1.0,1.0)), u.x), u.y);
 }
 float fbm(vec2 p){ float v=0.0, a=0.5; for(int i=0;i<5;i++){ v += a*noise(p); p*=2.02; a*=0.5; } return v; }
@@ -39,8 +58,16 @@ float stars(vec2 uv, float density, float size, float t){
   return smoothstep(size, 0.0, d) * tw;
 }
 void main(){
-  vec2 uv = (gl_FragCoord.xy - 0.5*u_res) / u_res.y;
-  vec2 m = (u_mouse - 0.5*u_res) / u_res.y;
+  // Normalise by the SHORT side, not always by height. On a landscape desktop
+  // these are the same thing, so the look there is unchanged. On a portrait
+  // phone height is ~2.1x width, so dividing by height shrank the uv range to
+  // about a quarter of the desktop's — the shader was drawing one enormous
+  // nebula lobe blown up across the screen, which is what read as "patchy" and
+  // put visible soft edges through the middle of the viewport. Against the short
+  // side the feature size per screen matches the design on both orientations.
+  float shortSide = min(u_res.x, u_res.y);
+  vec2 uv = (gl_FragCoord.xy - 0.5*u_res) / shortSide;
+  vec2 m = (u_mouse - 0.5*u_res) / shortSide;
   float t = u_time * 0.035;
 
   vec2 q = uv * 1.15;
@@ -80,12 +107,26 @@ void main(){
     col += mix(rippleDark, rippleLight, u_theme) * ring * 0.9;
   }
 
+  // Dark mode is light emitted into a void, so the nebula, the stars and the
+  // cursor halo all ADD. Light mode is the opposite premise — the design calls
+  // it "aged paper + iron-gall ink", and its own paper layers are dark stains
+  // and ruled lines laid ON the sheet. Adding the same accumulation to a ground
+  // that already sits at 0.9 only clipped it toward white, which is why the
+  // light theme read as a blown-out wash with a hot spot under the cursor.
+  // Subtracting turns exactly the same field into washes and flecks of ink.
   vec3 dark = vec3(0.031, 0.024, 0.055) + col;
-  vec3 paper = vec3(0.925, 0.890, 0.804) + col;
+  vec3 paper = vec3(0.925, 0.890, 0.804) - col * 1.15;
   vec3 outc = mix(dark, paper, u_theme);
 
   float vig = smoothstep(1.55, 0.35, length(uv));
   outc *= mix(0.72, 1.0, vig);
+
+  // A near-black ground with a wide, very gradual gradient across it is the
+  // worst case for an 8-bit framebuffer: consecutive output steps land many
+  // pixels apart and the eye reads them as flat bands with hard edges. One
+  // quantisation step of noise dissolves them at no visible cost.
+  outc += (ign(gl_FragCoord.xy) - 0.5) / 255.0;
+
   gl_FragColor = vec4(outc, 1.0);
 }`
 

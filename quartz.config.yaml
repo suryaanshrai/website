@@ -83,11 +83,14 @@ plugins:
   - source: "@quartz-community/github-flavored-markdown"
     enabled: true
     order: 40
+  # Left, not right: in the approved design the article page reads
+  # CONTENTS | article | LINKED FROM + LOCAL GRAPH, so the table of contents is
+  # the left rail and the right one is backlinks + graph.
   - source: "@quartz-community/table-of-contents"
     enabled: true
     order: 50
     layout:
-      position: right
+      position: left
       priority: 30
   - source: "@quartz-community/crawl-links"
     enabled: true
@@ -180,8 +183,14 @@ plugins:
     enabled: true
   - source: "@quartz-community/tag-page"
     enabled: true
+  # Disabled: the approved design has no file-tree rail anywhere — not on
+  # desktop, and not inside the mobile drawer, which lists the seven sections in
+  # display serif and nothing else. The explorer was the single most "generic
+  # Quartz" element on the page: a bordered panel of emoji folder rows that
+  # stacked a second sticky bar above the real header on mobile and ate 320px of
+  # the reading width on desktop. Navigation is the top rail plus search.
   - source: "@quartz-community/explorer"
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
@@ -216,8 +225,10 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # Disabled: this renders "suryaansh.dev" a second time at the top of the left
+  # rail. The wordmark lives in the top rail (SiteHeader), exactly once.
   - source: "@quartz-community/page-title"
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 10
@@ -251,8 +262,10 @@ plugins:
       priority: 50
   - source: "@quartz-community/recent-notes"
     enabled: false
+  # Disabled with the explorer: this only existed to pad the mobile left-sidebar
+  # toolbar, which no longer renders.
   - source: "@quartz-community/spacer"
-    enabled: true
+    enabled: false
     options: {}
     order: 25
     layout:
@@ -307,15 +320,20 @@ layout:
         left: []
         right: []
     content: {}
+    # Index pages are a full-width editorial list in the design — no rails on
+    # either side. `left: []` matters now that the table of contents lives there;
+    # a folder page has no headings, so the rail would render as an empty gutter.
     folder:
       exclude:
         - reader-mode
       positions:
+        left: []
         right: []
     tag:
       exclude:
         - reader-mode
       positions:
+        left: []
         right: []
     canvas: {}
     bases: {}

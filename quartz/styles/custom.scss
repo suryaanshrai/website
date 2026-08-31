@@ -1,4 +1,10 @@
 @use "./variables.scss" as *;
+// The site's page shell. Loaded from here rather than base.scss so it lands
+// after the stock grid rules it replaces.
+@use "./siteFrame.scss";
+// Article header, reading column, index lists and rails, in the design's
+// typographic register rather than the plugins' stock Quartz chrome.
+@use "./sitePages.scss";
 
 // put your custom CSS here!
 
@@ -59,52 +65,6 @@ html.theme-swapping *,
 html.theme-swapping *::before,
 html.theme-swapping *::after {
   transition: none !important;
-}
-
-// ---------------------------------------------------------------------------
-// Mobile: one header bar, not two
-// ---------------------------------------------------------------------------
-// The mobile grid (variables.scss $mobileGrid) places `grid-sidebar-left` above
-// `grid-header`, and the explorer plugin's own CSS
-// (`.page > #quartz-body .sidebar.left:has(.explorer)`, specificity 1,4,0)
-// re-asserts `position: sticky` + an opaque `var(--light)` fill, beating the
-// neutralization in base.scss (1,3,0). The result was two stacked sticky bars —
-// the site title + explorer hamburger above the real SiteHeader. The left
-// sidebar's contents are already reachable on mobile: the wordmark and every
-// nav destination live in SiteHeader, and the explorer tree is relocated into
-// the hamburger drawer by mobileNav.inline.ts.
-//
-// `display: none` (not a translate) is deliberate: the previous off-canvas
-// treatment left `.explorer-content` in the DOM at left:-359px, still focusable,
-// so keyboard tabbing walked into an invisible menu and its edge bled onscreen.
-@media all and ($mobile) {
-  .page > #quartz-body .sidebar.left,
-  .page > #quartz-body .sidebar.left:has(.explorer) {
-    display: none !important;
-  }
-}
-
-// The explorer, once moved inside the drawer, must shed the plugin's mobile
-// off-canvas positioning and its own toggle buttons — the drawer is already the
-// disclosure, so a second hamburger inside it is redundant.
-.site-mobile-nav .explorer {
-  width: 100%;
-  overflow: visible;
-
-  .explorer-toggle {
-    display: none !important;
-  }
-
-  .explorer-content {
-    position: static !important;
-    inset: auto !important;
-    transform: none !important;
-    width: 100% !important;
-    max-height: none !important;
-    overflow: visible !important;
-    background: transparent !important;
-    padding: 0 !important;
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -237,12 +197,10 @@ p,
   background: transparent;
 }
 
-// Inner scroll surfaces (sidebars, the drawer's file tree, code blocks) get a
-// narrower bar so they don't compete with the page scrollbar.
-.left.sidebar,
-.right.sidebar,
-.site-mobile-nav-tree,
-.explorer-ul,
+// Inner scroll surfaces (the article rails, the mobile drawer, code blocks) get
+// a narrower bar so they don't compete with the page scrollbar.
+.site-aside,
+.site-mobile-nav-links,
 pre {
   scrollbar-width: thin;
 

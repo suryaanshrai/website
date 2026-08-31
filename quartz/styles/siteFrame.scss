@@ -1,0 +1,233 @@
+@use "./variables.scss" as *;
+
+// ============================================================================
+// The site shell — see quartz/components/frames/SiteFrame.tsx
+// ============================================================================
+//
+// Everything here is scoped to `[data-frame="site"]` so the stock Quartz grid
+// rules in base.scss stay intact for any page still rendered through the
+// default frame (and so this file can be read as one self-contained layout).
+//
+// The design's measurements, taken from the approved mock:
+//   top rail   sticky, full-bleed, padding 18px 40px, 1px bottom hairline
+//   page       max-width 1560px, centred, padding 70px 40px 120px
+//   article    grid  CONTENTS 220px | text | asides 300px, 60px gutters
+// Below 860px the rails un-stick and stack under the article, in the design's
+// order: article, then contents, then the linked/graph asides.
+
+$rail-height: 69px;
+$site-max: 1560px;
+
+.page[data-frame="site"] {
+  // base.scss caps `.page` at 1500px to make the three-column grid line up.
+  // The shell does its own centring at a wider measure, and the top rail has to
+  // reach both viewport edges, so the cap has to come off here.
+  max-width: none;
+  margin: 0;
+
+  & > #quartz-body {
+    // Not a grid any more: rail, main and footer are three stacked blocks.
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------- top rail
+
+.page[data-frame="site"] .site-rail {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  margin: 0;
+  padding: 0;
+
+  & > header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    padding: 18px 40px;
+    box-sizing: border-box;
+    // The design fades the rail's ground into the page rather than sitting it
+    // on a flat fill, so content scrolls out from under it instead of hitting
+    // a hard edge.
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--light) 82%, transparent),
+      transparent
+    );
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--lightgray);
+
+    @media all and ($mobile) {
+      gap: 10px;
+      padding: 14px 18px;
+    }
+  }
+}
+
+// ------------------------------------------------------------------- page
+
+.page[data-frame="site"] .site-main {
+  position: relative;
+  z-index: 10;
+  display: block;
+  box-sizing: border-box;
+  max-width: $site-max;
+  margin: 0 auto;
+  padding: 70px 40px 120px;
+
+  @media all and ($mobile) {
+    padding: 44px 20px 80px;
+  }
+}
+
+.page[data-frame="site"] .site-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 60px;
+  align-items: start;
+
+  &.has-contents {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  &.has-aside {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+  &.has-contents.has-aside {
+    grid-template-columns: 220px minmax(0, 1fr) 300px;
+  }
+
+  // Rails stack under the article rather than squeezing the measure. The
+  // design's order here is deliberate: the reader gets the piece first, then
+  // its outline, then what links to it.
+  @media all and not ($desktop) {
+    &,
+    &.has-contents,
+    &.has-aside,
+    &.has-contents.has-aside {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 36px;
+    }
+
+    .site-column {
+      order: 1;
+    }
+    .site-aside-left {
+      order: 2;
+    }
+    .site-aside-right {
+      order: 3;
+    }
+  }
+}
+
+.page[data-frame="site"] .site-column {
+  min-width: 0;
+  // base.scss forces `.center` to 100% min/max width for the grid layout.
+  max-width: 100%;
+  margin: 0;
+}
+
+// ------------------------------------------------------------------ rails
+//
+// These replace the old `.left.sidebar` / `.right.sidebar` treatment, which was
+// a 100vh blurred panel with a 16px border-radius and a 1px border — the
+// "floating box" look the design does not have. The design's rails are bare
+// columns: no fill, no border, no radius.
+
+.page[data-frame="site"] .site-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  height: auto;
+
+  @media all and ($desktop) {
+    position: sticky;
+    top: calc(#{$rail-height} + 40px);
+    max-height: calc(100vh - #{$rail-height} - 60px);
+    overflow-y: auto;
+    // A rail that scrolls internally still shouldn't show a scrollbar track
+    // over the page's own ground.
+    scrollbar-width: thin;
+  }
+}
+
+// The rail label ("CONTENTS", "LINKED FROM", "LOCAL GRAPH") is the design's
+// small tracked-out mono; the plugins ship an h3/h2 in the body face.
+.page[data-frame="site"] .site-aside {
+  h2,
+  h3,
+  .toc > button,
+  .backlinks > h3,
+  .graph > h3 {
+    font-family: var(--codeFont);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin: 0 0 4px;
+    padding: 0;
+    background: none;
+    border: none;
+  }
+}
+
+// ---------------------------------------------------------------- leftovers
+//
+// Chrome the stock frame emits that the design has no place for.
+
+.page[data-frame="site"] {
+  // The default frame puts a full-width <hr> between the article and afterBody.
+  // The design separates those with space, not a rule.
+  & > .site-main > .site-body > .site-column > hr {
+    display: none;
+  }
+
+  .page-footer {
+    margin-top: 0;
+  }
+
+  .site-lede {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// Reader mode drops both rails and narrows the measure — the article and
+// nothing else. Previously reader mode left the blurred sidebars in place.
+html[reader-mode="on"] .page[data-frame="site"] {
+  .site-aside {
+    display: none;
+  }
+
+  .site-body,
+  .site-body.has-contents,
+  .site-body.has-aside,
+  .site-body.has-contents.has-aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .site-main {
+    max-width: 900px;
+  }
+}
+
+// The landing page is a sequence of full-bleed sections that set their own
+// gutters (see landing.scss), so the shell must not add its own on top.
+body[data-slug="index"] .page[data-frame="site"] .site-main {
+  max-width: none;
+  padding: 0;
+}

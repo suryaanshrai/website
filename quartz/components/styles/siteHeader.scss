@@ -1,24 +1,10 @@
 @use "../../styles/variables.scss" as *;
 
+// The rail itself — position, ground, padding — is the shell's job, in
+// siteFrame.scss. What is left here is the three clusters inside it: wordmark,
+// centred nav, trailing controls.
 .page-header > header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-  margin: 0;
-  padding: 14px 6px;
-  background: color-mix(in srgb, var(--light) 72%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid color-mix(in srgb, var(--secondary) 14%, transparent);
-
-  @media all and ($mobile) {
-    flex-wrap: nowrap;
-    padding: 10px 4px;
-  }
+  flex-wrap: nowrap;
 }
 
 .site-header-brand {
@@ -49,11 +35,19 @@
 .site-header-nav {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  // `nowrap` is the whole point of the shell change: with the rail full-bleed
+  // instead of nested in an ~850px grid column, all seven pills fit on one line.
+  // Wrapping is what produced the two-row bar in the live site.
+  flex-wrap: nowrap;
+  justify-content: center;
   gap: 4px;
-  flex: 1;
+  // Takes the space between the wordmark and the trailing controls, so the nav
+  // reads as centred without needing to know either cluster's width.
+  flex: 1 1 auto;
+  min-width: 0;
 
   .site-header-link {
+    white-space: nowrap;
     font-family: var(--codeFont);
     font-size: 0.62rem;
     letter-spacing: 0.16em;

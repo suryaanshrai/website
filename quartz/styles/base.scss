@@ -765,36 +765,10 @@ body[data-slug="contact"] {
   }
 }
 
-/* Glassmorphism on sidebars — desktop/tablet only. On mobile the sidebar
-   collapses into a compact sticky toolbar (see explorer/base mobile rules);
-   forcing the 100vh height + margin here too used to fight that reset and
-   produce a near full-screen blank box above the page content. */
-@media all and ($tablet), all and ($desktop) {
-  .left.sidebar,
-  .right.sidebar {
-    background: color-mix(in srgb, var(--light) 55%, transparent) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    border: 1px solid color-mix(in srgb, var(--secondary) 14%, transparent) !important;
-    border-radius: 16px;
-    padding: 1.5rem !important;
-    margin: 1.5rem !important;
-    height: calc(100vh - 3rem) !important;
-    overflow-y: auto;
-    box-sizing: border-box;
-    transition:
-      background 0.3s ease,
-      border-color 0.3s ease;
-  }
-
-  html[saved-theme="light"] {
-    .left.sidebar,
-    .right.sidebar {
-      background: color-mix(in srgb, var(--light) 85%, white 15%) !important;
-      border-color: color-mix(in srgb, var(--secondary) 8%, transparent) !important;
-    }
-  }
-}
+/* The blurred, bordered, 16px-radius "glass panel" treatment that used to sit
+   here on `.left.sidebar` / `.right.sidebar` is gone with those elements. The
+   design's rails are bare columns — no fill, no border, no radius — and are
+   styled in styles/siteFrame.scss under `.site-aside`. */
 
 a.internal,
 a.external {
