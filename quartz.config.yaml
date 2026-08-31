@@ -114,10 +114,27 @@ plugins:
   - source: "@quartz-community/roam"
     enabled: false
     order: 92
+  # Disabled: this plugin does NOT read `configuration.theme.typography`
+  # above — it has its own independent font system that (with no `options`
+  # given) falls back to reading @quartz-themes/core's font registry, or,
+  # failing that, hardcoded defaults (Schibsted Grotesk / Source Sans Pro /
+  # IBM Plex Mono) — silently overriding --titleFont/--bodyFont/--codeFont
+  # site-wide with the wrong fonts regardless of our real typography config.
+  # The core Quartz engine (quartz/util/theme.ts) already generates the
+  # correct fonts/CSS vars from `configuration.theme.typography` on its own;
+  # this marketplace plugin is only needed for per-heading (h1-h6) font
+  # overrides, which we don't use.
   - source: "@quartz-community/quartz-fonts"
-    enabled: true
+    enabled: false
+  # Disabled: this installs a full third-party Obsidian community theme's CSS
+  # (with `theme: default` that's Obsidian's own stock theme) as competing
+  # cascade layers that are declared AFTER `quartz-base` and therefore always
+  # win regardless of specificity — it was silently overriding every color
+  # variable (--light/--dark/--secondary/--gray) set by the real theme below
+  # with generic Obsidian defaults, site-wide. Our actual color/typography
+  # system is `configuration.theme` above; this plugin is not needed.
   - source: "@quartz-themes/core"
-    enabled: true
+    enabled: false
     options:
       theme: default
       mode: both
