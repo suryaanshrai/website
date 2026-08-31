@@ -1,0 +1,63 @@
+@use "../../styles/variables.scss" as *;
+
+.landing-graph-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: center;
+
+  @media all and ($mobile) {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+.landing-graph-copy {
+  h2 {
+    font-family: var(--titleFont);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+    line-height: 1.15;
+    margin: 0 0 16px;
+    color: var(--dark);
+  }
+
+  .landing-italic {
+    font-style: italic;
+    color: var(--secondary);
+  }
+
+  p {
+    max-width: 60ch;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--darkgray);
+    margin: 0 0 18px;
+  }
+}
+
+.landing-graph-canvas {
+  position: relative;
+  height: 420px;
+  border: 1px solid var(--lightgray);
+  border-radius: 18px;
+  background: var(--qz-surface);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+
+  @media all and ($mobile) {
+    height: 300px;
+  }
+}
+
+.landing-graph-label {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  font-family: var(--codeFont);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--gray);
+  pointer-events: none;
+}

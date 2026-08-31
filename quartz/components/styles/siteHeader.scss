@@ -56,12 +56,12 @@
   .site-header-link {
     font-family: var(--codeFont);
     font-size: 0.62rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--gray);
     padding: 7px 12px;
     border-radius: 999px;
-    border: 1px solid transparent;
+    border: 1px solid var(--lightgray);
     font-weight: 500;
     transition:
       color 0.2s ease,
@@ -140,32 +140,22 @@
 
 .page-header > header .search {
   flex-shrink: 0;
+  max-width: none;
+  flex-grow: 0 !important;
 
   .search-button {
     border-radius: 999px !important;
     height: 34px !important;
+    width: 34px !important;
+    padding: 0 !important;
+    justify-content: center;
+
+    svg {
+      margin: 0 !important;
+    }
 
     p {
-      color: var(--gray);
-    }
-  }
-
-  @media all and ($mobile) {
-    max-width: none;
-    flex-grow: 0 !important;
-
-    .search-button {
-      width: 34px !important;
-      padding: 0 !important;
-      justify-content: center;
-
-      svg {
-        margin: 0 !important;
-      }
-
-      p {
-        display: none;
-      }
+      display: none;
     }
   }
 }

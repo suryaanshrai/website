@@ -9,6 +9,9 @@ const SpaceBackground: QuartzComponent = () => {
     <div class="animation-container" data-persist="" aria-hidden="true">
       <canvas id="space-canvas" class="space-canvas" />
       <div class="grid-overlay" />
+      <div class="space-bg-grain" />
+      <div class="space-bg-ruled" />
+      <div class="space-bg-stains" />
     </div>
   )
 }

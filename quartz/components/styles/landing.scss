@@ -326,22 +326,6 @@ body[data-slug="index"] {
   }
 }
 
-// Homepage graph teaser widget reuses Graph(); style the mini-map bigger.
-.landing-graph-teaser + .graph {
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 0 40px 60px;
-  box-sizing: border-box;
-
-  > h3 {
-    display: none;
-  }
-
-  .graph-outer {
-    height: 420px;
-  }
-}
-
 .landing-footer-quote {
   position: relative;
   z-index: 10;

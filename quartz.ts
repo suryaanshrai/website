@@ -2,7 +2,6 @@ import { loadQuartzConfig, loadQuartzLayout } from "./quartz/plugins/loader/conf
 import { PageTypes } from "./quartz/plugins"
 import * as Component from "./quartz/components"
 import { RecentNotes } from "@quartz-community/recent-notes"
-import { Graph } from "@quartz-community/graph"
 import { Darkmode } from "@quartz-community/darkmode"
 import { Search } from "@quartz-community/search"
 import { ReaderMode } from "@quartz-community/reader-mode"
@@ -56,10 +55,6 @@ export const layout = await loadQuartzLayout({
           condition: (page) => page.fileData.slug === "index",
         }),
         Component.LandingGraphTeaser(),
-        Component.ConditionalRender({
-          component: Graph({ localGraph: { depth: -1, showTags: true } }),
-          condition: (page) => page.fileData.slug === "index",
-        }),
         Component.LandingFooterQuote(),
         ...(contentBase.beforeBody ?? []),
         Component.AudioPlayer(),

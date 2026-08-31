@@ -1,53 +1,36 @@
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+// @ts-ignore
+import script from "./scripts/landingGraph.inline"
+// @ts-ignore
+import styles from "./styles/landingGraph.scss"
 
 const LandingGraphTeaser: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
   if (fileData.slug !== "index") return null
 
   return (
-    <section class="landing-section landing-graph-teaser">
-      <h2>
-        Everything here is <span class="landing-italic">linked</span> to something else.
-      </h2>
-      <p>
-        Notes reference notes. A blog about Dostoevsky sits a hop away from a poem, which sits a hop
-        away from a piece on router registration. The graph is the point — drag it around.
-      </p>
-      <a href="#" class="landing-section-link" id="landing-open-graph" data-magnet>
-        OPEN THE GRAPH →
-      </a>
+    <section class="landing-section landing-graph-section">
+      <div class="landing-graph-copy">
+        <h2>
+          Everything here is <span class="landing-italic">linked</span> to something else.
+        </h2>
+        <p>
+          Notes reference notes. A blog about Dostoevsky sits a hop away from a poem, which sits a
+          hop away from a piece on router registration. The graph is the point — drag it around.
+        </p>
+        <a href="#" class="landing-section-link" id="landing-open-graph" data-magnet>
+          OPEN THE GRAPH →
+        </a>
+      </div>
+      <div class="landing-graph-canvas" data-landing-graph>
+        <div class="landing-graph-label" data-graph-label>
+          GRAPH
+        </div>
+      </div>
     </section>
   )
 }
 
-LandingGraphTeaser.css = `
-.landing-graph-teaser {
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 0 40px 20px;
-  box-sizing: border-box;
-
-  h2 {
-    font-family: var(--titleFont);
-    font-weight: 400;
-    font-size: clamp(1.9rem, 3.6vw, 2.6rem);
-    line-height: 1.15;
-    margin: 0 0 16px;
-    color: var(--dark);
-  }
-
-  .landing-italic {
-    font-style: italic;
-    color: var(--secondary);
-  }
-
-  p {
-    max-width: 60ch;
-    font-size: 1rem;
-    line-height: 1.75;
-    color: var(--darkgray);
-    margin: 0 0 18px;
-  }
-}
-`
+LandingGraphTeaser.afterDOMLoaded = script
+LandingGraphTeaser.css = styles
 
 export default (() => LandingGraphTeaser) satisfies QuartzComponentConstructor

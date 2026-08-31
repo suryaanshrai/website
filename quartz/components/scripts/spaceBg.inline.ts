@@ -53,29 +53,36 @@ void main(){
 
   vec3 violet = vec3(0.710, 0.549, 0.941);
   vec3 cyan = vec3(0.337, 0.769, 0.847);
-  vec3 col = mix(violet, cyan, smoothstep(-0.5, 0.9, uv.x + 0.35*fbm(q*2.4)));
-  col *= neb * 0.62;
+  vec3 maroon = vec3(0.40, 0.16, 0.11);
+  vec3 teal = vec3(0.20, 0.34, 0.32);
+  float xmix = smoothstep(-0.5, 0.9, uv.x + 0.35*fbm(q*2.4));
+  vec3 colDark = mix(violet, cyan, xmix) * neb * 0.62;
+  vec3 colLight = mix(maroon, teal, xmix) * neb * 0.4;
+  vec3 col = mix(colDark, colLight, u_theme);
 
   float s = stars(uv + vec2(t*0.12, 0.0), 26.0, 0.055, u_time)
           + 0.6*stars(uv*1.7 + vec2(-t*0.07, t*0.03), 46.0, 0.04, u_time*0.8)
           + 0.35*stars(uv*2.6 + vec2(t*0.04, 0.0), 78.0, 0.03, u_time*1.4);
-  col += vec3(0.86, 0.84, 0.95) * s * 0.85;
+  col += vec3(0.86, 0.84, 0.95) * s * 0.85 * (1.0 - u_theme);
+  col += vec3(0.32, 0.22, 0.15) * s * 0.35 * u_theme;
 
   float md = length(uv - m);
-  col += vec3(0.42, 0.30, 0.62) * smoothstep(0.42, 0.0, md) * 0.30;
-  col += vec3(0.25, 0.55, 0.62) * smoothstep(0.06, 0.0, md) * 0.5;
+  vec3 haloDark = vec3(0.42, 0.30, 0.62) * smoothstep(0.42, 0.0, md) * 0.30 + vec3(0.25, 0.55, 0.62) * smoothstep(0.06, 0.0, md) * 0.5;
+  vec3 haloLight = vec3(0.40, 0.20, 0.14) * smoothstep(0.42, 0.0, md) * 0.22 + vec3(0.22, 0.30, 0.28) * smoothstep(0.06, 0.0, md) * 0.32;
+  col += mix(haloDark, haloLight, u_theme);
 
   if(u_ripple.z > 0.0){
     vec2 rp = (u_ripple.xy - 0.5*u_res) / u_res.y;
     float r = u_ripple.z;
     float ring = smoothstep(0.03, 0.0, abs(length(uv - rp) - r*0.75)) * (1.0 - r);
-    col += vec3(0.55, 0.45, 0.80) * ring * 0.9;
+    vec3 rippleDark = vec3(0.55, 0.45, 0.80);
+    vec3 rippleLight = vec3(0.42, 0.22, 0.16);
+    col += mix(rippleDark, rippleLight, u_theme) * ring * 0.9;
   }
 
   vec3 dark = vec3(0.031, 0.024, 0.055) + col;
-  vec3 paperInk = mix(vec3(0.964, 0.949, 0.918), vec3(0.72, 0.66, 0.80), clamp(neb*0.9, 0.0, 1.0));
-  paperInk -= vec3(0.10, 0.12, 0.08) * s * 0.5;
-  vec3 outc = mix(dark, paperInk, u_theme);
+  vec3 paper = vec3(0.925, 0.890, 0.804) + col;
+  vec3 outc = mix(dark, paper, u_theme);
 
   float vig = smoothstep(1.55, 0.35, length(uv));
   outc *= mix(0.72, 1.0, vig);
