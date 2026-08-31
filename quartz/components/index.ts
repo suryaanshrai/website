@@ -12,6 +12,7 @@ import ReadingProgress from "./ReadingProgress"
 import Landing from "./Landing"
 import LandingGraphTeaser from "./LandingGraphTeaser"
 import LandingFooterQuote from "./LandingFooterQuote"
+import RecentWriting from "./RecentWriting"
 import AboutHero from "./AboutHero"
 import ContactCards from "./ContactCards"
 import AudioPlayer from "./AudioPlayer"
@@ -39,6 +40,7 @@ export {
   Landing,
   LandingGraphTeaser,
   LandingFooterQuote,
+  RecentWriting,
   AboutHero,
   ContactCards,
   AudioPlayer,

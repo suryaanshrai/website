@@ -312,18 +312,14 @@ body[data-slug="index"] {
   color: var(--darkgray);
 }
 
-// Homepage recent-writing list reuses RecentNotes; it's the next sibling of
-// .landing-page (which renders the "RECENT WRITING" section head), so it
-// needs the same max width to line up under that heading.
-.landing-page + .recent-notes {
+// The RecentWriting component renders immediately after .landing-page (which
+// renders the "RECENT WRITING" section head above it), so it needs the same
+// max width to line up under that heading.
+.landing-page + .recent-writing {
   max-width: 1560px;
   margin: 0 auto;
   padding: 0 40px 20px;
   box-sizing: border-box;
-
-  > h3:empty {
-    display: none;
-  }
 }
 
 .landing-footer-quote {

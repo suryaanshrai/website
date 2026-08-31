@@ -1,3 +1,35 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
+
+// `--qz-surface` / `--qz-border` / `--qz-audio-panel` are referenced by
+// LandingGraphTeaser, the landing-page index-hover preview, the 404 panel,
+// and AudioPlayer, but were never defined anywhere — they resolved to
+// nothing (effectively transparent). Derive them from the theme's own
+// --light/--dark so they auto-adapt per theme without separate light/dark
+// override blocks, matching the design's translucent "panel" surfaces.
+:root {
+  --qz-surface: color-mix(in srgb, var(--light) 97%, var(--dark) 3%);
+  --qz-border: var(--lightgray);
+  --qz-audio-panel: color-mix(in srgb, var(--light) 92%, var(--dark) 8%);
+}
+
+// The table-of-contents plugin's own CSS only dims inactive links via
+// opacity on a single color. The design uses a left accent bar instead:
+// muted text + faint line for inactive items, full-contrast text + a
+// secondary-colored bar for the in-view item.
+.toc-content.overflow > li > a {
+  opacity: 1;
+  color: var(--darkgray);
+  border-left: 1px solid var(--lightgray);
+  padding-left: 12px;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.toc-content.overflow > li > a.in-view {
+  opacity: 1;
+  color: var(--dark);
+  border-left-color: var(--secondary);
+}

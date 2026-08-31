@@ -1,0 +1,48 @@
+@use "../../styles/variables.scss" as *;
+
+.recent-writing {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-writing-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 220px;
+  gap: 28px;
+  align-items: baseline;
+  padding: 26px 6px;
+  border-bottom: 1px solid var(--lightgray);
+  color: var(--dark);
+
+  @media all and ($mobile) {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 20px 6px;
+  }
+}
+
+.recent-writing-date {
+  font-family: var(--codeFont);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--gray);
+}
+
+.recent-writing-title {
+  font-family: var(--titleFont);
+  font-weight: 400;
+  font-size: 2.05rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.recent-writing-row:hover .recent-writing-title {
+  color: var(--secondary);
+}
+
+.recent-writing-kicker {
+  font-size: 0.85rem;
+  color: var(--darkgray);
+  line-height: 1.55;
+}

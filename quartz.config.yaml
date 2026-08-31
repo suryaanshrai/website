@@ -27,18 +27,18 @@ configuration:
         weights: [400, 500]
     colors:
       lightMode:
-        light: "#f6f2ea"
-        lightgray: "#ece4d6"
-        gray: "#8b8298"
-        darkgray: "#554d64"
-        dark: "#16121c"
-        secondary: "#6d3fb0"
-        tertiary: "#1c7f93"
-        highlight: rgba(109, 63, 176, 0.1)
-        textHighlight: rgba(28, 127, 147, 0.2)
+        light: "#ece1c8"
+        lightgray: rgba(43, 32, 19, 0.16)
+        gray: "#7d6f52"
+        darkgray: "#6b5c45"
+        dark: "#2b2013"
+        secondary: "#7a2f24"
+        tertiary: "#3f6b64"
+        highlight: rgba(122, 47, 36, 0.1)
+        textHighlight: rgba(63, 107, 100, 0.2)
       darkMode:
         light: "#08060e"
-        lightgray: "#140f1e"
+        lightgray: rgba(196, 178, 235, 0.14)
         gray: "#6b6383"
         darkgray: "#a79dbe"
         dark: "#efeaf7"

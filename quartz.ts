@@ -1,7 +1,6 @@
 import { loadQuartzConfig, loadQuartzLayout } from "./quartz/plugins/loader/config-loader"
 import { PageTypes } from "./quartz/plugins"
 import * as Component from "./quartz/components"
-import { RecentNotes } from "@quartz-community/recent-notes"
 import { Darkmode } from "@quartz-community/darkmode"
 import { Search } from "@quartz-community/search"
 import { ReaderMode } from "@quartz-community/reader-mode"
@@ -43,17 +42,7 @@ export const layout = await loadQuartzLayout({
     content: {
       beforeBody: [
         Component.Landing(),
-        Component.ConditionalRender({
-          component: RecentNotes({
-            title: "",
-            limit: 4,
-            showTags: false,
-            linkToMore: "blogs",
-            filter: (f) =>
-              (f.slug ?? "").startsWith("blogs/") && !(f.slug ?? "").endsWith("/index"),
-          }),
-          condition: (page) => page.fileData.slug === "index",
-        }),
+        Component.RecentWriting(),
         Component.LandingGraphTeaser(),
         Component.LandingFooterQuote(),
         ...(contentBase.beforeBody ?? []),
