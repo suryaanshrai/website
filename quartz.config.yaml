@@ -173,14 +173,12 @@ plugins:
     layout:
       position: right
       priority: 10
+  # Rendered explicitly in the site header (see quartz.ts HEADER) instead of
+  # the plugin's own default left-sidebar placement — disabled here so it
+  # isn't instantiated twice (the marketplace loader still installs it;
+  # `enabled: false` only skips its automatic layout placement).
   - source: "@quartz-community/search"
-    enabled: true
-    layout:
-      position: left
-      priority: 20
-      group: toolbar
-      groupOptions:
-        grow: true
+    enabled: false
   - source: "@quartz-community/backlinks"
     enabled: true
     layout:
@@ -206,18 +204,13 @@ plugins:
     layout:
       position: left
       priority: 10
+  # darkmode and reader-mode are rendered explicitly in the site header
+  # (see quartz.ts HEADER) on every page type instead of via the plugin's
+  # own default left-sidebar placement — same reasoning as search above.
   - source: "@quartz-community/darkmode"
-    enabled: true
-    layout:
-      position: left
-      priority: 30
-      group: toolbar
+    enabled: false
   - source: "@quartz-community/reader-mode"
-    enabled: true
-    layout:
-      position: left
-      priority: 35
-      group: toolbar
+    enabled: false
   - source: "@quartz-community/breadcrumbs"
     enabled: true
     layout:

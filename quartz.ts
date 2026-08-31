@@ -4,6 +4,8 @@ import * as Component from "./quartz/components"
 import { RecentNotes } from "@quartz-community/recent-notes"
 import { Graph } from "@quartz-community/graph"
 import { Darkmode } from "@quartz-community/darkmode"
+import { Search } from "@quartz-community/search"
+import { ReaderMode } from "@quartz-community/reader-mode"
 import { contactLinks } from "./quartz/contactLinks"
 
 const config = await loadQuartzConfig()
@@ -11,7 +13,13 @@ const config = await loadQuartzConfig()
 const base = await loadQuartzLayout()
 const contentBase = base.byPageType.content ?? base.defaults
 
-const HEADER = [Component.SiteHeader(), Darkmode(), Component.ReadingProgress()]
+const HEADER = [
+  Component.SiteHeader(),
+  Search({ enablePreview: true }),
+  Darkmode(),
+  ReaderMode(),
+  Component.ReadingProgress(),
+]
 const FOOTER = [Component.Footer({ iconLinks: contactLinks })]
 const GLOBAL_AFTER_BODY = [
   Component.MobileNav(),
