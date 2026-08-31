@@ -27,8 +27,13 @@
     color: var(--gray);
   }
 
-  &:hover .site-header-name {
-    color: var(--secondary);
+  // Gated at source rather than relying on the `(hover: none)` neutralisation in
+  // custom.scss — a latched hover on the wordmark is the most visible instance
+  // of this whole class of bug.
+  @media (hover: hover) {
+    &:hover .site-header-name {
+      color: var(--secondary);
+    }
   }
 }
 
@@ -62,8 +67,10 @@
       background-color 0.2s ease,
       border-color 0.2s ease;
 
-    &:hover {
-      color: var(--dark);
+    @media (hover: hover) {
+      &:hover {
+        color: var(--dark);
+      }
     }
 
     &.active {

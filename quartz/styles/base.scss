@@ -98,8 +98,16 @@ a {
   transition: color 0.2s ease;
   color: var(--secondary);
 
-  &:hover {
-    color: var(--tertiary);
+  // Gated on a device that can actually hover. On touch, :hover latches after a
+  // tap and never clears, so this repainted whatever was last tapped in the
+  // accent colour and left it there — most visibly the wordmark, which stayed
+  // cyan for the rest of the session. The per-component neutralisations in
+  // custom.scss could not reach it: they target the descendant span, while this
+  // rule (0,1,1) outranks `.site-header-brand` (0,1,0) on the anchor itself.
+  @media (hover: hover) {
+    &:hover {
+      color: var(--tertiary);
+    }
   }
 
   &.internal {
@@ -775,35 +783,17 @@ a.external {
   transition:
     text-shadow 0.3s ease,
     color 0.3s ease;
-  &:hover {
-    text-shadow: 0 0 8px color-mix(in srgb, var(--tertiary) 40%, transparent);
-    color: var(--tertiary) !important;
-  }
-}
 
-.search {
-  input {
-    background: color-mix(in srgb, var(--light) 60%, transparent) !important;
-    border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent) !important;
-    color: var(--dark) !important;
-    border-radius: 8px !important;
-    transition:
-      background 0.3s ease,
-      border-color 0.3s ease;
-
-    &:focus {
-      border-color: var(--tertiary) !important;
-      box-shadow: 0 0 10px color-mix(in srgb, var(--tertiary) 20%, transparent) !important;
+  // Same reasoning as the base `a:hover` above — sticky on touch.
+  @media (hover: hover) {
+    &:hover {
+      text-shadow: 0 0 8px color-mix(in srgb, var(--tertiary) 40%, transparent);
+      color: var(--tertiary) !important;
     }
   }
 }
 
-html[saved-theme="light"] {
-  .search {
-    input {
-      background: color-mix(in srgb, var(--light) 80%, white 20%) !important;
-      border-color: color-mix(in srgb, var(--secondary) 15%, transparent) !important;
-      color: var(--dark) !important;
-    }
-  }
-}
+/* The search input used to be given its own fill, 8px radius and focus glow
+   here, all with `!important` — a second bordered box inside the panel. The
+   whole search surface is now styled as one card in styles/siteSearch.scss;
+   these rules only fought it. */

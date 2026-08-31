@@ -5,10 +5,18 @@ let uniforms: {
   mouse: WebGLUniformLocation | null
   theme: WebGLUniformLocation | null
   ripple: WebGLUniformLocation | null
+  pointer: WebGLUniformLocation | null
 } | null = null
 let raf: number | null = null
 let onResize: (() => void) | null = null
 let startTime = 0
+// The element the current WebGL context belongs to. `.animation-container`
+// carries `data-persist`, but the SPA morph can still replace the node when the
+// surrounding structure differs between page types — and a context bound to a
+// detached canvas paints nothing. Comparing identity on every `nav` is what
+// makes the background survive that.
+let boundCanvas: HTMLCanvasElement | null = null
+let renderScale = 1
 
 const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 }
 let rippleAt: [number, number] | null = null
@@ -23,6 +31,11 @@ const VERTEX_SRC = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0)
 const FRAGMENT_SRC = `
 precision highp float;
 uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_theme; uniform vec3 u_ripple;
+// 1 where a real cursor exists, 0 on touch. The mouse-anchored terms below are
+// cursor *responses*; with no cursor to respond to they were still drawn at the
+// initial (0.5, 0.5), parking a permanent mark in the middle of every phone
+// screen — clearly visible once light mode started subtracting rather than adding.
+uniform float u_pointer;
 
 // The classic \`fract(sin(dot(p, k)) * 43758.5)\` hash is the usual cause of
 // blocky patches on phones: fbm pushes p out to ~30x, and mobile GPUs implement
@@ -75,7 +88,7 @@ void main(){
   float neb = fbm(q*1.9 + vec2(t*0.6, -t*0.4));
   neb = pow(smoothstep(0.28, 1.0, neb), 1.6);
 
-  float depth = smoothstep(1.25, 0.0, length(uv - m*0.25));
+  float depth = smoothstep(1.25, 0.0, length(uv - m*0.25*u_pointer));
   neb *= 0.55 + 0.75*depth;
 
   vec3 violet = vec3(0.710, 0.549, 0.941);
@@ -96,7 +109,7 @@ void main(){
   float md = length(uv - m);
   vec3 haloDark = vec3(0.42, 0.30, 0.62) * smoothstep(0.42, 0.0, md) * 0.30 + vec3(0.25, 0.55, 0.62) * smoothstep(0.06, 0.0, md) * 0.5;
   vec3 haloLight = vec3(0.40, 0.20, 0.14) * smoothstep(0.42, 0.0, md) * 0.22 + vec3(0.22, 0.30, 0.28) * smoothstep(0.06, 0.0, md) * 0.32;
-  col += mix(haloDark, haloLight, u_theme);
+  col += mix(haloDark, haloLight, u_theme) * u_pointer;
 
   if(u_ripple.z > 0.0){
     vec2 rp = (u_ripple.xy - 0.5*u_res) / u_res.y;
@@ -174,6 +187,7 @@ function handleContextLost(e: Event) {
   }
   gl = null
   uniforms = null
+  boundCanvas = null
 }
 
 function handleContextRestored() {
@@ -213,9 +227,31 @@ function syncTheme() {
   }
 }
 
+function syncPointer() {
+  if (gl && uniforms) {
+    gl.uniform1f(uniforms.pointer, pointerEffectsEnabled() ? 1 : 0)
+  }
+}
+
 function initNebulaBg() {
   const canvas = document.getElementById("space-canvas") as HTMLCanvasElement | null
   if (!canvas) return
+
+  // If the live canvas is not the one the context was created for, the morph
+  // swapped the node out from under us. Anything we still hold — the context,
+  // the uniform locations, the resize closure — belongs to a detached element
+  // and can only paint into nothing, so drop it all and start cold.
+  if (boundCanvas !== null && boundCanvas !== canvas) {
+    if (raf !== null) {
+      cancelAnimationFrame(raf)
+      raf = null
+    }
+    if (onResize) window.removeEventListener("resize", onResize)
+    onResize = null
+    gl = null
+    uniforms = null
+    boundCanvas = null
+  }
 
   // Re-bind window listeners idempotently (safe across repeated SPA navigations)
   window.removeEventListener("pointermove", handlePointerMove)
@@ -241,6 +277,7 @@ function initNebulaBg() {
   // sure the render loop is alive.
   if (gl && uniforms) {
     syncTheme()
+    syncPointer()
     if (onResize) onResize()
     if (raf === null) raf = requestAnimationFrame(draw)
     return
@@ -273,21 +310,32 @@ function initNebulaBg() {
     mouse: gl.getUniformLocation(program, "u_mouse"),
     theme: gl.getUniformLocation(program, "u_theme"),
     ripple: gl.getUniformLocation(program, "u_ripple"),
+    pointer: gl.getUniformLocation(program, "u_pointer"),
   }
+  boundCanvas = canvas
 
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+  renderScale = Math.min(window.devicePixelRatio || 1, 1.5)
+  // Resolves the canvas by id on every call rather than closing over the element
+  // it was created with: the previous closure kept measuring a node the morph
+  // had already detached, so `clientWidth` read 0 and the replacement was left
+  // at the 300x150 canvas default — a blank background.
   onResize = () => {
-    const w = Math.floor(canvas.clientWidth * dpr)
-    const h = Math.floor(canvas.clientHeight * dpr)
-    canvas.width = w
-    canvas.height = h
-    gl!.viewport(0, 0, w, h)
-    gl!.uniform2f(uniforms!.res, w, h)
+    const c = document.getElementById("space-canvas") as HTMLCanvasElement | null
+    if (!c || !c.isConnected || !gl || !uniforms) return
+    const w = Math.max(1, Math.floor(c.clientWidth * renderScale))
+    const h = Math.max(1, Math.floor(c.clientHeight * renderScale))
+    if (c.width !== w || c.height !== h) {
+      c.width = w
+      c.height = h
+    }
+    gl.viewport(0, 0, w, h)
+    gl.uniform2f(uniforms.res, w, h)
   }
   onResize()
   window.addEventListener("resize", onResize)
 
   syncTheme()
+  syncPointer()
   startTime = performance.now()
   raf = requestAnimationFrame(draw)
 }

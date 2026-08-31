@@ -23,10 +23,11 @@ const Header = HeaderConstructor()
  *       aside.site-aside-right  LINKED FROM / LOCAL GRAPH
  *   footer
  *
- * Both asides are omitted from the markup entirely when their slot is empty, so
- * the grid collapses to a single column on list and landing pages instead of
- * reserving dead gutters.
+ * Both asides are always emitted and are collapsed by CSS when their slot is
+ * empty, so `.site-body` has the same child shape on every page type — see the
+ * comment at the markup below for why that matters to SPA navigation.
  */
+
 /**
  * Pages whose whole layout is hand-authored (the landing hero and index, the
  * About long-form column, the Contact card grid). They are all `content` pages
@@ -58,6 +59,12 @@ export const SiteFrame: PageFrame = {
 
     return (
       <>
+        {/* First thing in the tab order on every page: without it a keyboard
+            user walks the wordmark, seven nav pills and four controls before
+            reaching a single word of the article. */}
+        <a href="#site-content" class="site-skip-link">
+          Skip to content
+        </a>
         <div class="page-header site-rail">
           <Header {...componentData}>
             {header.map((HeaderComponent) => (
@@ -71,15 +78,20 @@ export const SiteFrame: PageFrame = {
               <BodyComponent {...componentData} />
             ))}
           </div>
+          {/* Both rails are ALWAYS emitted, empty when unused, and collapsed by
+              CSS (`.site-body:not(.has-contents) > .site-aside-left`). Emitting
+              them conditionally changed the child list of `.site-body` between
+              page types — one child on a folder page, three on an article — and
+              the SPA morph diffs children positionally, so navigating from a
+              folder into an article rebuilt this entire subtree. That destroyed
+              and replaced the background canvas living in `.page-footer` below,
+              which is why the starfield vanished on exactly that navigation.
+              Keeping the shape constant gives the morph nothing to rebuild. */}
           <div class={bodyClass}>
-            {hasLeft && (
-              <aside class="site-aside site-aside-left">
-                {left.map((BodyComponent) => (
-                  <BodyComponent {...componentData} />
-                ))}
-              </aside>
-            )}
-            <div class="site-column center">
+            <aside class="site-aside site-aside-left">
+              {hasLeft && left.map((BodyComponent) => <BodyComponent {...componentData} />)}
+            </aside>
+            <div class="site-column center" id="site-content" tabIndex={-1}>
               <Content {...componentData} />
               <div class="page-footer">
                 {afterBody.map((BodyComponent) => (
@@ -87,13 +99,9 @@ export const SiteFrame: PageFrame = {
                 ))}
               </div>
             </div>
-            {hasRight && (
-              <aside class="site-aside site-aside-right">
-                {right.map((BodyComponent) => (
-                  <BodyComponent {...componentData} />
-                ))}
-              </aside>
-            )}
+            <aside class="site-aside site-aside-right">
+              {hasRight && right.map((BodyComponent) => <BodyComponent {...componentData} />)}
+            </aside>
           </div>
         </main>
         {footer.map((FooterComponent) => (

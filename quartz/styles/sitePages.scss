@@ -48,8 +48,12 @@ $chrome-track: 0.16em;
       padding: 0;
       transition: color var(--qz-feedback) var(--qz-ease);
 
-      &:hover {
-        color: var(--dark);
+      // Gated: on touch, :hover latches after a tap and the crumb would stay at
+      // full contrast for the rest of the session.
+      @media (hover: hover) {
+        &:hover {
+          color: var(--dark);
+        }
       }
     }
 

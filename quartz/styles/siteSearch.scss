@@ -1,0 +1,268 @@
+@use "./variables.scss" as *;
+
+// ============================================================================
+// Search — the design's command palette, over the plugin's markup
+// ============================================================================
+//
+// Stock Quartz renders search as a white rounded pill floating on a lightly
+// blurred page, with a "Search for something..." placeholder and results as
+// plain body text. It is the most-used surface on the site and the one that
+// looked least like it belonged to it.
+//
+// The design specifies a proper panel: a dimmed ground, a 640px card with a
+// hairline border, a 16px radius and a deep shadow, an input row led by a `⌕`
+// and closed by an `ESC` badge, and results as a mono topic tag beside a serif
+// title. All of that is achievable over the plugin's own DOM:
+//
+//   .search-container.active > .search-space > input.search-bar
+//                                            > .search-layout
+//                                                > .results-container > a.result-card
+//                                                > .preview-container
+//
+// Every selector below is prefixed with `.page[data-frame="site"]` so it clears
+// the plugin's own `.search > .search-container > …` chains without !important.
+
+$panel: 640px;
+$panel-with-preview: 1000px;
+$input-row: 62px;
+
+.page[data-frame="site"] .search > .search-container {
+  // The plugin's `contain: layout` plus a 100vw/100vh box; keep the box, change
+  // the ground and turn it into a centring flex container when open.
+  background: color-mix(in srgb, var(--light) 68%, transparent);
+  // Prefixed FIRST, standard second — in that order the build keeps both. With
+  // the standard property first the toolchain drops it and only the `-webkit-`
+  // spelling reaches the browser, which is exactly how the top rail ended up
+  // with no blur at all on the live site.
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  padding: 12vh 20px 20px;
+  box-sizing: border-box;
+
+  &.active {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  @media all and ($mobile) {
+    padding: 8vh 14px 14px;
+  }
+}
+
+.page[data-frame="site"] .search > .search-container > .search-space {
+  position: relative;
+  width: 100%;
+  max-width: $panel;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--secondary) 30%, transparent);
+  border-radius: 16px;
+  background: var(--light);
+  box-shadow: 0 30px 80px color-mix(in srgb, var(--dark) 30%, transparent);
+  overflow: hidden;
+
+  // The plugin puts a radius, a fill, a shadow and a 2em gap on the input and
+  // the results list *individually*, which is what made them read as two
+  // floating cards. Here they are two rows of one surface.
+  > *:not(.ghost-text):not(.tag-suggestions) {
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    margin-bottom: 0;
+  }
+
+  // The `⌕` that opens the input row.
+  &::before {
+    content: "⌕";
+    position: absolute;
+    left: 20px;
+    top: 0;
+    height: $input-row;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--gray);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  // …and the ESC affordance that closes it. The plugin already binds Escape.
+  &::after {
+    content: "ESC";
+    position: absolute;
+    right: 20px;
+    top: 0;
+    height: $input-row;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    margin-top: calc((#{$input-row} - 20px) / 2);
+    height: 20px;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+    font-family: var(--codeFont);
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @media all and ($mobile) {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+// Widen only when the preview pane is actually rendering — a 640px card cannot
+// hold a results list and a document preview side by side.
+.page[data-frame="site"]
+  .search
+  > .search-container
+  > .search-space:has(> .search-layout[data-preview].display-results) {
+  @media all and not ($mobile) {
+    max-width: $panel-with-preview;
+  }
+}
+
+.page[data-frame="site"] .search > .search-container > .search-space > input.search-bar {
+  box-sizing: border-box;
+  height: $input-row;
+  padding: 0 70px 0 46px;
+  border: none;
+  border-bottom: 1px solid var(--lightgray);
+  border-radius: 0;
+  background: none;
+  font-family: var(--bodyFont);
+  font-size: 1.05rem;
+  color: var(--dark);
+
+  &::placeholder {
+    color: var(--gray);
+    opacity: 1;
+  }
+
+  // The panel itself is the focus indicator here; a ring inside a bordered card
+  // reads as a second box.
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-bottom-color: color-mix(in srgb, var(--secondary) 45%, transparent);
+  }
+
+  @media all and ($mobile) {
+    padding-right: 20px;
+  }
+}
+
+.page[data-frame="site"] .search > .search-container > .search-space > .search-layout {
+  border: none;
+  border-radius: 0;
+
+  > div {
+    height: auto;
+    max-height: 52vh;
+    border-radius: 0;
+  }
+
+  > .results-container {
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+  > .preview-container {
+    border-left: 1px solid var(--lightgray);
+    padding: 20px 28px;
+  }
+}
+
+// --------------------------------------------------------------- result rows
+
+.page[data-frame="site"]
+  .search
+  > .search-container
+  > .search-space
+  > .search-layout
+  > .results-container
+  .result-card {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 13px 12px;
+  border: none;
+  border-radius: 10px;
+  color: var(--dark);
+  transition: background-color var(--qz-feedback) var(--qz-ease);
+
+  > h3 {
+    order: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--titleFont);
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1.25;
+    color: var(--dark);
+  }
+
+  // The auto-extracted description is a third piece of information on a row
+  // that the design gives two; it pushes the list past a scannable height.
+  > p.card-description {
+    order: 3;
+    flex: 1 1 100%;
+    margin: 2px 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--gray);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+
+  // Topic tags lead the row in the design, in mono, in the cool accent.
+  > ul.tags {
+    order: 1;
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      display: block;
+      margin: 0;
+    }
+
+    > li > p {
+      margin: 0;
+      padding: 0;
+      border-radius: 0;
+      background: none;
+      font-family: var(--codeFont);
+      font-size: 0.56rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--tertiary);
+    }
+  }
+
+  // `.focus` is the plugin's keyboard-selection class and must always paint;
+  // only the pointer hover is gated, so a tapped result doesn't stay highlighted
+  // behind the closed panel.
+  &:focus,
+  &.focus {
+    background: color-mix(in srgb, var(--secondary) 12%, transparent);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background: color-mix(in srgb, var(--secondary) 12%, transparent);
+    }
+  }
+}

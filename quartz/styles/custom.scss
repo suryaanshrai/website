@@ -5,6 +5,8 @@
 // Article header, reading column, index lists and rails, in the design's
 // typographic register rather than the plugins' stock Quartz chrome.
 @use "./sitePages.scss";
+// The search palette, over the search plugin's own markup.
+@use "./siteSearch.scss";
 
 // put your custom CSS here!
 
