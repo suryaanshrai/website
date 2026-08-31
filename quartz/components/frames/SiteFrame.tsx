@@ -27,6 +27,16 @@ const Header = HeaderConstructor()
  * the grid collapses to a single column on list and landing pages instead of
  * reserving dead gutters.
  */
+/**
+ * Pages whose whole layout is hand-authored (the landing hero and index, the
+ * About long-form column, the Contact card grid). They are all `content` pages
+ * as far as the layout config is concerned, so the rails can't be dropped per
+ * page type — but the design gives none of them a table of contents, a backlinks
+ * list or a graph, and rendering the rails anyway left an empty 300px gutter and
+ * a stray graph panel floating beside the comments.
+ */
+const OWN_LAYOUT: ReadonlySet<string> = new Set(["index", "about-me", "contact"])
+
 export const SiteFrame: PageFrame = {
   name: "site",
   render({
@@ -39,8 +49,9 @@ export const SiteFrame: PageFrame = {
     right,
     footer,
   }: PageFrameProps) {
-    const hasLeft = left.length > 0
-    const hasRight = right.length > 0
+    const railless = OWN_LAYOUT.has(componentData.fileData.slug ?? "")
+    const hasLeft = !railless && left.length > 0
+    const hasRight = !railless && right.length > 0
     const bodyClass = ["site-body", hasLeft ? "has-contents" : null, hasRight ? "has-aside" : null]
       .filter(Boolean)
       .join(" ")

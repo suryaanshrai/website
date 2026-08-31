@@ -72,8 +72,14 @@ $site-max: 1560px;
 // ------------------------------------------------------------------- page
 
 .page[data-frame="site"] .site-main {
+  // `position: relative` without a z-index deliberately: it keeps the column a
+  // containing block without opening a stacking context. The design's own main
+  // carries `z-index: 10` because its background layers sit at z-index 1, but
+  // here the background canvas is at -1, so main needs nothing — and giving it
+  // a stacking context trapped the mobile drawer (z-index 100, but rendered
+  // inside afterBody) beneath the sticky rail at z-index 40, so opening the menu
+  // drew the drawer under the header and the two wordmarks overlapped.
   position: relative;
-  z-index: 10;
   display: block;
   box-sizing: border-box;
   max-width: $site-max;
@@ -190,11 +196,9 @@ $site-max: 1560px;
 // Chrome the stock frame emits that the design has no place for.
 
 .page[data-frame="site"] {
-  // The default frame puts a full-width <hr> between the article and afterBody.
-  // The design separates those with space, not a rule.
-  & > .site-main > .site-body > .site-column > hr {
-    display: none;
-  }
+  // (The default frame emits a full-width <hr> between the article and
+  // afterBody; this frame simply doesn't, since the design separates them with
+  // space rather than a rule.)
 
   .page-footer {
     margin-top: 0;
