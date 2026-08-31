@@ -73,7 +73,28 @@
     }
   }
 
-  @media all and ($mobile) {
+  // Between the mobile breakpoint and 1200px the rail is wide enough to keep the
+  // pills but not at their full desktop cost: measured at 1000px the nav's box
+  // is 538px while its content needs 571px, and because the row is centred the
+  // 33px of overflow spilled out of BOTH ends — the first pill sat on top of the
+  // wordmark and the last one on top of the clock. Tightening the pills here,
+  // plus dropping the clock (the first thing the design sheds as the rail
+  // narrows, see below), buys back ~140px so the row fits with real room.
+  @media all and ($tablet) {
+    gap: 3px;
+
+    .site-header-link {
+      padding: 7px 8px;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  // The design swaps the pill row for the hamburger at ~880px, not at the site's
+  // 800px mobile breakpoint, and measurement agrees: at 820px the row still
+  // needs 492px in a 460px box. Rather than shrink the pills to illegibility for
+  // one 60px band, hand navigation to the drawer there, exactly as the design
+  // does. Everything else keeps the 800px breakpoint.
+  @media (max-width: 880px) {
     display: none;
   }
 }
@@ -86,7 +107,10 @@
   flex-shrink: 0;
   white-space: nowrap;
 
-  @media all and ($mobile) {
+  // The clock is the rail's most expendable element — it is ambience, not
+  // navigation — so it goes first when the row gets tight, freeing ~100px for
+  // the nav. The design drops it too, just at a narrower width.
+  @media all and not ($desktop) {
     display: none;
   }
 }
@@ -112,7 +136,10 @@
     background: var(--dark);
   }
 
-  @media all and ($mobile) {
+  // Paired with the nav's 880px hide above: the toggle has to appear at exactly
+  // the width the pill row disappears, or the 800-880px band has no navigation
+  // at all.
+  @media (max-width: 880px) {
     display: flex;
     // Flex `order` re-sorts header children regardless of DOM position, so
     // the toggle stays the rightmost control next to search/darkmode/reader-mode.
