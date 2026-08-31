@@ -33,3 +33,163 @@
   color: var(--dark);
   border-left-color: var(--secondary);
 }
+
+// ---------------------------------------------------------------------------
+// Theme swap
+// ---------------------------------------------------------------------------
+// Toggling the theme re-resolves --dark/--light on :root, which starts a
+// `transition: color`/`border-color` on every element that declares one. Those
+// transitions were observed to stall permanently at their interpolated midpoint
+// (e.g. .landing-index-title stuck at rgb(134,125,124), exactly halfway between
+// the dark-mode ink #efeaf7 and the light-mode ink #2b2013), leaving the
+// mismatched "patches" the palette swap was supposed to fix. Suppressing every
+// transition for the duration of the swap makes the palette change atomic; the
+// class is added on `themechange` and removed two frames later by
+// themeSwap.inline.ts.
+html.theme-swapping,
+html.theme-swapping *,
+html.theme-swapping *::before,
+html.theme-swapping *::after {
+  transition: none !important;
+}
+
+// ---------------------------------------------------------------------------
+// Mobile: one header bar, not two
+// ---------------------------------------------------------------------------
+// The mobile grid (variables.scss $mobileGrid) places `grid-sidebar-left` above
+// `grid-header`, and the explorer plugin's own CSS
+// (`.page > #quartz-body .sidebar.left:has(.explorer)`, specificity 1,4,0)
+// re-asserts `position: sticky` + an opaque `var(--light)` fill, beating the
+// neutralization in base.scss (1,3,0). The result was two stacked sticky bars —
+// the site title + explorer hamburger above the real SiteHeader. The left
+// sidebar's contents are already reachable on mobile: the wordmark and every
+// nav destination live in SiteHeader, and the explorer tree is relocated into
+// the hamburger drawer by mobileNav.inline.ts.
+//
+// `display: none` (not a translate) is deliberate: the previous off-canvas
+// treatment left `.explorer-content` in the DOM at left:-359px, still focusable,
+// so keyboard tabbing walked into an invisible menu and its edge bled onscreen.
+@media all and ($mobile) {
+  .page > #quartz-body .sidebar.left,
+  .page > #quartz-body .sidebar.left:has(.explorer) {
+    display: none !important;
+  }
+}
+
+// The explorer, once moved inside the drawer, must shed the plugin's mobile
+// off-canvas positioning and its own toggle buttons — the drawer is already the
+// disclosure, so a second hamburger inside it is redundant.
+.site-mobile-nav .explorer {
+  width: 100%;
+  overflow: visible;
+
+  .explorer-toggle {
+    display: none !important;
+  }
+
+  .explorer-content {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Touch behaviour
+// ---------------------------------------------------------------------------
+// No tap-highlight-color was set anywhere, so every tap drew the platform
+// default flash (measured rgba(51,181,229,0.4) — raw Android blue) over the
+// site's own palette.
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Sticky `:hover` is the other half of the "tap bounce": on touch, :hover
+// latches after a tap and never clears, so the footer icons stayed rotated 360°
+// and lifted, and row titles stayed in the accent colour. Confine every
+// decorative hover to devices that can actually hover, and give touch a real,
+// self-clearing :active instead.
+@media (hover: none) {
+  footer a.footerIconLink:hover {
+    transform: none;
+  }
+
+  footer a.footerIconLink:hover .footerIconSpin {
+    transform: none;
+  }
+
+  .landing-index-row:hover .landing-index-title,
+  .recent-writing-row:hover .recent-writing-title,
+  .contact-card:hover .contact-card-label,
+  .site-header-brand:hover .site-header-name,
+  .site-header-nav .site-header-link:hover {
+    color: inherit;
+  }
+
+  a.internal:hover,
+  a.external:hover {
+    text-shadow: none;
+    color: inherit !important;
+  }
+
+  .landing-index-row:active .landing-index-title,
+  .recent-writing-row:active .recent-writing-title,
+  .contact-card:active .contact-card-label {
+    color: var(--secondary);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Focus + hit targets
+// ---------------------------------------------------------------------------
+// `:focus-visible` appeared exactly once across ~112KB of emitted CSS, against
+// three `outline: none` rules — keyboard users had essentially no focus
+// indicator. A hairline in the accent reads better than the UA default and
+// matches the design's other 1px rules.
+:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.search > .search-container > .search-space > input:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+// The header controls are 32–36px to suit the design; that is below the 44px
+// minimum touch target. Expand the *hit area* with a centred pseudo-element so
+// the rendered size is untouched.
+@media (hover: none) {
+  .page-header > header .darkmode,
+  .page-header > header .readermode,
+  .page-header > header .search .search-button,
+  .site-header-nav-toggle,
+  .site-mobile-nav-close {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 44px;
+      height: 44px;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  // The small-caps section links ("ALL 23 NOTES →", "OPEN THE GRAPH →") render
+  // at 14px tall, well under the touch minimum. Padding here is safe because
+  // both sit on their own baseline in a section head.
+  .landing-section-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

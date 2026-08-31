@@ -263,6 +263,13 @@ plugins:
     enabled: true
     options: {}
     order: 50
+  # This plugin is what strips the YAML frontmatter block out of the rendered
+  # body, so it must stay enabled — disabling it dumps `title:/description:/
+  # tags:` into the top of every post and into the meta description. What is not
+  # wanted is its Obsidian-style "Properties" table, which showed an almost
+  # always empty `description —` row plus the tags that are already rendered as
+  # pills immediately below it, so every post listed its tags twice. The
+  # approved design has no properties table: keep the parsing, drop the view.
   - source: "@quartz-community/note-properties"
     enabled: true
     options:
@@ -272,7 +279,7 @@ plugins:
         - tags
         - aliases
       excludedProperties: []
-      hidePropertiesView: false
+      hidePropertiesView: true
       delimiters: ---
       language: yaml
     order: 5

@@ -60,6 +60,11 @@ body[data-slug="index"] {
   margin: 0 auto;
   padding: 0 40px 60px;
   box-sizing: border-box;
+
+  // Match the hero's mobile gutter so every section starts on the same ruler.
+  @media all and ($mobile) {
+    padding: 0 20px 44px;
+  }
 }
 
 .landing-section-head {
@@ -320,6 +325,13 @@ body[data-slug="index"] {
   margin: 0 auto;
   padding: 0 40px 20px;
   box-sizing: border-box;
+
+  // Without this the desktop 40px gutter carried onto mobile while the hero
+  // used 20px, so at 375px the rows sat in a 251px column that lined up with
+  // nothing else on the page.
+  @media all and ($mobile) {
+    padding: 0 20px 20px;
+  }
 }
 
 .landing-footer-quote {

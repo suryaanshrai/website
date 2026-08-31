@@ -112,6 +112,33 @@ function handlePointerDown(e: PointerEvent) {
   ripple = 0.001
 }
 
+function pointerEffectsEnabled(): boolean {
+  return (
+    window.matchMedia("(hover: hover)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
+}
+
+// The canvas is opaque (`alpha: false`) and covers the whole viewport at
+// z-index -1. Mobile browsers drop WebGL contexts aggressively when a tab is
+// backgrounded; with no handler the last-drawn frame stayed painted in the old
+// theme forever, which is one of the ways stale patches survived a theme swap.
+// Preventing the default keeps the context recoverable, and `restored` rebuilds
+// the program from scratch.
+function handleContextLost(e: Event) {
+  e.preventDefault()
+  if (raf !== null) {
+    cancelAnimationFrame(raf)
+    raf = null
+  }
+  gl = null
+  uniforms = null
+}
+
+function handleContextRestored() {
+  initNebulaBg()
+}
+
 function draw(now: number) {
   raf = requestAnimationFrame(draw)
 
@@ -152,8 +179,20 @@ function initNebulaBg() {
   // Re-bind window listeners idempotently (safe across repeated SPA navigations)
   window.removeEventListener("pointermove", handlePointerMove)
   window.removeEventListener("pointerdown", handlePointerDown)
-  window.addEventListener("pointermove", handlePointerMove, { passive: true })
-  window.addEventListener("pointerdown", handlePointerDown)
+  // The pointer-follow and tap-ripple are hover-device affordances. Bound to
+  // `window`, the ripple fired on *every* tap anywhere on the page, so the whole
+  // background pulsed each time a touch user tapped a link — the "tap bounce".
+  // Neither effect is meaningful without a hovering cursor, so bind them only
+  // where one exists, and never under reduced motion.
+  if (pointerEffectsEnabled()) {
+    window.addEventListener("pointermove", handlePointerMove, { passive: true })
+    window.addEventListener("pointerdown", handlePointerDown)
+  }
+
+  canvas.removeEventListener("webglcontextlost", handleContextLost)
+  canvas.removeEventListener("webglcontextrestored", handleContextRestored)
+  canvas.addEventListener("webglcontextlost", handleContextLost)
+  canvas.addEventListener("webglcontextrestored", handleContextRestored)
 
   // SPA navigation: the canvas element (and its WebGL context) survives the
   // body morph since it's identical markup on every page. Do NOT recreate the
@@ -215,6 +254,9 @@ function initNebulaBg() {
 function cleanupNebulaBg() {
   window.removeEventListener("pointermove", handlePointerMove)
   window.removeEventListener("pointerdown", handlePointerDown)
+  const canvas = document.getElementById("space-canvas")
+  canvas?.removeEventListener("webglcontextlost", handleContextLost)
+  canvas?.removeEventListener("webglcontextrestored", handleContextRestored)
 }
 
 if (document.readyState === "loading") {

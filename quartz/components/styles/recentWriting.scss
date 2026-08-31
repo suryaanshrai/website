@@ -35,14 +35,34 @@
   line-height: 1.15;
   letter-spacing: -0.01em;
   transition: color 0.2s ease;
+  text-wrap: balance;
+
+  // At 2.05rem in a ~335px single column, a long title ran to three lines while
+  // a short one took one, so row heights swung 146→221px. A step down keeps
+  // every current title inside two lines without truncating anything.
+  @media all and ($mobile) {
+    font-size: 1.6rem;
+  }
 }
 
 .recent-writing-row:hover .recent-writing-title {
   color: var(--secondary);
 }
 
+// Auto-extracted descriptions vary wildly in length (75–236 chars across the
+// current four posts), which made row heights jump 243→302px and read as broken
+// rhythm. Clamping to two lines fixes the row height regardless of the source.
 .recent-writing-kicker {
   font-size: 0.85rem;
   color: var(--darkgray);
   line-height: 1.55;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+
+  &:empty {
+    display: none;
+  }
 }

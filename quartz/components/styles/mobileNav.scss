@@ -63,14 +63,14 @@
   flex-shrink: 0;
 }
 
+// The drawer now holds the section links *and* the relocated explorer tree, so
+// it scrolls as one column instead of vertically centring a fixed list.
 .site-mobile-nav-links {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 2px;
-  padding: 20px 28px;
-  overflow-y: auto;
+  padding: 20px 28px 0;
+  flex-shrink: 0;
 
   .site-mobile-nav-link {
     padding: 16px 4px;
@@ -83,4 +83,20 @@
       color: var(--secondary);
     }
   }
+}
+
+.site-mobile-nav-tree {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 22px 28px 32px;
+}
+
+.site-mobile-nav-tree-label {
+  margin: 0 0 14px;
+  font-family: var(--codeFont);
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  color: var(--gray);
 }

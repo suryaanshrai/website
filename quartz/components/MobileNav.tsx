@@ -36,6 +36,12 @@ const MobileNav: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
           </a>
         ))}
       </nav>
+      {/* The explorer file tree is moved in here on mobile by
+          mobileNav.inline.ts — the left sidebar that used to host it is hidden
+          below 800px, since it rendered as a second stacked header bar. */}
+      <div class="site-mobile-nav-tree" id="site-mobile-nav-tree">
+        <p class="site-mobile-nav-tree-label">BROWSE ALL</p>
+      </div>
     </div>
   )
 }

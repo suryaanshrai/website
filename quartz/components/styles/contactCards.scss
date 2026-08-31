@@ -1,8 +1,16 @@
+@use "../../styles/variables.scss" as *;
+
 .contact-cards-page {
   max-width: 1560px;
   margin: 0 auto;
   padding: 20px 40px 100px;
   box-sizing: border-box;
+
+  // This file had no mobile breakpoint at all, so the 40px desktop gutter and
+  // the 30px card padding carried straight onto a 375px screen.
+  @media all and ($mobile) {
+    padding: 12px 20px 64px;
+  }
 }
 
 .contact-eyebrow {
@@ -56,6 +64,10 @@
   &:hover .contact-card-label {
     color: var(--secondary);
   }
+
+  @media all and ($mobile) {
+    padding: 22px 20px;
+  }
 }
 
 .contact-card-icon {
@@ -78,5 +90,8 @@
   font-size: 0.68rem;
   letter-spacing: 0.08em;
   color: var(--gray);
-  word-break: break-all;
+  // `break-all` split URLs mid-token ("topmate.io/suryaan | shrai/").
+  // `anywhere` only breaks when a line genuinely cannot fit, and prefers the
+  // existing slash/dot boundaries first.
+  overflow-wrap: anywhere;
 }

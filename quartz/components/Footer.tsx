@@ -37,7 +37,18 @@ export default ((opts?: Options) => {
                   rel={rel}
                   target={target}
                 >
-                  <img class={imgClass} src={link.src} alt="" loading="lazy" decoding="async" />
+                  {/* The icons are square and CSS-sized; the attributes exist to
+                      give the box an intrinsic aspect ratio so the footer row
+                      doesn't reflow as they decode. */}
+                  <img
+                    class={imgClass}
+                    src={link.src}
+                    alt=""
+                    width={32}
+                    height={32}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </a>
               </li>
             )

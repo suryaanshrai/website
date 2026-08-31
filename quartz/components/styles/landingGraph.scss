@@ -46,8 +46,20 @@
   cursor: grab;
   touch-action: none;
 
+  // The graph is the page's signature element; at 300px on a phone it read as a
+  // thumbnail. Give it a portrait aspect so it fills the column properly.
   @media all and ($mobile) {
-    height: 300px;
+    height: min(78vw, 420px);
+  }
+}
+
+// `touch-action: none` blocks page scrolling over the canvas so drags work, but
+// on a phone that turns a full-width block into a scroll trap. Let touch users
+// scroll straight through it — the drag interaction is a pointer affordance.
+@media (hover: none) {
+  .landing-graph-canvas {
+    touch-action: auto;
+    cursor: default;
   }
 }
 

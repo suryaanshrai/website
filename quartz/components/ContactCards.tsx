@@ -27,6 +27,8 @@ const ContactCards: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
                 class="contact-card-icon"
                 src={link.src}
                 alt=""
+                width={24}
+                height={24}
                 loading="lazy"
                 decoding="async"
               />

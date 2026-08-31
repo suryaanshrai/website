@@ -116,7 +116,10 @@ async function _navigate(url: URL, isBack: boolean = false) {
       const el = document.getElementById(decodeURIComponent(url.hash.substring(1)))
       el?.scrollIntoView()
     } else {
-      window.scrollTo({ top: 0 })
+      // `behavior: "instant"` is required because html has `scroll-behavior:
+      // smooth` for in-page anchors — without it every SPA link tap animated a
+      // full-page scroll to the top before the new content rendered.
+      window.scrollTo({ top: 0, behavior: "instant" })
     }
   }
 
