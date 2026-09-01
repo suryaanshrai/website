@@ -5,7 +5,6 @@ tags:
   - games
 date: 2025-10-24
 ---
-
 Beeeeeeuuuuuuuttifull game. Enchantingly beautiful. But, you are forced to do too many side quests. Which, to be honest, were not really that enjoyable. (They become a pain too soon when you have to do them forcefully).
 
 A must play for Potterheads.

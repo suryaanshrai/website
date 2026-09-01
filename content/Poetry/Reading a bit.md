@@ -7,8 +7,12 @@ tags:
 date: 2025-05-31
 generate-audio: "true"
 ---
+  
+  
 
 [![](https://blogger.googleusercontent.com/img/a/AVvXsEjTBQ-BHoVq-elseoIsUL2F0MBYzEIotg9fC1pjfI8k3xhIoryOq-MHodm_UTivl0jQZhxPXDHDhI8BgE1jQSI7w3Hkb2jXP3HiTJB08GnL0SCzGNaRGtJCkloQk9ulte5TA9wOxX7B72iiOBUdMrlSAnZQQuIfh0WN-8purMvHoQiCmFFcnn7DlfKmAs8=w616-h770)](https://www.blogger.com/blog/post/edit/3054563877724509654/1283775384058665816#)
+
+  
 
 Have you ever read a long story?
 
@@ -21,6 +25,7 @@ It is awe-inspiring. Isn't it?
 The feeling of reaching the end of it?
 
   <br>
+  
 
 You finished the entire story, it is an achievement!
 
@@ -35,6 +40,7 @@ Every little detail of those unreal characters,
 It makes the heart beat in sync with their calendars.
 
   <br>
+  
 
 But every story in this world has the same plot,
 
@@ -50,6 +56,8 @@ But it is a new one, not the same old rubbish.
 
 <br>
 
+  
+
 With so many stories and so many books,
 
 I will not lay an accuse,
@@ -59,6 +67,7 @@ Nor a plea, nor a wish,
 To the author of a story that has finished.
 
   <br>
+  
 
 Yet you talk about the characters with your loved ones,
 

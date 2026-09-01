@@ -9,5 +9,4 @@ tags:
 date: 2025-10-24
 draft: "true"
 ---
-
 How I use NotebookLM, Audible, and Obsidian to ease out the mundane yet necessary part of studying - Note Taking.

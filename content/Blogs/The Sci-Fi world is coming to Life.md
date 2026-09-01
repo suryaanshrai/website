@@ -8,7 +8,6 @@ tags:
 date: 2025-10-24
 generate-audio: "true"
 ---
-
 ### A Future That Arrived While We Were Scrolling
 
 We tend to imagine "The Future" as a distinct destination—a place with flying cars, chrome skyscrapers, and teleportation devices. We keep waiting for that big, cinematic moment where the world shifts into _Science Fiction_.

@@ -7,7 +7,6 @@ tags:
 date: 2022-06-05
 generate-audio: "true"
 ---
-
 [![](https://literature720019509.files.wordpress.com/2019/05/road_not_taken_.jpg)](https://www.blogger.com/blog/post/edit/3054563877724509654/8289384087718739019#)
 
  There are moments in life when you are way ahead of the tracks, far up the mountains, it's as if you are meeting the horizon. And then there are moments when you don't know what is going on. You just keep walking. Even when you are being crushed by the sheer weight of the memories of where you've been, where you could've been right now, you keep walking. 

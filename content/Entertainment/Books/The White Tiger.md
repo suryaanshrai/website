@@ -5,7 +5,6 @@ tags:
   - books
 date: 2025-11-23
 ---
-
 Had read this one quite a few years ago. A great read. The way the author has designed the entire narration, the elements it capture, the sequence of events and the way it ends. Everything just adds up into a power packed punch for such an unexpected turn of events that I still marvel at how good the book was. Definitely a chef's kiss 🤌.
 
 I enjoyed the character development from his childhood origins, to his days at working for the financially well family, and all the adventures he had partaken while working there (and no I do not acknowledge all his actions).
