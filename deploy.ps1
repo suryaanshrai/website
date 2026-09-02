@@ -30,5 +30,8 @@ if (-not (Test-Path "$RepoRoot\audios")) { New-Item -Type Directory "$RepoRoot\a
 Copy-Item "$RepoRoot\..\text-to-speech-local\audios\*" "$RepoRoot\audios\" -Recurse -Force
 
 # # Final Sync
+# (calling node directly instead of `npx quartz sync` - npx resolves the
+# bare command to the npx.ps1 shim, which execution policy silently blocks
+# in some PowerShell hosts, e.g. Windows PowerShell 5.1 via Update-Site)
 Set-Location $RepoRoot
-npx quartz sync
+node "$RepoRoot\quartz\bootstrap-cli.mjs" sync

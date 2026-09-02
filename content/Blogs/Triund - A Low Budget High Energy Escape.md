@@ -6,6 +6,7 @@ tags:
   - travel
   - draft
 date: 2026-06-25
+draft: "true"
 ---
 - Monks playing carrom in cafes
 - women making pretty paintings on the streets
