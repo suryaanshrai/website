@@ -20,7 +20,12 @@ let renderScale = 1
 
 const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 }
 let rippleAt: [number, number] | null = null
-let ripple = 0
+// Time-based rather than a per-frame accumulator, so the ripple takes the
+// same wall-clock duration at 60Hz and 120Hz instead of running at double
+// speed on high-refresh displays. `u_ripple.z` carries age (0..1) to the
+// shader; null means "no ripple in flight".
+let rippleStart: number | null = null
+const RIPPLE_DURATION_MS = 900
 
 function getTheme(): "light" | "dark" {
   return document.documentElement.getAttribute("saved-theme") === "light" ? "light" : "dark"
@@ -83,7 +88,37 @@ void main(){
   vec2 m = (u_mouse - 0.5*u_res) / shortSide;
   float t = u_time * 0.035;
 
-  vec2 q = uv * 1.15;
+  // Click ripple: a small lens that bends whatever's behind it and settles,
+  // rather than a ring of light drawn over the scene. \`dUv\` is what the
+  // nebula, stars and vignette below actually sample — undisturbed (== uv)
+  // whenever no ripple is in flight, so the resting frame is bit-for-bit
+  // identical to before this existed. Two crests (a leading wave and a
+  // fainter trailing one) is what reads as water rather than one drawn
+  // circle; swell/decay is a two-stage envelope — fast in, slow settle —
+  // rather than the mechanical linear fade a per-frame step gives you.
+  vec2 dUv = uv;
+  float rippleGlow = 0.0;
+  if(u_ripple.z > 0.0){
+    vec2 rp = (u_ripple.xy - 0.5*u_res) / shortSide;
+    float age = u_ripple.z;
+    float swell = smoothstep(0.0, 0.18, age);
+    float decay = pow(1.0 - age, 2.0);
+    float envelope = swell * decay;
+    float radius = 0.30 * (1.0 - pow(1.0 - age, 3.0));
+
+    vec2 toFrag = uv - rp;
+    float d = length(toFrag);
+    vec2 dir = d > 0.0001 ? toFrag / d : vec2(0.0);
+
+    float crest = exp(-pow((d - radius) / 0.055, 2.0))
+                + 0.45 * exp(-pow((d - radius * 0.62) / 0.055, 2.0));
+    float wave = crest * envelope;
+
+    dUv = uv - dir * wave * 0.035;
+    rippleGlow = wave;
+  }
+
+  vec2 q = dUv * 1.15;
   q += 0.16 * vec2(fbm(q*1.4 + t), fbm(q*1.4 - t + 4.7));
   float neb = fbm(q*1.9 + vec2(t*0.6, -t*0.4));
   neb = pow(smoothstep(0.28, 1.0, neb), 1.6);
@@ -95,14 +130,14 @@ void main(){
   vec3 cyan = vec3(0.337, 0.769, 0.847);
   vec3 maroon = vec3(0.40, 0.16, 0.11);
   vec3 teal = vec3(0.20, 0.34, 0.32);
-  float xmix = smoothstep(-0.5, 0.9, uv.x + 0.35*fbm(q*2.4));
+  float xmix = smoothstep(-0.5, 0.9, dUv.x + 0.35*fbm(q*2.4));
   vec3 colDark = mix(violet, cyan, xmix) * neb * 0.62;
   vec3 colLight = mix(maroon, teal, xmix) * neb * 0.4;
   vec3 col = mix(colDark, colLight, u_theme);
 
-  float s = stars(uv + vec2(t*0.12, 0.0), 26.0, 0.055, u_time)
-          + 0.6*stars(uv*1.7 + vec2(-t*0.07, t*0.03), 46.0, 0.04, u_time*0.8)
-          + 0.35*stars(uv*2.6 + vec2(t*0.04, 0.0), 78.0, 0.03, u_time*1.4);
+  float s = stars(dUv + vec2(t*0.12, 0.0), 26.0, 0.055, u_time)
+          + 0.6*stars(dUv*1.7 + vec2(-t*0.07, t*0.03), 46.0, 0.04, u_time*0.8)
+          + 0.35*stars(dUv*2.6 + vec2(t*0.04, 0.0), 78.0, 0.03, u_time*1.4);
   col += vec3(0.86, 0.84, 0.95) * s * 0.85 * (1.0 - u_theme);
   col += vec3(0.32, 0.22, 0.15) * s * 0.35 * u_theme;
 
@@ -111,13 +146,12 @@ void main(){
   vec3 haloLight = vec3(0.40, 0.20, 0.14) * smoothstep(0.42, 0.0, md) * 0.22 + vec3(0.22, 0.30, 0.28) * smoothstep(0.06, 0.0, md) * 0.32;
   col += mix(haloDark, haloLight, u_theme) * u_pointer;
 
-  if(u_ripple.z > 0.0){
-    vec2 rp = (u_ripple.xy - 0.5*u_res) / u_res.y;
-    float r = u_ripple.z;
-    float ring = smoothstep(0.03, 0.0, abs(length(uv - rp) - r*0.75)) * (1.0 - r);
+  // Rim highlight on the wavefront itself — a sixth of the old ring's
+  // strength, since the displacement above is now what carries the effect.
+  if(rippleGlow > 0.0){
     vec3 rippleDark = vec3(0.55, 0.45, 0.80);
     vec3 rippleLight = vec3(0.42, 0.22, 0.16);
-    col += mix(rippleDark, rippleLight, u_theme) * ring * 0.9;
+    col += mix(rippleDark, rippleLight, u_theme) * rippleGlow * 0.16;
   }
 
   // Dark mode is light emitted into a void, so the nebula, the stars and the
@@ -131,7 +165,7 @@ void main(){
   vec3 paper = vec3(0.925, 0.890, 0.804) - col * 1.15;
   vec3 outc = mix(dark, paper, u_theme);
 
-  float vig = smoothstep(1.55, 0.35, length(uv));
+  float vig = smoothstep(1.55, 0.35, length(dUv));
   outc *= mix(0.72, 1.0, vig);
 
   // A near-black ground with a wide, very gradual gradient across it is the
@@ -163,7 +197,7 @@ function handlePointerDown(e: PointerEvent) {
     e.clientX / Math.max(window.innerWidth, 1),
     1 - e.clientY / Math.max(window.innerHeight, 1),
   ]
-  ripple = 0.001
+  rippleStart = performance.now()
 }
 
 function pointerEffectsEnabled(): boolean {
@@ -209,11 +243,17 @@ function draw(now: number) {
   gl.uniform1f(uniforms.time, t)
   gl.uniform2f(uniforms.mouse, mouse.x * canvas.width, mouse.y * canvas.height)
 
-  if (ripple > 0) {
-    ripple = Math.min(ripple + 0.012, 1.0)
-    if (ripple >= 1) ripple = 0
-    const r = rippleAt ?? [0.5, 0.5]
-    gl.uniform3f(uniforms.ripple, r[0] * canvas.width, r[1] * canvas.height, ripple)
+  if (rippleStart !== null) {
+    // Clamp above 0 so age never lands on exactly 0.0 the first frame after a
+    // click, which would fail the shader's `u_ripple.z > 0.0` gate for one frame.
+    const age = Math.max(0.0001, (now - rippleStart) / RIPPLE_DURATION_MS)
+    if (age >= 1) {
+      rippleStart = null
+      gl.uniform3f(uniforms.ripple, 0, 0, 0)
+    } else {
+      const r = rippleAt ?? [0.5, 0.5]
+      gl.uniform3f(uniforms.ripple, r[0] * canvas.width, r[1] * canvas.height, age)
+    }
   } else {
     gl.uniform3f(uniforms.ripple, 0, 0, 0)
   }

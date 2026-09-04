@@ -136,24 +136,18 @@ p,
 // ---------------------------------------------------------------------------
 // The Comments component never assigned a stylesheet, so the remark42 embed was
 // dropped into the page with no width, spacing, or heading of its own. This
-// gives it the same measure and section rule as the rest of the article chrome;
-// the widget's internal theming is handled in the remark42 fork.
+// gives it the same measure and section rule as the rest of the article chrome.
+// The section heading itself (previously a "RESPONSES" micro-label rendered
+// here) now lives inside the widget as a proper "Discussion N comments"
+// header with a live count — see components/root/root.tsx in the remark42
+// fork — so this host-side rule only handles width, spacing and the rule
+// above the section.
 .remark42 {
   max-width: 750px;
   margin: 56px auto 0;
   padding-top: 28px;
   border-top: 1px solid var(--lightgray);
   min-height: 1px;
-
-  &::before {
-    content: "RESPONSES";
-    display: block;
-    margin-bottom: 22px;
-    font-family: var(--codeFont);
-    font-size: 0.62rem;
-    letter-spacing: 0.28em;
-    color: var(--gray);
-  }
 }
 
 // ---------------------------------------------------------------------------
