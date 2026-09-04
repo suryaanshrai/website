@@ -15,6 +15,21 @@ const REMARK42 = {
   },
 }
 
+// remark42 keys each comment thread on this URL verbatim, so any two forms
+// that reach the same page have to normalize to one string or they silently
+// open different threads. `window.location.href` doesn't: `/poetry`,
+// `/poetry/`, `/poetry/#note` and `/poetry/?x=1` are four distinct strings
+// for what a reader experiences as one page. This is also how three real
+// comments ended up orphaned pre-launch — posted while the URL momentarily
+// carried different casing/trailing-slash — so it's not just a theoretical
+// case.
+function canonicalCommentUrl(): string {
+  let path = window.location.pathname
+  path = path.replace(/index\.html$/, "")
+  if (path.length > 1) path = path.replace(/\/+$/, "")
+  return window.location.origin + path
+}
+
 function computeRemarkConfig(remark42Container: HTMLElement) {
   const theme = document.documentElement.getAttribute("saved-theme") === "dark" ? "dark" : "light"
   const noFooter = remark42Container.dataset.noFooter === "1"
@@ -27,7 +42,7 @@ function computeRemarkConfig(remark42Container: HTMLElement) {
     theme: theme,
     no_footer: noFooter,
     simple_view: simpleView,
-    url: window.location.href, // Ensure URL is current
+    url: canonicalCommentUrl(),
   }
 }
 

@@ -1,3 +1,5 @@
+import { onPointerInert } from "./util"
+
 let gl: WebGLRenderingContext | null = null
 let uniforms: {
   res: WebGLUniformLocation | null
@@ -6,6 +8,7 @@ let uniforms: {
   theme: WebGLUniformLocation | null
   ripple: WebGLUniformLocation | null
   pointer: WebGLUniformLocation | null
+  halo: WebGLUniformLocation | null
 } | null = null
 let raf: number | null = null
 let onResize: (() => void) | null = null
@@ -19,6 +22,12 @@ let boundCanvas: HTMLCanvasElement | null = null
 let renderScale = 1
 
 const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 }
+// Faded out (not just frozen) while the pointer is over the comments iframe
+// or off the window — see `onPointerInert` in ./util. `haloTarget` is the
+// destination the lerp in `draw()` eases `halo` toward, same shape as the
+// existing mouse x/y easing just below.
+let halo = 1
+let haloTarget = 1
 let rippleAt: [number, number] | null = null
 // Time-based rather than a per-frame accumulator, so the ripple takes the
 // same wall-clock duration at 60Hz and 120Hz instead of running at double
@@ -41,6 +50,14 @@ uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_
 // initial (0.5, 0.5), parking a permanent mark in the middle of every phone
 // screen — clearly visible once light mode started subtracting rather than adding.
 uniform float u_pointer;
+// Eased 0..1, separate from u_pointer: this one fades the halo out while the
+// pointer is over the comments iframe or off the window (u_mouse has stopped
+// updating in that case, so without this the halo just parks at the last
+// position instead of disappearing). u_pointer stays untouched by this — it
+// also gates the nebula parallax below, and fading that on iframe-hover would
+// visibly shift the whole background for a boundary the user never asked
+// about.
+uniform float u_halo;
 
 // The classic \`fract(sin(dot(p, k)) * 43758.5)\` hash is the usual cause of
 // blocky patches on phones: fbm pushes p out to ~30x, and mobile GPUs implement
@@ -144,7 +161,7 @@ void main(){
   float md = length(uv - m);
   vec3 haloDark = vec3(0.42, 0.30, 0.62) * smoothstep(0.42, 0.0, md) * 0.30 + vec3(0.25, 0.55, 0.62) * smoothstep(0.06, 0.0, md) * 0.5;
   vec3 haloLight = vec3(0.40, 0.20, 0.14) * smoothstep(0.42, 0.0, md) * 0.22 + vec3(0.22, 0.30, 0.28) * smoothstep(0.06, 0.0, md) * 0.32;
-  col += mix(haloDark, haloLight, u_theme) * u_pointer;
+  col += mix(haloDark, haloLight, u_theme) * u_pointer * u_halo;
 
   // Rim highlight on the wavefront itself — a sixth of the old ring's
   // strength, since the displacement above is now what carries the effect.
@@ -187,9 +204,26 @@ function compile(context: WebGLRenderingContext, type: number, src: string): Web
   return shader
 }
 
+// Set whenever the halo fades back in after being inert, so the very next
+// real pointer position snaps `mouse.x/y` straight there instead of lerping
+// in from wherever it was frozen — the halo is still ~0 for that one frame,
+// so the snap itself is invisible, but the alternative (a multi-frame glide
+// eased in at 0.06/frame) is not.
+let mouseNeedsSnap = false
+
 function handlePointerMove(e: PointerEvent) {
   mouse.tx = e.clientX / Math.max(window.innerWidth, 1)
   mouse.ty = 1 - e.clientY / Math.max(window.innerHeight, 1)
+  if (mouseNeedsSnap) {
+    mouse.x = mouse.tx
+    mouse.y = mouse.ty
+    mouseNeedsSnap = false
+  }
+}
+
+function handleHaloInert(inert: boolean) {
+  haloTarget = inert ? 0 : 1
+  if (!inert) mouseNeedsSnap = true
 }
 
 function handlePointerDown(e: PointerEvent) {
@@ -239,9 +273,11 @@ function draw(now: number) {
 
   mouse.x += (mouse.tx - mouse.x) * 0.06
   mouse.y += (mouse.ty - mouse.y) * 0.06
+  halo += (haloTarget - halo) * 0.08
 
   gl.uniform1f(uniforms.time, t)
   gl.uniform2f(uniforms.mouse, mouse.x * canvas.width, mouse.y * canvas.height)
+  gl.uniform1f(uniforms.halo, halo)
 
   if (rippleStart !== null) {
     // Clamp above 0 so age never lands on exactly 0.0 the first frame after a
@@ -304,6 +340,7 @@ function initNebulaBg() {
   if (pointerEffectsEnabled()) {
     window.addEventListener("pointermove", handlePointerMove, { passive: true })
     window.addEventListener("pointerdown", handlePointerDown)
+    onPointerInert(handleHaloInert)
   }
 
   canvas.removeEventListener("webglcontextlost", handleContextLost)
@@ -351,6 +388,7 @@ function initNebulaBg() {
     theme: gl.getUniformLocation(program, "u_theme"),
     ripple: gl.getUniformLocation(program, "u_ripple"),
     pointer: gl.getUniformLocation(program, "u_pointer"),
+    halo: gl.getUniformLocation(program, "u_halo"),
   }
   boundCanvas = canvas
 

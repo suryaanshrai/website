@@ -44,3 +44,65 @@ export async function fetchCanonical(url: URL): Promise<Response> {
   const [_, redirect] = text.match(canonicalRegex) ?? []
   return redirect ? fetch(`${new URL(redirect, url)}`) : res
 }
+
+// Tracks whether the pointer is somewhere this document can no longer see it
+// move: over an iframe (which swallows pointermove/pointerdown for its own
+// document, so whatever was last computed here just stays put forever), or
+// off the browser window entirely. Pointer-follow effects (the cursor ring,
+// the WebGL halo) should fade out on `inert` rather than freeze at the
+// boundary — `cb` fires once per transition so callers can drive that fade.
+//
+// Safe to call again on every `nav` re-init, matching this codebase's
+// idempotent-rebind idiom elsewhere (see `initNebulaBg`/`initMagnetCursor`):
+// each call tears down its own previous listeners before re-binding.
+const inertCleanups = new WeakMap<(inert: boolean) => void, () => void>()
+
+export function onPointerInert(cb: (inert: boolean) => void): void {
+  inertCleanups.get(cb)?.()
+
+  let inert = false
+  function setInert(next: boolean) {
+    if (next === inert) return
+    inert = next
+    cb(inert)
+  }
+
+  // Bubbles, so this is delegated on `document` rather than bound to the
+  // iframe directly — the comments iframe is only inserted once its
+  // container scrolls into view, and delegation covers it with no
+  // MutationObserver needed. The pointer entering an iframe still fires
+  // `pointerover` on it in the parent document; only pointer *movement*
+  // inside the embedded document is invisible from here.
+  function handleOver(e: PointerEvent) {
+    setInert((e.target as Element | null)?.tagName === "IFRAME")
+  }
+  // The pointer leaving the viewport altogether — `window.pointerleave`
+  // never fires (the pointer has left the target it would fire on), so this
+  // binds to the root element instead.
+  function handleLeaveWindow() {
+    setInert(true)
+  }
+  // Alt-tabbing away while the pointer still hovers an already-inert iframe
+  // (or into/out of one without a pointer move) — re-derive from focus
+  // rather than blindly setting either state, so this never fights the
+  // pointerover/pointerleave handlers above.
+  function syncFocusInert() {
+    setInert(document.activeElement?.tagName === "IFRAME")
+  }
+
+  document.addEventListener("pointerover", handleOver, { passive: true })
+  document.documentElement.addEventListener("pointerleave", handleLeaveWindow)
+  window.addEventListener("blur", syncFocusInert)
+  window.addEventListener("focus", syncFocusInert)
+
+  const cleanup = () => {
+    document.removeEventListener("pointerover", handleOver)
+    document.documentElement.removeEventListener("pointerleave", handleLeaveWindow)
+    window.removeEventListener("blur", syncFocusInert)
+    window.removeEventListener("focus", syncFocusInert)
+  }
+  inertCleanups.set(cb, cleanup)
+  if (typeof window.addCleanup === "function") {
+    window.addCleanup(cleanup)
+  }
+}
