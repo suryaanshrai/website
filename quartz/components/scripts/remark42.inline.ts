@@ -70,7 +70,13 @@ function loadRemark42Script(remark42Container: HTMLElement) {
   }
 }
 
+// Observer from a previous page whose comments were never scrolled near; it
+// would otherwise keep watching a node the morph has detached.
+let pendingObserver: IntersectionObserver | null = null
+
 function ensureRemark42Ready(remark42Container: HTMLElement) {
+  pendingObserver?.disconnect()
+  pendingObserver = null
   computeRemarkConfig(remark42Container)
 
   // If script is already loaded, just re-create the instance for SPA navigations.
@@ -93,6 +99,7 @@ function ensureRemark42Ready(remark42Container: HTMLElement) {
       { root: null, rootMargin: "250px 0px", threshold: 0 },
     )
     observer.observe(remark42Container)
+    pendingObserver = observer
   } else if ("requestIdleCallback" in window) {
     ;(window as any).requestIdleCallback(load, { timeout: 2000 })
   } else {

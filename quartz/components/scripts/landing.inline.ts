@@ -102,14 +102,3 @@ function initLanding() {
 document.addEventListener("nav", () => {
   initLanding()
 })
-
-if (typeof window.addCleanup === "function") {
-  window.addCleanup(() => {
-    revealObserver?.disconnect()
-    revealObserver = null
-    if (revealFailsafe !== null) {
-      window.clearTimeout(revealFailsafe)
-      revealFailsafe = null
-    }
-  })
-}

@@ -13,14 +13,6 @@ function initReadingProgress() {
   updateProgress()
 }
 
-function cleanupReadingProgress() {
-  window.removeEventListener("scroll", updateProgress)
-}
-
 document.addEventListener("nav", () => {
   initReadingProgress()
 })
-
-if (typeof window.addCleanup === "function") {
-  window.addCleanup(cleanupReadingProgress)
-}

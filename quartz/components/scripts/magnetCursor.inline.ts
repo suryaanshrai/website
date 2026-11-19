@@ -105,14 +105,6 @@ function initMagnetCursor() {
   }
 }
 
-function cleanupMagnetCursor() {
-  window.removeEventListener("pointermove", handleMagnetPointerMove)
-}
-
 document.addEventListener("nav", () => {
   initMagnetCursor()
 })
-
-if (typeof window.addCleanup === "function") {
-  window.addCleanup(cleanupMagnetCursor)
-}

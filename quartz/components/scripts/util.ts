@@ -20,9 +20,7 @@ export function registerEscapeHandler(outsideContainer: HTMLElement | null, cb: 
 }
 
 export function removeAllChildren(node: HTMLElement) {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild)
-  }
+  node.replaceChildren()
 }
 
 // AliasRedirect emits HTML redirects which also have the link[rel="canonical"]

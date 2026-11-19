@@ -17,13 +17,6 @@ function initClock() {
   }
 }
 
-function cleanupClock() {
-  if (tickId !== null) {
-    window.clearInterval(tickId)
-    tickId = null
-  }
-}
-
 // --- Theme swap ------------------------------------------------------------
 // Flipping `saved-theme` re-resolves --dark/--light on :root, which starts a
 // transition on every element declaring `transition: color`/`border-color`.
@@ -80,12 +73,3 @@ document.addEventListener("pointerdown", onTogglePointerDown, true)
 document.addEventListener("nav", () => {
   initClock()
 })
-
-if (typeof window.addCleanup === "function") {
-  window.addCleanup(() => {
-    cleanupClock()
-    document.removeEventListener("themechange", beginThemeSwap)
-    document.removeEventListener("pointerdown", onTogglePointerDown, true)
-    endThemeSwap()
-  })
-}

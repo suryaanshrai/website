@@ -71,11 +71,6 @@ async function updateAudioPlayer() {
         const decodedNew = decodeURIComponent(newSrc)
 
         if (decodedCurrent !== decodedNew) {
-          console.log("Audio mismatch detected, reloading player:", {
-            current: decodedCurrent,
-            new: decodedNew,
-          })
-
           // Pause the current audio before changing source
           audioElement.pause()
 
@@ -87,8 +82,6 @@ async function updateAudioPlayer() {
 
           // FORCE reload the audio element to pick up the new source
           audioElement.load()
-        } else {
-          console.log("Audio already matches, skipping reload")
         }
       }
       showAudioPlayer()
@@ -103,19 +96,14 @@ async function updateAudioPlayer() {
   }
 }
 
-// Handle audio errors
+// Handle audio errors. Named handlers, so re-running on every nav dedupes
+// instead of stacking another pair of listeners on the same element.
 function setupErrorHandlers() {
   const audioElement = document.querySelector(".audio-player") as HTMLAudioElement | null
   if (!audioElement) return
 
-  audioElement.addEventListener("error", () => {
-    hideAudioPlayer()
-  })
-
-  audioElement.addEventListener("loadedmetadata", () => {
-    // Successfully loaded, ensure player is visible
-    showAudioPlayer()
-  })
+  audioElement.addEventListener("error", hideAudioPlayer)
+  audioElement.addEventListener("loadedmetadata", showAudioPlayer)
 }
 
 function formatTime(seconds: number): string {
@@ -176,10 +164,10 @@ function setupCustomControls() {
   })
 }
 
-// Initialize on page load
-setupErrorHandlers()
-setupCustomControls()
-updateAudioPlayer()
+// No module-level init: the SPA router fires `nav` on first load too. Running
+// setup here as well bound the play button twice (the first binding's cleanup
+// could never register, since addCleanup is defined later), so each click
+// called play() and then pause().
 
 // Pause audio immediately when navigation starts (before DOM morphing)
 document.addEventListener("prenav", () => {

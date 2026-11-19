@@ -40,6 +40,9 @@ function notifyNav(url: FullSlug) {
   document.dispatchEvent(event)
 }
 
+// Call addCleanup only inside a `nav` handler. Component scripts run once per
+// full page load and before this router, so a top-level call never registers,
+// and listeners bound at top level are meant to live for the whole session.
 const cleanupFns: Set<(...args: any[]) => void> = new Set()
 window.addCleanup = (fn) => cleanupFns.add(fn)
 

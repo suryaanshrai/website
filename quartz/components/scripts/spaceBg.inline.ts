@@ -234,11 +234,10 @@ function handlePointerDown(e: PointerEvent) {
   rippleStart = performance.now()
 }
 
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
 function pointerEffectsEnabled(): boolean {
-  return (
-    window.matchMedia("(hover: hover)").matches &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  )
+  return window.matchMedia("(hover: hover)").matches && !reducedMotionQuery.matches
 }
 
 // The canvas is opaque (`alpha: false`) and covers the whole viewport at
@@ -268,8 +267,7 @@ function draw(now: number) {
   const canvas = document.getElementById("space-canvas") as HTMLCanvasElement | null
   if (!canvas || !canvas.isConnected || !gl || !uniforms || document.hidden) return
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  const t = reduceMotion ? 0 : (now - startTime) / 1000
+  const t = reducedMotionQuery.matches ? 0 : (now - startTime) / 1000
 
   mouse.x += (mouse.tx - mouse.x) * 0.06
   mouse.y += (mouse.ty - mouse.y) * 0.06
@@ -418,14 +416,6 @@ function initNebulaBg() {
   raf = requestAnimationFrame(draw)
 }
 
-function cleanupNebulaBg() {
-  window.removeEventListener("pointermove", handlePointerMove)
-  window.removeEventListener("pointerdown", handlePointerDown)
-  const canvas = document.getElementById("space-canvas")
-  canvas?.removeEventListener("webglcontextlost", handleContextLost)
-  canvas?.removeEventListener("webglcontextrestored", handleContextRestored)
-}
-
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initNebulaBg)
 } else {
@@ -439,7 +429,3 @@ document.addEventListener("nav", () => {
 document.addEventListener("themechange", () => {
   syncTheme()
 })
-
-if (typeof window.addCleanup === "function") {
-  window.addCleanup(cleanupNebulaBg)
-}

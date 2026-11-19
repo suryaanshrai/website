@@ -94,11 +94,3 @@ function setup() {
 }
 
 document.addEventListener("nav", setup)
-
-if (typeof window.addCleanup === "function") {
-  window.addCleanup(() => {
-    document.removeEventListener("keydown", onKeydown)
-    document.removeEventListener("keydown", onTrapKeydown, true)
-    document.body.style.overflow = ""
-  })
-}
