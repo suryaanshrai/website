@@ -65,6 +65,30 @@ ThemeToggle.css = `
   display: contents;
 }
 
+/* Make the flip readable: the incoming icon spins in after a click. Keyed on
+   a flag the toggle sets, so icons don't animate on every page load; a CSS
+   animation restarts each time its icon goes from display:none to shown. */
+@keyframes theme-icon-in {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+  }
+}
+@keyframes theme-icon-fade {
+  from {
+    opacity: 0;
+  }
+}
+:root[data-theme-toggled] .darkmode svg {
+  transform-origin: 50% 50%;
+  animation: theme-icon-fade 0.3s ease;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-theme-toggled] .darkmode svg {
+    animation: theme-icon-in 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

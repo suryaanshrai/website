@@ -50,6 +50,8 @@ function toggle() {
     if (stored) localStorage.setItem(KEY, stored)
     else localStorage.removeItem(KEY)
   } catch {}
+  // Lets the icon animate in from now on (see ThemeToggle's CSS).
+  document.documentElement.dataset.themeToggled = ""
   apply(true)
 }
 
