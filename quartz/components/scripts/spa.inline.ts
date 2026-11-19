@@ -67,6 +67,7 @@ function stopLoading() {
 
 let isNavigating = false
 let p: DOMParser
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
 async function _navigate(url: URL, isBack: boolean = false) {
   isNavigating = true
   startLoading()
@@ -111,26 +112,37 @@ async function _navigate(url: URL, isBack: boolean = false) {
   html.body.appendChild(announcer)
 
   document.querySelector(".navigation-progress")?.remove()
-  micromorph(document.body, html.body)
 
-  // scroll into place and add history
-  if (!isBack) {
-    if (url.hash) {
-      const el = document.getElementById(decodeURIComponent(url.hash.substring(1)))
-      el?.scrollIntoView()
-    } else {
-      // `behavior: "instant"` is required because html has `scroll-behavior:
-      // smooth` for in-page anchors — without it every SPA link tap animated a
-      // full-page scroll to the top before the new content rendered.
-      window.scrollTo({ top: 0, behavior: "instant" })
+  const swap = () => {
+    micromorph(document.body, html.body)
+
+    // scroll into place
+    if (!isBack) {
+      if (url.hash) {
+        const el = document.getElementById(decodeURIComponent(url.hash.substring(1)))
+        el?.scrollIntoView()
+      } else {
+        // `behavior: "instant"` is required because html has `scroll-behavior:
+        // smooth` for in-page anchors — without it every SPA link tap animated a
+        // full-page scroll to the top before the new content rendered.
+        window.scrollTo({ top: 0, behavior: "instant" })
+      }
     }
+
+    // now, patch head, re-executing scripts
+    const elementsToRemove = document.head.querySelectorAll(":not([data-persist])")
+    elementsToRemove.forEach((el) => el.remove())
+    const elementsToAdd = html.head.querySelectorAll(":not([data-persist])")
+    elementsToAdd.forEach((el) => document.head.appendChild(el))
   }
 
-  // now, patch head, re-executing scripts
-  const elementsToRemove = document.head.querySelectorAll(":not([data-persist])")
-  elementsToRemove.forEach((el) => el.remove())
-  const elementsToAdd = html.head.querySelectorAll(":not([data-persist])")
-  elementsToAdd.forEach((el) => document.head.appendChild(el))
+  // Cross-fade between pages where the browser supports view transitions and
+  // the reader hasn't asked for reduced motion; otherwise swap instantly.
+  if (document.startViewTransition && !reducedMotion.matches) {
+    await document.startViewTransition(swap).updateCallbackDone
+  } else {
+    swap()
+  }
 
   // delay setting the url until now
   // at this point everything is loaded so changing the url should resolve to the correct addresses

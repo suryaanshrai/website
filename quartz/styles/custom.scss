@@ -102,6 +102,12 @@ html.theme-swapping *::after {
 
 // ---------------------------------------------------------------------------
 // Typographic detail
+// SPA page swaps cross-fade (see spa.inline.ts). On the feedback duration, not
+// the entrance one, so following a link still feels immediate.
+::view-transition-group(root) {
+  animation-duration: var(--qz-feedback);
+}
+
 // ---------------------------------------------------------------------------
 // Headings set at display sizes are where a one-word last line is most obvious.
 h1,
