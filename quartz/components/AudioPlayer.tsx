@@ -17,10 +17,11 @@ const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponen
 
   // Extract the relative path from the content folder and change extension
   // filePath typically looks like "content/folder/file.md"
-  // Strip special characters that don't exist in audio filenames (?, !, etc.)
+  // Strip "?", which Windows filenames can't hold, so the TTS output drops it.
+  // "!" is kept: the generated files keep it ("...Actually Help!!!!!.mp3").
   const audioPath = filePath
     .replace(/^content\//, "static/audios/") // Replace content/ with static/audios/
-    .replace(/[?!]/g, "") // Remove special characters like ? and !
+    .replace(/\?/g, "")
     .replace(/\.md$/, ".mp3") // Replace .md extension with .mp3
 
   // Encode the path for URL usage while preserving directory structure

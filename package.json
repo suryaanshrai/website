@@ -20,8 +20,7 @@
     "test": "tsx --test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "install-plugins": "npx tsx ./quartz/plugins/loader/install-plugins.ts",
-    "copy-audios": "node -e \"const fs = require('fs'); const src = 'audios'; const dest = 'quartz/static/audios'; if (fs.existsSync(dest)) { fs.rmSync(dest, { recursive: true }); } if (fs.existsSync(src)) { fs.cpSync(src, dest, { recursive: true }); console.log('Copied audios to quartz/static/audios'); } }\"",
-    "prebuild": "npm run copy-audios && npm run install-plugins"
+    "prebuild": "npm run install-plugins"
   },
   "engines": {
     "npm": ">=10.9.2",

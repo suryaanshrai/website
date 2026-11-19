@@ -1,10 +1,5 @@
 // Script to handle audio player updates and error handling during SPA navigation
 
-// Function to strip special characters from filename (matching server-side logic)
-function cleanFilename(str: string): string {
-  return str.replace(/[?!]/g, "")
-}
-
 // Function to hide audio player container
 function hideAudioPlayer() {
   const container = document.querySelector(".audio-player-container") as HTMLElement | null

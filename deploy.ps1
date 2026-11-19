@@ -26,8 +26,11 @@ Copy-Item -Path $SourcePath -Destination "$RepoRoot\content\" -Recurse -Force
 # }
 
 # # Copy Audios
-if (-not (Test-Path "$RepoRoot\audios")) { New-Item -Type Directory "$RepoRoot\audios" | Out-Null }
-Copy-Item "$RepoRoot\..\text-to-speech-local\audios\*" "$RepoRoot\audios\" -Recurse -Force
+# Straight into quartz\static: Quartz publishes that folder as /static/, which
+# is where the audio player looks. Nothing else copies them in at build time.
+$AudioDest = "$RepoRoot\quartz\static\audios"
+if (-not (Test-Path $AudioDest)) { New-Item -Type Directory $AudioDest | Out-Null }
+Copy-Item "$RepoRoot\..\text-to-speech-local\audios\*" "$AudioDest\" -Recurse -Force
 
 # # Final Sync
 # (calling node directly instead of `npx quartz sync` - npx resolves the
