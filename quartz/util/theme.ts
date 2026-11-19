@@ -174,6 +174,15 @@ function hexToHsl(hex: string): { h: number; s: number; l: number } {
 }
 
 export function joinStyles(theme: Theme, ...stylesheet: string[]) {
+  const darkTokens = `  --light: ${theme.colors.darkMode.light};
+  --lightgray: ${theme.colors.darkMode.lightgray};
+  --gray: ${theme.colors.darkMode.gray};
+  --darkgray: ${theme.colors.darkMode.darkgray};
+  --dark: ${theme.colors.darkMode.dark};
+  --secondary: ${theme.colors.darkMode.secondary};
+  --tertiary: ${theme.colors.darkMode.tertiary};
+  --highlight: ${theme.colors.darkMode.highlight};
+  --textHighlight: ${theme.colors.darkMode.textHighlight};`
   return `
 ${stylesheet.join("\n\n")}
 
@@ -195,15 +204,14 @@ ${stylesheet.join("\n\n")}
 }
 
 :root[saved-theme="dark"] {
-  --light: ${theme.colors.darkMode.light};
-  --lightgray: ${theme.colors.darkMode.lightgray};
-  --gray: ${theme.colors.darkMode.gray};
-  --darkgray: ${theme.colors.darkMode.darkgray};
-  --dark: ${theme.colors.darkMode.dark};
-  --secondary: ${theme.colors.darkMode.secondary};
-  --tertiary: ${theme.colors.darkMode.tertiary};
-  --highlight: ${theme.colors.darkMode.highlight};
-  --textHighlight: ${theme.colors.darkMode.textHighlight};
+${darkTokens}
+}
+
+/* No script ran (saved-theme unset): follow the OS instead of staying light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([saved-theme]) {
+${darkTokens}
+  }
 }
 
 :root {

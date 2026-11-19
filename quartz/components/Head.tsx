@@ -59,6 +59,9 @@ export default (() => {
         )}
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {/* ThemeToggle rewrites this (and the theme-color pair) to a pinned
+            scheme when the reader overrides the OS. */}
+        <meta name="color-scheme" content="light dark" />
         {/* Without these the mobile browser chrome stays its default black while
             the page is aged paper, which is the seam visible above the header on
             a phone. Values track the theme's `light` ground in each mode. */}

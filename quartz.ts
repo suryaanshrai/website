@@ -1,7 +1,6 @@
 import { loadQuartzConfig, loadQuartzLayout } from "./quartz/plugins/loader/config-loader"
 import { PageTypes } from "./quartz/plugins"
 import * as Component from "./quartz/components"
-import { Darkmode } from "@quartz-community/darkmode"
 import { Search } from "@quartz-community/search"
 import { ReaderMode } from "@quartz-community/reader-mode"
 import { contactLinks } from "./quartz/contactLinks"
@@ -14,7 +13,7 @@ const contentBase = base.byPageType.content ?? base.defaults
 const HEADER = [
   Component.SiteHeader(),
   Search({ enablePreview: true }),
-  Darkmode(),
+  Component.ThemeToggle(),
   ReaderMode(),
   Component.ReadingProgress(),
 ]

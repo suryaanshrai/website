@@ -9,6 +9,7 @@ import SiteHeader from "./SiteHeader"
 import MobileNav from "./MobileNav"
 import MagnetCursor from "./MagnetCursor"
 import ReadingProgress from "./ReadingProgress"
+import ThemeToggle from "./ThemeToggle"
 import Landing from "./Landing"
 import LandingGraphTeaser from "./LandingGraphTeaser"
 import LandingFooterQuote from "./LandingFooterQuote"
@@ -37,6 +38,7 @@ export {
   MobileNav,
   MagnetCursor,
   ReadingProgress,
+  ThemeToggle,
   Landing,
   LandingGraphTeaser,
   LandingFooterQuote,
