@@ -87,11 +87,12 @@ function initLanding() {
   initReveals()
 
   const rows = document.querySelectorAll<HTMLElement>(".landing-index-row")
+  // Same functions each nav, so re-adding dedupes. Focus mirrors hover for keyboard users.
   rows.forEach((row) => {
-    row.removeEventListener("mouseenter", handleRowEnter)
-    row.removeEventListener("mouseleave", handleRowLeave)
     row.addEventListener("mouseenter", handleRowEnter)
     row.addEventListener("mouseleave", handleRowLeave)
+    row.addEventListener("focus", handleRowEnter)
+    row.addEventListener("blur", handleRowLeave)
   })
 
   const openGraphLink = document.getElementById("landing-open-graph")

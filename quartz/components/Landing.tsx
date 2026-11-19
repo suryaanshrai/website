@@ -132,7 +132,7 @@ const Landing: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps) 
           </div>
         </div>
 
-        <nav class="landing-index">
+        <nav class="landing-index" aria-label="Sections">
           {INDEX_ROWS.map((row) => {
             const count = row.countOverride ?? String(countInFolder(allFiles, row.slug))
             return (
@@ -152,7 +152,8 @@ const Landing: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps) 
               </a>
             )
           })}
-          <div class="landing-index-preview">
+          {/* A visual echo of the hovered/focused row; the row already says it all to AT. */}
+          <div class="landing-index-preview" aria-hidden="true">
             <div class="landing-preview-kicker" id="landing-preview-kicker">
               STATUS · IDLE
             </div>

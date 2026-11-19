@@ -125,14 +125,30 @@ function clearActivePopover() {
   allPopoverElements.forEach((popoverElement) => popoverElement.classList.remove("active-popover"))
 }
 
+// Keyboard users get the same preview on focus. Only :focus-visible, so a
+// mouse click (which also focuses the link) doesn't flash a second preview.
+function focusHandler(this: HTMLAnchorElement) {
+  if (!this.matches(":focus-visible")) return
+  const rect = this.getBoundingClientRect()
+  mouseEnterHandler.call(this, { clientX: rect.left + 1, clientY: rect.top + 1 })
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") clearActivePopover()
+})
+
 function setupPopovers() {
   const links = [...document.querySelectorAll("a.internal")] as HTMLAnchorElement[]
   for (const link of links) {
     link.addEventListener("mouseenter", mouseEnterHandler)
     link.addEventListener("mouseleave", clearActivePopover)
+    link.addEventListener("focus", focusHandler)
+    link.addEventListener("blur", clearActivePopover)
     window.addCleanup(() => {
       link.removeEventListener("mouseenter", mouseEnterHandler)
       link.removeEventListener("mouseleave", clearActivePopover)
+      link.removeEventListener("focus", focusHandler)
+      link.removeEventListener("blur", clearActivePopover)
     })
   }
 }
