@@ -52,12 +52,17 @@ ThemeToggle.css = `
   top: calc(50% - 10px);
   fill: var(--darkgray);
 }
+/* The state spans must not form boxes: the icons are absolutely positioned
+   and rely on the button's flex centring for their static position. */
+.darkmode > span {
+  display: contents;
+}
 .darkmode > .nightIcon,
 :root[saved-theme="dark"] .darkmode > .dayIcon {
   display: none;
 }
 :root[saved-theme="dark"] .darkmode > .nightIcon {
-  display: inline;
+  display: contents;
 }
 
 .sr-only {
