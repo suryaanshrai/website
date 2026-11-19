@@ -293,6 +293,18 @@ function draw(now: number) {
   }
 
   gl.drawArrays(gl.TRIANGLES, 0, 3)
+
+  // Under reduced motion the field is frozen (t = 0) and pointer effects are
+  // off, so one frame is the whole picture: stop until something changes it.
+  if (reducedMotionQuery.matches && rippleStart === null) {
+    cancelAnimationFrame(raf!)
+    raf = null
+  }
+}
+
+// Redraw after a theme or size change when the loop is idle.
+function requestFrame() {
+  if (raf === null && gl) raf = requestAnimationFrame(draw)
 }
 
 function syncTheme() {
@@ -406,6 +418,7 @@ function initNebulaBg() {
     }
     gl.viewport(0, 0, w, h)
     gl.uniform2f(uniforms.res, w, h)
+    requestFrame()
   }
   onResize()
   window.addEventListener("resize", onResize)
@@ -428,4 +441,8 @@ document.addEventListener("nav", () => {
 
 document.addEventListener("themechange", () => {
   syncTheme()
+  requestFrame()
 })
+
+// Rebinds pointer effects for the new preference and restarts the loop if idle.
+reducedMotionQuery.addEventListener("change", () => initNebulaBg())

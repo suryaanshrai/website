@@ -22,8 +22,9 @@
   }
 }
 
+// A ring that chases the pointer is motion for its own sake.
 @media (prefers-reduced-motion: reduce) {
   .magnet-cursor {
-    transition: none;
+    display: none;
   }
 }

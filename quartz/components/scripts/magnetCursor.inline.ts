@@ -93,8 +93,12 @@ function magnetLoop() {
   ring.style.borderRadius = `${magnetState.tr}px`
 }
 
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+
 function initMagnetCursor() {
-  if (window.matchMedia("(hover: none)").matches) return
+  // The ring is display:none under reduced motion (see the scss), so don't
+  // spend a frame loop on it either.
+  if (window.matchMedia("(hover: none)").matches || reducedMotion.matches) return
 
   window.removeEventListener("pointermove", handleMagnetPointerMove)
   window.addEventListener("pointermove", handleMagnetPointerMove, { passive: true })
@@ -104,6 +108,19 @@ function initMagnetCursor() {
     magnetRaf = requestAnimationFrame(magnetLoop)
   }
 }
+
+function stopMagnetCursor() {
+  window.removeEventListener("pointermove", handleMagnetPointerMove)
+  if (magnetRaf !== null) {
+    cancelAnimationFrame(magnetRaf)
+    magnetRaf = null
+  }
+}
+
+reducedMotion.addEventListener("change", () => {
+  if (reducedMotion.matches) stopMagnetCursor()
+  else initMagnetCursor()
+})
 
 document.addEventListener("nav", () => {
   initMagnetCursor()

@@ -132,7 +132,11 @@ body[data-slug="index"] {
   border-radius: 50%;
   background: #3ddc97;
   box-shadow: 0 0 10px #3ddc97;
-  animation: landing-blink 2.6s ease-in-out infinite;
+
+  // An endless pulse; static for readers who asked for less motion.
+  @media (prefers-reduced-motion: no-preference) {
+    animation: landing-blink 2.6s ease-in-out infinite;
+  }
 }
 
 .landing-name {
