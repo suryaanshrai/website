@@ -10,7 +10,7 @@ function hideAudioPlayer() {
   const container = document.querySelector(".audio-player-container") as HTMLElement | null
   if (container) {
     container.classList.remove("qz-audio-visible")
-    container.setAttribute("aria-hidden", "true")
+    container.inert = true
   }
 }
 
@@ -19,7 +19,7 @@ function showAudioPlayer() {
   const container = document.querySelector(".audio-player-container") as HTMLElement | null
   if (container) {
     container.classList.add("qz-audio-visible")
-    container.removeAttribute("aria-hidden")
+    container.inert = false
   }
 }
 
@@ -118,15 +118,19 @@ function setupCustomControls() {
   const container = document.querySelector(".audio-player-container") as HTMLElement | null
   const audioElement = container?.querySelector(".audio-player") as HTMLAudioElement | null
   const toggle = container?.querySelector(".audio-toggle") as HTMLButtonElement | null
-  const fill = container?.querySelector(".audio-track-fill") as HTMLElement | null
-  const track = container?.querySelector(".audio-track") as HTMLElement | null
+  const track = container?.querySelector(".audio-track") as HTMLInputElement | null
   const timeLabel = container?.querySelector(".audio-time") as HTMLElement | null
-  if (!container || !audioElement || !toggle || !fill || !track || !timeLabel) return
+  if (!container || !audioElement || !toggle || !track || !timeLabel) return
 
   const updateProgress = () => {
     const pct = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0
-    fill.style.width = `${pct}%`
-    timeLabel.textContent = `${formatTime(audioElement.currentTime)} / ${formatTime(audioElement.duration)}`
+    // Don't yank the thumb out from under a drag in progress.
+    if (!track.matches(":active")) track.value = String(pct)
+    track.style.setProperty("--pct", `${track.value}%`)
+    const now = formatTime(audioElement.currentTime)
+    const total = formatTime(audioElement.duration)
+    timeLabel.textContent = `${now} / ${total}`
+    track.setAttribute("aria-valuetext", `${now} of ${total}`)
   }
 
   const handleToggleClick = () => {
@@ -136,17 +140,23 @@ function setupCustomControls() {
       audioElement.pause()
     }
   }
-  const handlePlay = () => toggle.classList.add("is-playing")
-  const handlePause = () => toggle.classList.remove("is-playing")
-  const handleSeek = (e: MouseEvent) => {
+  const handlePlay = () => {
+    toggle.classList.add("is-playing")
+    toggle.setAttribute("aria-label", "Pause audio narration")
+  }
+  const handlePause = () => {
+    toggle.classList.remove("is-playing")
+    toggle.setAttribute("aria-label", "Play audio narration")
+  }
+  // Keyboard arrows, clicks and drags all arrive as `input`.
+  const handleSeek = () => {
+    track.style.setProperty("--pct", `${track.value}%`)
     if (!audioElement.duration) return
-    const rect = track.getBoundingClientRect()
-    const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
-    audioElement.currentTime = pct * audioElement.duration
+    audioElement.currentTime = (Number(track.value) / 100) * audioElement.duration
   }
 
   toggle.addEventListener("click", handleToggleClick)
-  track.addEventListener("click", handleSeek)
+  track.addEventListener("input", handleSeek)
   audioElement.addEventListener("play", handlePlay)
   audioElement.addEventListener("pause", handlePause)
   audioElement.addEventListener("timeupdate", updateProgress)
@@ -156,7 +166,7 @@ function setupCustomControls() {
 
   window.addCleanup?.(() => {
     toggle.removeEventListener("click", handleToggleClick)
-    track.removeEventListener("click", handleSeek)
+    track.removeEventListener("input", handleSeek)
     audioElement.removeEventListener("play", handlePlay)
     audioElement.removeEventListener("pause", handlePause)
     audioElement.removeEventListener("timeupdate", updateProgress)

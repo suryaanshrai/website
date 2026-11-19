@@ -12,7 +12,7 @@ const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponen
   }
 
   // Construct the audio file path based on the content file path
-  // Convert: content/🌹Poetry/The Fallen Rose.md -> /static/audios/🌹Poetry/The Fallen Rose.wav
+  // Convert: content/🌹Poetry/The Fallen Rose.md -> /static/audios/🌹Poetry/The Fallen Rose.mp3
   const filePath = fileData.filePath || ""
 
   // Extract the relative path from the content folder and change extension
@@ -21,7 +21,7 @@ const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponen
   const audioPath = filePath
     .replace(/^content\//, "static/audios/") // Replace content/ with static/audios/
     .replace(/[?!]/g, "") // Remove special characters like ? and !
-    .replace(/\.md$/, ".mp3") // Replace .md extension with .wav
+    .replace(/\.md$/, ".mp3") // Replace .md extension with .mp3
 
   // Encode the path for URL usage while preserving directory structure
   const encodedPath =
@@ -32,27 +32,40 @@ const AudioPlayer: QuartzComponent = ({ fileData, displayClass }: QuartzComponen
       .join("/")
 
   return (
+    // `inert` (not aria-hidden) while collapsed: it also keeps the play button
+    // and seek bar out of the tab order. The script lifts it once the file exists.
     <div
       class={classNames(displayClass, "audio-player-container")}
       data-audio-base-path={audioPath}
-      aria-hidden="true"
+      inert
     >
       <button type="button" class="audio-toggle" aria-label="Play audio narration" data-magnet>
-        <svg class="audio-icon-play" viewBox="0 0 24 24" fill="currentColor">
+        <svg class="audio-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M8 5v14l11-7z" />
         </svg>
-        <svg class="audio-icon-pause" viewBox="0 0 24 24" fill="currentColor">
+        <svg class="audio-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <rect x="6" y="5" width="4" height="14" />
           <rect x="14" y="5" width="4" height="14" />
         </svg>
       </button>
-      <div class="audio-track">
-        <div class="audio-track-fill"></div>
-      </div>
-      <span class="audio-time">0:00 / 0:00</span>
-      <span class="audio-label">LISTEN</span>
+      <input
+        type="range"
+        class="audio-track"
+        min="0"
+        max="100"
+        step="0.1"
+        value="0"
+        aria-label="Seek narration"
+        aria-valuetext="0:00 of 0:00"
+      />
+      <span class="audio-time" aria-hidden="true">
+        0:00 / 0:00
+      </span>
+      <span class="audio-label" aria-hidden="true">
+        LISTEN
+      </span>
       <audio preload="metadata" class="audio-player" data-expected-src={encodedPath}>
-        <source src={encodedPath} type="audio/wav" />
+        <source src={encodedPath} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </div>
@@ -141,21 +154,42 @@ AudioPlayer.css = `
   }
 }
 
+/* A native range input drawn as the design's 3px bar: the played part is a
+   gradient sized by --pct, and the thumb only shows on hover or keyboard focus. */
 .audio-track {
+  --pct: 0%;
   flex: 1;
-  height: 3px;
-  border-radius: 99px;
-  background: var(--qz-audio-panel);
-  position: relative;
-  overflow: hidden;
+  min-width: 0;
+  /* Taller hit area than the 3px it draws. */
+  height: 16px;
+  margin: 0;
+  appearance: none;
+  cursor: pointer;
+  background:
+    linear-gradient(90deg, var(--secondary), var(--tertiary)) 0 50% / var(--pct) 3px no-repeat,
+    linear-gradient(var(--qz-audio-panel), var(--qz-audio-panel)) 0 50% / 100% 3px no-repeat;
 }
-
-.audio-track-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 0%;
-  background: linear-gradient(90deg, var(--secondary), var(--tertiary));
-  border-radius: 99px;
+.audio-track::-webkit-slider-thumb {
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--secondary);
+  opacity: 0;
+}
+.audio-track::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--secondary);
+  opacity: 0;
+}
+.audio-track:is(:hover, :focus-visible)::-webkit-slider-thumb {
+  opacity: 1;
+}
+.audio-track:is(:hover, :focus-visible)::-moz-range-thumb {
+  opacity: 1;
 }
 
 .audio-time {

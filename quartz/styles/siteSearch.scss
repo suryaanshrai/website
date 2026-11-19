@@ -146,10 +146,11 @@ $input-row: 62px;
 
   // The panel itself is the focus indicator here; a ring inside a bordered card
   // reads as a second box.
+  // The underline is the focus indicator, so it has to read at full strength.
   &:focus,
   &:focus-visible {
     outline: none;
-    border-bottom-color: color-mix(in srgb, var(--secondary) 45%, transparent);
+    border-bottom-color: var(--secondary);
   }
 
   @media all and ($mobile) {

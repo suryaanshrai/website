@@ -34,16 +34,20 @@ const SiteHeader: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
         <span class="site-header-name">suryaansh</span>
         <span class="site-header-tld">.DEV</span>
       </a>
-      <nav class="site-header-nav">
-        {NAV_ITEMS.map((item) => (
-          <a
-            href={resolveRelative(currentSlug, item.slug)}
-            class={`site-header-link ${isActive(currentSlug, item.slug) ? "active" : ""}`}
-            data-magnet
-          >
-            {item.label}
-          </a>
-        ))}
+      <nav class="site-header-nav" aria-label="Primary">
+        {NAV_ITEMS.map((item) => {
+          const active = isActive(currentSlug, item.slug)
+          return (
+            <a
+              href={resolveRelative(currentSlug, item.slug)}
+              class={`site-header-link ${active ? "active" : ""}`}
+              aria-current={active ? "page" : undefined}
+              data-magnet
+            >
+              {item.label}
+            </a>
+          )
+        })}
       </nav>
       <span class="site-header-clock" id="site-header-clock">
         --:--:-- IST
