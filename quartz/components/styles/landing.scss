@@ -96,6 +96,18 @@ body[data-slug="index"] {
   }
 }
 
+// Holds the graph plugin's fixed overlay; must not take a grid cell itself.
+.landing-global-graph {
+  display: contents;
+}
+
+button.landing-section-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
 .landing-hero-row {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;

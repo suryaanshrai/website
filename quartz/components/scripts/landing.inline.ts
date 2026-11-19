@@ -16,12 +16,6 @@ function handleRowLeave() {
   if (body) body.textContent = "Hover an entry to preview what lives inside it."
 }
 
-function handleOpenGraphClick(e: MouseEvent) {
-  e.preventDefault()
-  const icon = document.querySelector(".popover-hint .global-graph-icon") as HTMLElement | null
-  icon?.click()
-}
-
 // Scroll choreography. The page had no entrance motion at all — every section
 // was simply present. Reveals are a translate + fade (never a bare opacity
 // fade, which reads as nothing happening), on the single site entrance curve,
@@ -94,10 +88,6 @@ function initLanding() {
     row.addEventListener("focus", handleRowEnter)
     row.addEventListener("blur", handleRowLeave)
   })
-
-  const openGraphLink = document.getElementById("landing-open-graph")
-  openGraphLink?.removeEventListener("click", handleOpenGraphClick)
-  openGraphLink?.addEventListener("click", handleOpenGraphClick)
 }
 
 document.addEventListener("nav", () => {
